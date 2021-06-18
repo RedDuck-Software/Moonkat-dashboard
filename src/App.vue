@@ -17,6 +17,9 @@ export default {
 };
 </script>
 
+<style src="@/assets/responsive.css"></style>
+<style src="@/assets/custom__style.css"></style>
+<style src="@/assets/style.css"></style>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
