@@ -82,9 +82,7 @@ name: "Features"
 </script>
 
 <style scoped>
-*===========================
-3.0 *** FEATURE AREA START ***
-=============================*/
+
 #overview {
   padding: 80px 0;
 }

@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+  <nav class="navbar navbar-expand-lg  navbar-light bg-light fixed-top">
     <div class="container">
       <a class="navbar-brand" href="index.html">MoonKat<b>.</b></a>
       <button
@@ -21,7 +21,7 @@
       <div id="navbarSupportedContent" class="collapse navbar-collapse menu-main">
         <ul class="navbar-nav ml-auto menu-item">
           <li class="nav-item">
-            <router-link class="nav-link" to="#banner">Home</router-link>
+            <router-link class="nav-link" to="/#banner">Home</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="#tokenomics">Tokenomics</router-link>

@@ -1,6 +1,4 @@
 <template>
-  <!-- TOKENOMICS AREA START -->
-
   <div class="container">
     <div class="row header-text text-center about-header">
       <div class="col-lg-12">
@@ -90,47 +88,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="row product-pa">
-              <div class="col-lg-7 mob-mar-bottom">
-                  <div class="product-item">
-                      <div class="row">
-                          <div class="col-lg-8 col-md-7 product-txt">
-                              <span>Total Supply:</span>
-                              <h3>1 Quadrillion</h3>
-                          </div>
-                          <div class="col-lg-8 col-md-7 product-txt">
-                              <span>Circulating Supply:</span>
-                              <h3>400,000,000,000,000</h3>
-                          </div>
-                          <div class="col-lg-8 col-md-7 product-txt">
-                              <span>Burned Forever: </span>
-                              <h3>400,000,000,000,000</h3>
-                              <a href="#">Liquidity Locks</a>
-                              <a href="#">Token Burn</a>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-lg-5 mob-mar-bottom">
-                  <div class="product-item">
-                      <div class="row">
-                          <div class="col-lg-8 col-md-7 product-txt">
-                              <span>1 $RDS price:</span>
-                              <h3>$0.000000001</h3>
-                          </div>
-                          <div class="col-lg-8 col-md-7 product-txt">
-                              <span>Market Cap:</span>
-                              <h3>$3,112,890</h3>
-                          </div>
-                          <div class="col-lg-8 col-md-7 product-txt">
-                              <span>Airdrop pool:</span>
-                              <h3>100,000,000,000,000</h3>
-                              <a href="#">Smart Contract</a>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div> -->
     <div class="row">
       <div class="col-lg-10 m-auto about-item col-md-12">
         <div class="row">
@@ -166,7 +123,6 @@
       </div>
     </div>
   </div>
-  <!-- TOKENOMICS AREA ENDS -->
 </template>
 
 <script>
@@ -175,210 +131,180 @@ export default {
 };
 </script>
 
-<style scoped>
-*=========================== 3.0 *** FEATURE area START *** =============================*/ #overview {
+<style>
+#about {
   padding: 80px 0;
 }
 
-.over-pa {
-  padding-top: 60px;
+.about-header h3:after {
+  width: 192px;
 }
 
-.over-item {
-  background: #161616;
+.about-img {
+  background: #151515;
   -webkit-box-shadow: 0 31px 35px rgba(0, 0, 0, 0.1);
   box-shadow: 0 31px 35px rgba(0, 0, 0, 0.1);
-  padding: 35px 31px;
-  margin-top: 30px;
+  border-radius: 10px;
 }
 
-.unique-style,
-.unique-style2 {
+.about-pa {
+  padding-top: 25px;
+}
+
+.about-item {
+  padding-top: 90px;
+}
+
+.about-img {
   position: relative;
 }
 
-.unique-style::after {
+.ai-one::after {
   position: absolute;
   content: "";
-  top: 50%;
-  right: -145px;
-  height: 2px;
-  width: 190px;
-  border: 2px solid #ededed;
-  border-color: #1d1d1d;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  z-index: -11;
-}
-
-.unique-style::before {
-  position: absolute;
-  content: "";
-  top: 50%;
-  right: -152px;
-  height: 10px;
-  border-radius: 50%;
-  width: 10px;
-  background: #ff7657;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+  top: 350px;
+  left: -65px;
+  width: 120px;
+  height: 120px;
+  border: 25px solid #161616;
   z-index: -1;
-}
-
-.unique-style2:after {
-  position: absolute;
-  content: "";
-  top: 50%;
-  left: -170px;
-  height: 2px;
-  width: 230px;
-  border: 2px solid #ededed;
-  border-color: #1d1d1d;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  z-index: -11;
-}
-
-.unique-style2:before {
-  position: absolute;
-  content: "";
-  top: 50%;
-  left: -171px;
-  height: 10px;
   border-radius: 50%;
-  width: 10px;
-  background: #ff7657;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
+}
+
+.ai-two::after {
+  position: absolute;
+  content: "";
+  top: 344px;
+  right: -55px;
+  width: 120px;
+  height: 120px;
+  border: 25px solid #161616;
   z-index: -1;
+  -webkit-transform: rotate(35deg);
+  -ms-transform: rotate(35deg);
+  transform: rotate(35deg);
 }
 
-.unique-style3::after {
+.ai-three::after {
   position: absolute;
   content: "";
-  top: -70px;
-  left: 20px;
-  height: 230px;
-  width: 2px;
-  border: 2px solid #ededed;
-  border-color: #1d1d1d;
-  z-index: -11;
-}
-
-.unique-style3::before {
-  position: absolute;
-  content: "";
-  top: -76px;
-  left: 16px;
-  height: 10px;
+  top: 350px;
+  left: -65px;
+  width: 120px;
+  height: 120px;
+  border: 25px solid #161616;
+  z-index: -1;
   border-radius: 50%;
-  width: 10px;
-  background: #ff7657;
-  z-index: -1;
 }
 
-.unique-style4::after {
-  position: absolute;
-  content: "";
-  bottom: -105px;
-  right: 20px;
-  height: 230px;
-  width: 2px;
-  border: 2px solid #ededed;
-  border-color: #1d1d1d;
-  z-index: -11;
+.about-img img {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  -webkit-transition: all linear 0.3s;
+  -o-transition: all linear 0.3s;
+  transition: all linear 0.3s;
 }
 
-.unique-style4::before {
-  position: absolute;
-  content: "";
-  bottom: -106px;
-  right: 17px;
-  height: 10px;
-  border-radius: 50%;
-  width: 10px;
-  background: #ff7657;
-  z-index: -1;
+.about-img:hover img {
+  -webkit-filter: grayscale(0);
+  filter: grayscale(0);
 }
 
-.header-text h3 {
-  font-size: 37px;
-  font-family: pb;
-  color: white;
-  letter-spacing: 10px;
-  position: relative;
-  display: inline-block;
-}
-
-.header-text h3:after {
-  position: absolute;
-  content: "";
-  bottom: 0;
-  left: 50%;
-  -webkit-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
-  width: 240px;
-  height: 2px;
-  background: #1d1d1d;
-}
-
-.header-text h3 span {
+.separet-span {
+  font-family: pr;
+  font-size: 19px;
   color: #ff7657;
 }
 
-.over-i {
-  font-size: 27px;
-  color: #fff;
-  width: 60px;
-  height: 60px;
-  line-height: 60px;
-  border-radius: 50%;
-  text-align: center;
-  background: #f8615a;
+.about-txt {
+  padding-top: 30px;
 }
 
-.over-item h3 {
-  font-size: 24px;
-  color: white;
+.about-txt h3 {
   font-family: pb;
-  padding: 20px 0;
-  position: relative;
+  font-size: 26px;
+  color: #fff;
+  padding-bottom: 16px;
+  padding-top: 8px;
 }
 
-.over-item p {
+.about-txt p {
   font-size: 17px;
   color: #787878;
-  line-height: 26px;
+  line-height: 27px;
+  padding-bottom: 30px;
 }
 
-.over-btn {
-  padding-top: 15px;
+.separate-p {
+  padding-bottom: 50px !important;
 }
 
-.over-btn a {
-  color: #ff7657;
-  font-size: 17px;
+.about-txt a {
+  padding: 14px 20px;
+  background: #ff7657;
+  color: #fff;
+  font-size: 18px;
   font-family: pb;
+  position: relative;
 }
 
-over-btn a i {
-  padding-right: 5px;
+.about-txt a i {
+  padding-left: 8px;
 }
 
-.txt-right {
-  text-align: right;
+.about-txt a::after {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  content: "";
+  top: 10px;
+  left: 0;
+  background: #db5536;
+  z-index: -1;
+  -webkit-transition: all linear 0.3s;
+  -o-transition: all linear 0.3s;
+  transition: all linear 0.3s;
 }
 
-.txt-right p {
-  padding-left: 20px;
+.about-txt a:hover:after {
+  top: 6px;
 }
 
-.txt-left p {
-  padding-right: 20px;
+.p-bar span {
+  font-size: 18px;
+  color: #787878;
+}
+
+.p-bars {
+  padding-top: 35px;
+}
+
+.progress-bar {
+  background: #ff7657;
+}
+
+.progress {
+  background: #151515;
+}
+
+.p-bar {
+  margin-bottom: 20px;
+}
+
+.counter-main {
+  padding-top: 50px;
+}
+
+.counter-1 h5 {
+  font-size: 18px;
+  color: #ff7657;
+  margin-top: -56px;
+  margin-left: 28px;
+  padding-bottom: 38px;
+}
+
+.counter-1 span {
+  font-size: 18px;
+  color: #787878;
 }
 </style>
