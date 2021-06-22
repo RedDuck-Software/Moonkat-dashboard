@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg  navbar-light bg-light fixed-top">
+  <nav class="navbar navbar-expand-lg  navbar-light bg-light fixed-top" :class="isSticky ? stickyClass : ''">
     <div class="container">
       <a class="navbar-brand" href="/">MoonKat<b>.</b></a>
       <button
@@ -14,6 +14,8 @@
         <i class="fa fa-bars" aria-hidden="true"></i>
       </button>
       <div class="header-social">
+        <font-awesome-icon icon="twitter" />
+
         <a href="https://twitter.com/moonkatBSC"><i class="fa fa-twitter" aria-hidden="true"></i></a>
         <a href="https://t.me/moonkat_finance"><i class="fa fa-telegram" aria-hidden="true"></i></a>
         <a href="https://medium.com/@moonkatfinance"><i class="fa fa-medium" aria-hidden="true"></i></a>
@@ -21,7 +23,7 @@
       <div id="navbarSupportedContent" class="collapse navbar-collapse menu-main">
         <ul class="navbar-nav ml-auto menu-item">
           <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'Home', hash: '#banner' }">Home</router-link>
+            <router-link class="nav-link" :to="{ name: 'Home' }">Home</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" :to="{ name: 'Home', hash: '#tokenomics' }">Tokenomics</router-link>
@@ -50,13 +52,29 @@
 <script lang="ts">
 export default {
   name: "Header",
+  data() {
+    return {
+      isSticky: false,
+      stickyClass: "nav-bg",
+      scrollPosition: 0,
+    };
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  destroyed() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
+  methods: {
+    handleScroll() {
+      this.scrollPosition = window.scrollY;
+      this.isSticky = this.scrollPosition >= 100;
+    },
+  },
 };
 </script>
 
 <style scoped>
-/*===========================
-1.0 *** HEADER AREA START ***
-=============================*/
 .navbar {
   position: fixed;
   width: 100%;
@@ -75,7 +93,7 @@ export default {
 
 .navbar-light .navbar-nav .nav-link {
   color: #fff;
-  font-family: pr;
+  font-family: Poppins, Helvetica, sans-serif;
   font-size: 17px;
   font-weight: 500;
   -webkit-transition: all linear 0.3s;
@@ -129,13 +147,13 @@ export default {
   color: #ff7657;
 }
 
-.navbar-light .navbar-nav .nav-link.active {
+.navbar-light .navbar-nav .nav-link.router-link-active {
   color: #ff7657;
 }
 
 .navbar-light .navbar-brand {
   color: #fff;
-  font-family: pb;
+  font-family: Poppins, Helvetica, sans-serif;
   font-size: 26px;
   -webkit-transition: all linear 0.3s;
   -o-transition: all linear 0.3s;

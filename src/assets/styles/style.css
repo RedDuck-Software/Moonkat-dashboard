@@ -96,7 +96,7 @@ p {
 .modal-title {
     font-size: 26px;
     color: white;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
 }
 
 .modal-header {
@@ -118,7 +118,7 @@ p {
     color: white;
     border: none;
     border-radius: 3px;
-    font-family: pb;
+    font-family:  Poppins-Bold, Helvetica, sans-serif;
 }
 
 .dropboxx:focus,
@@ -375,11 +375,6 @@ p {
     height: 100%;
 }
 
-/*===========================
-3.0 *** FEATURE AREA START ***
-=============================*/
-
-/
 
 /*===========================
 5.0 *** GALLERY AREA START ***
@@ -436,13 +431,13 @@ p {
 
 .product-txt span {
     color: #ff7657;
-    font-family: pr;
+    font-family:  Poppins, Helvetica, sans-serif;
     font-size: 18px;
 }
 
 .product-txt h3 {
     font-size: 25px;
-    font-family: pb;
+    font-family:  Poppins-Bold, Helvetica, sans-serif;
     color: white;
     padding-top: 6px;
     padding-bottom: 23px;
@@ -450,7 +445,7 @@ p {
 
 .product-txt p {
     color: #787878;
-    font-family: pr;
+    font-family:  Poppins, Helvetica, sans-serif;
     padding-bottom: 33px;
 }
 
@@ -464,7 +459,7 @@ p {
     background: #ff7657;
     color: #fff;
     font-size: 18px;
-    font-family: pb;
+    font-family:  Poppins-Bold, Helvetica, sans-serif;
 }
 
 .product-slider {
@@ -488,7 +483,7 @@ p {
 .product-slider h3 {
     font-size: 26px;
     color: white;
-    font-family: pb;
+    font-family:  Poppins-Bold, Helvetica, sans-serif;
     padding-bottom: 6px;
 }
 
@@ -507,7 +502,7 @@ p {
 
 .product-slider span {
     color: #787878;
-    font-family: pr;
+    font-family:  Poppins, Helvetica, sans-serif;
 }
 
 .border-style {
@@ -581,21 +576,21 @@ p {
 }
 
 .team-item h3 {
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     font-size: 26px;
     color: white;
     padding: 30px 0 14px;
 }
 
 .team-item p {
-    font-family: pr;
+    font-family: Poppins, Helvetica, sans-serif;
     font-size: 18px;
     color: #787878;
     padding-bottom: 14px;
 }
 
 .team-item a {
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     font-size: 16px;
     color: #ff7657;
 
@@ -606,7 +601,7 @@ p {
     background: #ff7657;
     color: #fff;
     font-size: 18px;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     position: relative;
 }
 
@@ -631,7 +626,7 @@ p {
 
 .price-table h3 {
     color: white;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     font-size: 18px;
     text-align: center;
     padding-bottom: 30px;
@@ -647,21 +642,21 @@ p {
 
 .price-table h4 {
     font-size: 40px;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     color: white;
     text-align: center;
     padding-bottom: 30px;
 }
 
 .price-table sub {
-    font-family: pr;
+    font-family: Poppins, Helvetica, sans-serif;
     color: #ff7657;
     font-size: 16px;
 }
 
 .price-table p {
     color: #787878;
-    font-family: pr;
+    font-family: Poppins, Helvetica, sans-serif;
     padding-bottom: 15px;
     padding-left: 35px;
 }
@@ -674,7 +669,7 @@ p {
 
 .price-table a {
     padding: 14px 20px;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     font-size: 16px;
     color: #161616;
     background: white;
@@ -739,7 +734,7 @@ p {
 
 .comment p {
     color: #787878;
-    font-family: pr;
+    font-family: Poppins, Helvetica, sans-serif;
     font-size: 17px;
 }
 
@@ -762,7 +757,7 @@ p {
 
 .user-txt h3 {
     font-size: 24px;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     color: white;
     padding-bottom: 10px;
 }
@@ -779,19 +774,7 @@ p {
 /*===========================
 10.0 *** CONTACT AREA START ***
 =============================*/
-#contact {
-    padding: 80px 0;
-    position: relative;
-}
 
-.contact-pa {
-    padding-top: 80px;
-}
-
-.faq-icon {
-    background: #151515;
-    border: 1px solid #151515;
-}
 
 .faq-icon i {
     color: #ff7657;
@@ -807,9 +790,7 @@ p {
     box-shadow: none;
 }
 
-.zom {
-    font-size: 17px;
-}
+
 
 .box-bg {
     background: #151515;
@@ -846,7 +827,7 @@ textarea:-ms-input-placeholder {
 .con-btn {
     padding: 15px 40px;
     color: white;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     background: #ff7657;
     border-radius: 50px;
     font-size: 18px;
@@ -863,38 +844,13 @@ textarea:-ms-input-placeholder {
     cursor: pointer;
 }
 
-.card-header {
-    background: #151515;
-    border: 1px solid #151515;
-}
-
-.card-body {
-    background: #161616;
-    color: #ccc;
-    padding: 26px 40px;
-    line-height: 28px;
-    font-family: pr;
-}
-
-.card {
-    border: none;
-}
-
-.btn-link {
-    color: #ff7657;
-    font-family: pb;
-}
-
-.btn-link:hover,
-.btn-link:focus {
-    text-decoration: none;
-    color: #ff7657;
-}
-
 input::placeholder,
 textarea::placeholder {
     color: white !important;
 }
+
+
+/*\\\\\\\\\\\\\\\\\\\\\*/
 
 /*===========================
 11.0 *** BLOG AREA START ***
@@ -903,13 +859,6 @@ textarea::placeholder {
     padding: 80px 0;
 }
 
-.blog-header h3:after {
-    width: 186px;
-}
-
-.blog-pa {
-    padding-top: 80px;
-}
 
 .tags {
     padding-top: 60px;
@@ -917,7 +866,7 @@ textarea::placeholder {
 
 .tags h4 {
     color: white;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     padding-bottom: 45px;
     font-size: 21px;
 }
@@ -931,35 +880,6 @@ textarea::placeholder {
 
 .tag-pa {
     padding-top: 48px;
-}
-
-.blog-item-txt h3 {
-    color: white;
-    font-size: 24px;
-    font-family: pb;
-    padding: 22px 0 16px;
-}
-
-.blog-item-txt p {
-    color: #787878;
-    padding-bottom: 14px;
-}
-
-.blog-item-txt a {
-    color: #ff7657;
-    font-size: 17px;
-    font-family: pb;
-    padding-top: 5px;
-}
-
-.blog-shadow {
-    background: #151515;
-    border-radius: 6px;
-}
-
-.blog-item-txt {
-    padding-left: 23px;
-    padding-bottom: 25px;
 }
 
 .search-btn {
@@ -987,179 +907,107 @@ textarea::placeholder {
     padding-left: 60px;
     font-size: 26px;
     color: white;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
 }
 
 .sub-main a {
     background: white;
     padding: 15px 25px;
     border-radius: 50px;
-    font-family: pb;
+    font-family: Poppins-Bold, Helvetica, sans-serif;
     color: #ff7657;
     font-size: 18px;
 }
 
-/*===========================
-13.0 *** FOOTER AREA START ***
-=============================*/
-
-#footer {
-    padding: 120px 0 85px;
-    background: #151515;
-    border-bottom: 1px solid #151515;
-    border-top: 2px dashed #222;
-}
-
-.footer-logo p {
-    color: #787878;
-    font-family: pr;
-    padding-top: 10px;
-    line-height: 29px;
-    font-size: 16px;
-    padding-bottom: 13px;
-}
-
+/*\\\\\\\\\\\\\\\\\\*/
 .footer-social {
-    padding-top: 11px;
+  padding-top: 11px;
 }
 
 .footer-social i {
-    width: 45px;
-    height: 45px;
-    border: 1px solid #fff;
-    line-height: 45px;
-    text-align: center;
-    border-radius: 50%;
-    color: #ff7657;
-    background: white;
-    font-size: 20px;
-    margin-right: 13px;
-    -webkit-transition: all linear .3s;
-    -o-transition: all linear .3s;
-    transition: all linear .3s;
+  width: 45px;
+  height: 45px;
+  border: 1px solid #fff;
+  line-height: 45px;
+  text-align: center;
+  border-radius: 50%;
+  color: #ff7657;
+  background: white;
+  font-size: 20px;
+  margin-right: 13px;
+  -webkit-transition: all linear 0.3s;
+  -o-transition: all linear 0.3s;
+  transition: all linear 0.3s;
 }
 
 .footer-social i:hover {
-    background: #ff7657;
-    color: #fff;
-    border: 1px solid #ff7657;
-}
-
-.links h3 {
-    font-size: 21px;
-    font-family: pb;
-    color: #fff;
-    font-weight: 600;
-    text-transform: capitalize;
-    padding-bottom: 4px;
-}
-
-.links ul li a {
-    color: #787878;
-    text-transform: capitalize;
-    line-height: 38px;
-    font-size: 16px;
-    -webkit-transition: all linear .3s;
-    -o-transition: all linear .3s;
-    transition: all linear .3s;
-    font-family: pr;
-}
-
-.links ul li a:hover {
-    color: #ff7657;
-    padding-left: 10px;
+  background: #ff7657;
+  color: #fff;
+  border: 1px solid #ff7657;
 }
 
 .location p {
-    padding-bottom: 5px;
+  padding-bottom: 5px;
 }
 
 .location a {
-    color: #ccc;
-    font-size: 15px;
-    line-height: 25px;
-}
-
-
-.f-logo {
-    font-size: 27px;
-    color: #ff7657;
-    font-family: pb;
-}
-
-.f-logo:hover {
-    color: #ff7657;
+  color: #ccc;
+  font-size: 15px;
+  line-height: 25px;
 }
 
 .insta-item {
-    color: white;
+  color: white;
 }
 
 .fg2 input {
-    border-radius: 50px;
-    background: none;
-    color: #fff;
-    border: 1px solid #ff416c;
+  border-radius: 50px;
+  background: none;
+  color: #fff;
+  border: 1px solid #ff416c;
 }
 
 .fg2 input:focus {
-    background: none;
-    border: 1px solid #ff416c;
-    position: relative;
-    right: 0;
+  background: none;
+  border: 1px solid #ff416c;
+  position: relative;
+  right: 0;
 }
 
 .fg2 input:hover {
-    border-radius: 50px;
-    border: 1px solid #ff416c;
+  border-radius: 50px;
+  border: 1px solid #ff416c;
 }
 
 .fg2 button i {
-    -webkit-transition: all linear .3s;
-    -o-transition: all linear .3s;
-    transition: all linear .3s;
+  -webkit-transition: all linear 0.3s;
+  -o-transition: all linear 0.3s;
+  transition: all linear 0.3s;
 }
 
 .fg2 button {
-    border-radius: 50px;
-    position: absolute;
-    right: 16px;
-    top: 65px;
-    border: none;
-    background: #ff416c;
-    color: #fff;
+  border-radius: 50px;
+  position: absolute;
+  right: 16px;
+  top: 65px;
+  border: none;
+  background: #ff416c;
+  color: #fff;
 }
 
 .fg2 button:hover {
-    border: none;
-    background: #ff416c;
+  border: none;
+  background: #ff416c;
 }
 
 .fg2 button:hover i {
-    padding-right: 8px;
+  padding-right: 8px;
 }
 
-/*===========================
-14.0 *** COPY_RIGHT AREA START ***
-=============================*/
 
-#footer-btm {
-    background: #161616;
-    border-top: 2px dashed #222;
-    padding: 25px 0;
-}
 
-.fop-btm h2 {
-    color: #fff;
-    font-size: 16px;
-    font-family: pr;
-    margin-bottom: 0;
-}
 
-.fop-btm a {
-    color: #ff7657;
-    font-family: pb;
-}
+
   /*==============connect wallet page css==============*/
       .section-2 {
     margin: 0 auto 0 auto;

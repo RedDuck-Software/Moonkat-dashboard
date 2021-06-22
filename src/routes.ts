@@ -3,7 +3,6 @@ import VueRouter, { RouteConfig } from "vue-router";
 
 import Home from "./pages/Home.vue";
 import ConnectWalletPage from "./pages/ConnectWalletPage.vue";
-import { Position, PositionResult, Route } from "vue-router/types/router";
 
 Vue.use(VueRouter);
 
@@ -14,7 +13,7 @@ const routes: RouteConfig[] = [
     name: "Home",
   },
 
-  { path: "/connect-wallet", component: ConnectWalletPage, meta: { scrollToTop: true } },
+  { path: "/connect-wallet", component: ConnectWalletPage },
 ];
 
 const router: VueRouter = new VueRouter({

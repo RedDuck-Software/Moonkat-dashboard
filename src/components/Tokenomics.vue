@@ -1,150 +1,153 @@
 <template>
-  <div class="container">
-    <div class="row header-text text-center about-header">
-      <div class="col-lg-12">
-        <h3 class="mt-4 pt-4">TOKE<span>NO</span>MICS</h3>
+  <section id="tokenomics">
+    <div class="container">
+      <div class="row header-text text-center about-header">
+        <div class="col-lg-12">
+          <h3 class="mt-4 pt-4">TOKE<span>NO</span>MICS</h3>
+        </div>
       </div>
-    </div>
-    <div class="row about-pa">
-      <div class="col-lg-10 m-auto about-item col-md-12">
-        <div class="row">
-          <div class="col-lg-7 col-md-6">
-            <div class="about-txt sm-reduce-pa">
-              <span class="separet-span">Total Supply: 1 BILLION (1,000,000,000) $MKAT </span>
-              <div class="p-bars">
-                <div class="col-lg-11 p-bar">
-                  <span>74% Presale/Locked in Liquidity</span>
-                  <div class="progress">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      style="width: 74%"
-                      aria-valuenow="74"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
+      <div class="row about-pa">
+        <div class="col-lg-10 m-auto about-item col-md-12">
+          <div class="row">
+            <div class="col-lg-7 col-md-6">
+              <div class="about-txt sm-reduce-pa">
+                <span class="separet-span">Total Supply: 1 BILLION (1,000,000,000) $MKAT </span>
+                <div class="p-bars">
+                  <div class="col-lg-11 p-bar">
+                    <span>74% Presale/Locked in Liquidity</span>
+                    <div class="progress">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: 74%"
+                        aria-valuenow="74"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
                   </div>
-                </div>
-                <div class="col-lg-11 p-bar">
-                  <span>6% Burn </span>
-                  <div class="progress">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      style="width: 6%"
-                      aria-valuenow="6"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
+                  <div class="col-lg-11 p-bar">
+                    <span>6% Burn </span>
+                    <div class="progress">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: 6%"
+                        aria-valuenow="6"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
                   </div>
-                </div>
-                <div class="col-lg-10 p-bar">
-                  <span>5% Marketing & Airdrop </span>
-                  <div class="progress">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      style="width: 5%"
-                      aria-valuenow="5"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
+                  <div class="col-lg-10 p-bar">
+                    <span>5% Marketing & Airdrop </span>
+                    <div class="progress">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: 5%"
+                        aria-valuenow="5"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
                   </div>
-                </div>
-                <div class="col-lg-10 p-bar">
-                  <span>5% Team </span>
-                  <div class="progress">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      style="width: 5%"
-                      aria-valuenow="5"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
+                  <div class="col-lg-10 p-bar">
+                    <span>5% Team </span>
+                    <div class="progress">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: 5%"
+                        aria-valuenow="5"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
                   </div>
-                </div>
-                <div class="col-lg-10 p-bar">
-                  <span>10% Community Reserve </span>
-                  <div class="progress">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      style="width: 5%"
-                      aria-valuenow="5"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
+                  <div class="col-lg-10 p-bar">
+                    <span>10% Community Reserve </span>
+                    <div class="progress">
+                      <div
+                        class="progress-bar"
+                        role="progressbar"
+                        style="width: 5%"
+                        aria-valuenow="5"
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      ></div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="col-lg-5 text-center mob-hide sm-hide col-md-6">
+              <div>
+                <img src="@/assets/images/moonkat1.jpg" alt="about-img" class="img-fluid" />
+              </div>
+            </div>
           </div>
-          <div class="col-lg-5 text-center mob-hide sm-hide col-md-6">
-            <div>
-              <img src="images/moonkat1.jpg" alt="about-img" class="img-fluid" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-10 m-auto about-item col-md-12">
+          <div class="row">
+            <div class="col-lg-4 col-sm-8 m-sm-auto text-center col-md-5">
+              <div class="">
+                <img src="@/assets/images/nft.svg" alt="about-img" class="img-fluid" />
+              </div>
+            </div>
+            <div class="col-lg-1 col-md-1"></div>
+            <div class="col-lg-7 col-md-6">
+              <div class="about-txt">
+                <span class="separet-span">MoonKat NFTS</span>
+                <p>
+                  Our superb use case enables all kitty lovers to mint unique NFTS for their pets backed by a real-world
+                  product like T-shirts, sweatshirts, hats, masks and many, many more! These NFTs can be further traded
+                  on the platform.
+                  <br />
+                  COMING SOON!
+                </p>
+                <span class="separet-span">The Kitty Foundation</span>
+                <p class="separate-p tab-hider">
+                  We are neither blind nor ignorant to the harsh treatments given to kitties worldwide, especially
+                  physically deformed kitties , we believe every kitty is unique in its own way. Your funds will go to
+                  the different feline charities world wide
+                </p>
+
+                <a href="#" onclick="donateUs()">Donate</a>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-lg-10 m-auto about-item col-md-12">
-        <div class="row">
-          <div class="col-lg-4 col-sm-8 m-sm-auto text-center col-md-5">
-            <div class="">
-              <img src="images/nft.svg" alt="about-img" class="img-fluid" />
-            </div>
-          </div>
-          <div class="col-lg-1 col-md-1"></div>
-          <div class="col-lg-7 col-md-6">
-            <div class="about-txt">
-              <span class="separet-span">MoonKat NFTS</span>
-              <p>
-                Our superb use case enables all kitty lovers to mint unique NFTS for their pets backed by a real-world
-                product like T-shirts, sweatshirts, hats, masks and many, many more! These NFTs can be further traded on
-                the platform.
-                <br />
-                COMING SOON!
-              </p>
-              <span class="separet-span">The Kitty Foundation</span>
-              <p class="separate-p tab-hider">
-                We are neither blind nor ignorant to the harsh treatments given to kitties worldwide, especially
-                physically deformed kitties , we believe every kitty is unique in its own way. Your funds will go to the
-                different feline charities world wide
-              </p>
-              <!-- <a href="#">Donate</a> -->
-              <a href="#" onclick="CopyToClipboard('0x193ED1547ef35e0CbdF8c785E4C5D64699e2A6B9');return false;"
-                >Donate</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </section>
 </template>
 
 <script>
 export default {
   name: "Tokenomics",
+  data() {
+    return {
+      donateWallet: "0x193ED1547ef35e0CbdF8c785E4C5D64699e2A6B9",
+    };
+  },
+  methods: {
+    donateUs(e) {
+      e.preventDefault();
+    },
+  },
 };
 </script>
 
-<style>
-#about {
-  padding: 80px 0;
-}
-
+<style scoped>
 .about-header h3:after {
   width: 192px;
 }
 
-.about-img {
-  background: #151515;
-  -webkit-box-shadow: 0 31px 35px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 31px 35px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
+.about-header h3:after {
+  width: 192px;
 }
 
 .about-pa {
@@ -153,10 +156,6 @@ export default {
 
 .about-item {
   padding-top: 90px;
-}
-
-.about-img {
-  position: relative;
 }
 
 .ai-one::after {
@@ -211,7 +210,7 @@ export default {
 }
 
 .separet-span {
-  font-family: pr;
+  font-family: Poppins, Helvetica, sans-serif;
   font-size: 19px;
   color: #ff7657;
 }
@@ -221,7 +220,7 @@ export default {
 }
 
 .about-txt h3 {
-  font-family: pb;
+  font-family: Poppins-Bold, Helvetica, sans-serif;
   font-size: 26px;
   color: #fff;
   padding-bottom: 16px;
@@ -244,7 +243,7 @@ export default {
   background: #ff7657;
   color: #fff;
   font-size: 18px;
-  font-family: pb;
+  font-family: Poppins-Bold, Helvetica, sans-serif;
   position: relative;
 }
 
