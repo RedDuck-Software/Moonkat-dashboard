@@ -88,21 +88,6 @@ p {
     height: 100%;
 }
 
-@font-face {
-    src: url(../fonts/Poppins-Bold.ttf);
-    font-family: pb;
-}
-
-@font-face {
-    src: url(../fonts/Poppins-Regular.ttf);
-    font-family: pr;
-}
-
-@font-face {
-    src: url(../fonts/Poppins-Light.ttf);
-    font-family: pl;
-}
-
 /* model */
 .modal-content {
     background: #121212;

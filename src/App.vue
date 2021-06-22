@@ -8,6 +8,7 @@
 
 <script>
 import Header from "./components/Header";
+import styles from "./assets/styles/style.css";
 
 export default {
   name: "App",
@@ -17,9 +18,6 @@ export default {
 };
 </script>
 
-<style src="@/assets/responsive.css"></style>
-<style src="@/assets/custom__style.css"></style>
-<style src="@/assets/style.css"></style>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -28,5 +26,20 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+@font-face {
+  font-family: "Poppins-Light";
+  src: local("Poppins-Light"), url(./assets/fonts/Poppins-Light.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: local("Poppins"), url(./assets/fonts/Poppins-Regular.ttf) format("truetype");
+}
+
+@font-face {
+  font-family: "Poppins-Bold";
+  src: local("Poppins-Bold"), url(./assets/fonts/Poppins-Bold.ttf) format("truetype");
 }
 </style>

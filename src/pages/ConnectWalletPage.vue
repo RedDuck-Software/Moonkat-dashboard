@@ -1,4 +1,4 @@
-<template> </template>
+<template> <div>dvds</div></template>
 
 <script>
 export default {

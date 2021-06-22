@@ -1,88 +1,83 @@
 <template>
-
-    <div class="container">
-      <div class="row header-text text-center">
-        <div class="col-lg-12">
-          <h3>FEA<span>TU</span>RES</h3>
-        </div>
+  <div class="container">
+    <div class="row header-text text-center">
+      <div class="col-lg-12">
+        <h3>FEA<span>TU</span>RES</h3>
       </div>
-      <div class="row over-pa">
-        <div class="col-lg-9 col-sm-12 m-auto">
-          <div class="row">
-            <div class="col-lg-6 col-sm-6">
-              <div class="over-item txt-right unique-style3">
-                <i class="fa fa-rocket over-i" aria-hidden="true"></i>
-                <div class="break"></div>
-                <h3>Community Built</h3>
-                <p>
-                  70% of tokens will be used for presale and to provide initial liquidity.
-                  To ensure a fair and complete distribution, the Moonkat team owns 5% of
-                  all tokens which is cliffed for six (6) months. For the ﬁrst 6 moths everyone
-                  has to buy on the open market.
-                </p>
-              </div>
+    </div>
+    <div class="row over-pa">
+      <div class="col-lg-9 col-sm-12 m-auto">
+        <div class="row">
+          <div class="col-lg-6 col-sm-6">
+            <div class="over-item txt-right unique-style3">
+              <i class="fa fa-rocket over-i" aria-hidden="true"></i>
+              <div class="break"></div>
+              <h3>Community Built</h3>
+              <p>
+                70% of tokens will be used for presale and to provide initial liquidity. To ensure a fair and complete
+                distribution, the Moonkat team owns 5% of all tokens which is cliffed for six (6) months. For the ﬁrst 6
+                moths everyone has to buy on the open market.
+              </p>
             </div>
-            <div class="col-lg-6 col-sm-6">
-              <div class="over-item txt-left unique-style">
-                <i class="fa fa-ban over-i" aria-hidden="true"></i>
-                <div class="break"></div>
-                <h3>Anti Pump-Dump-Exit Whales</h3>
-                <p>
-                  Transactions (sell/buy) that trade more than 0.1% of the
-                  total supply will be rejected. Whales who don’t want to be
-                  taxed 6% to make a transfer (between 2 wallets) that is
-                  larger than 0.1% of the total supply, can use the atomic
-                  transfer feature and be charged for 2.0 BNB without being taxed 6%.
-                </p>
-              </div>
+          </div>
+          <div class="col-lg-6 col-sm-6">
+            <div class="over-item txt-left unique-style">
+              <i class="fa fa-ban over-i" aria-hidden="true"></i>
+              <div class="break"></div>
+              <h3>Anti Pump-Dump-Exit Whales</h3>
+              <p>
+                Transactions (sell/buy) that trade more than 0.1% of the total supply will be rejected. Whales who don’t
+                want to be taxed 6% to make a transfer (between 2 wallets) that is larger than 0.1% of the total supply,
+                can use the atomic transfer feature and be charged for 2.0 BNB without being taxed 6%.
+              </p>
             </div>
-            <div class="col-lg-6 col-sm-6">
-              <div class="over-item txt-right unique-style2">
-                <i class="fa fa-money over-i" aria-hidden="true"></i>
-                <div class="break"></div>
-                <h3>Automatic Liquidity Pool</h3>
-                <p>
-                  2% of every transaction contributes toward automatically generating further liquidity on Pancake Swap.
-                  Beneﬁting long term $MKAT holders the most!
-                </p>
-              </div>
+          </div>
+          <div class="col-lg-6 col-sm-6">
+            <div class="over-item txt-right unique-style2">
+              <i class="fa fa-money over-i" aria-hidden="true"></i>
+              <div class="break"></div>
+              <h3>Automatic Liquidity Pool</h3>
+              <p>
+                2% of every transaction contributes toward automatically generating further liquidity on Pancake Swap.
+                Beneﬁting long term $MKAT holders the most!
+              </p>
             </div>
-            <div class="col-lg-6 col-sm-6">
-              <div class="over-item txt-right unique-style2">
-                <i class="fa fa-star over-i" aria-hidden="true"></i>
-                <div class="break"></div>
-                <h3>EARN $BNB REWARDS</h3>
-                <p>
-                  4% of every transaction is taken and re-distributed to
-                  moonkat holders in $BNB. $MKAT holders can claim their BNB
-                  at the end of their weekly cycle.
-                </p>
-              </div>
+          </div>
+          <div class="col-lg-6 col-sm-6">
+            <div class="over-item txt-right unique-style2">
+              <i class="fa fa-star over-i" aria-hidden="true"></i>
+              <div class="break"></div>
+              <h3>EARN $BNB REWARDS</h3>
+              <p>
+                4% of every transaction is taken and re-distributed to moonkat holders in $BNB. $MKAT holders can claim
+                their BNB at the end of their weekly cycle.
+              </p>
             </div>
-            <div class="col-lg-6 col-sm-6">
-              <div class="over-item txt-left unique-style4">
-                <i class="fa fa-lock over-i" aria-hidden="true"></i>
-                <div class="break"></div>
-                <h3>No Locked Staking</h3>
-                <p>
-                  Users don't have to lock up their tokens to claim their rewards,
-                  just hold MKAT to claim BNB weekly from DApp
-                </p>
-              </div>
+          </div>
+          <div class="col-lg-6 col-sm-6">
+            <div class="over-item txt-left unique-style4">
+              <i class="fa fa-lock over-i" aria-hidden="true"></i>
+              <div class="break"></div>
+              <h3>No Locked Staking</h3>
+              <p>
+                Users don't have to lock up their tokens to claim their rewards, just hold MKAT to claim BNB weekly from
+                DApp
+              </p>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-name: "Features"
-}
+  name: "Features",
+};
 </script>
 
 <style scoped>
-
 #overview {
   padding: 80px 0;
 }
@@ -93,8 +88,8 @@ name: "Features"
 
 .over-item {
   background: #161616;
-  -webkit-box-shadow: 0 31px 35px rgba(0, 0, 0, .1);
-  box-shadow: 0 31px 35px rgba(0, 0, 0, .1);
+  -webkit-box-shadow: 0 31px 35px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 31px 35px rgba(0, 0, 0, 0.1);
   padding: 35px 31px;
   margin-top: 30px;
 }
@@ -106,7 +101,7 @@ name: "Features"
 
 .unique-style::after {
   position: absolute;
-  content: '';
+  content: "";
   top: 50%;
   right: -145px;
   height: 2px;
@@ -121,7 +116,7 @@ name: "Features"
 
 .unique-style::before {
   position: absolute;
-  content: '';
+  content: "";
   top: 50%;
   right: -152px;
   height: 10px;
@@ -136,7 +131,7 @@ name: "Features"
 
 .unique-style2:after {
   position: absolute;
-  content: '';
+  content: "";
   top: 50%;
   left: -170px;
   height: 2px;
@@ -151,7 +146,7 @@ name: "Features"
 
 .unique-style2:before {
   position: absolute;
-  content: '';
+  content: "";
   top: 50%;
   left: -171px;
   height: 10px;
@@ -166,7 +161,7 @@ name: "Features"
 
 .unique-style3::after {
   position: absolute;
-  content: '';
+  content: "";
   top: -70px;
   left: 20px;
   height: 230px;
@@ -178,7 +173,7 @@ name: "Features"
 
 .unique-style3::before {
   position: absolute;
-  content: '';
+  content: "";
   top: -76px;
   left: 16px;
   height: 10px;
@@ -190,7 +185,7 @@ name: "Features"
 
 .unique-style4::after {
   position: absolute;
-  content: '';
+  content: "";
   bottom: -105px;
   right: 20px;
   height: 230px;
@@ -202,7 +197,7 @@ name: "Features"
 
 .unique-style4::before {
   position: absolute;
-  content: '';
+  content: "";
   bottom: -106px;
   right: 17px;
   height: 10px;
@@ -223,7 +218,7 @@ name: "Features"
 
 .header-text h3:after {
   position: absolute;
-  content: '';
+  content: "";
   bottom: 0;
   left: 50%;
   -webkit-transform: translateX(-50%);
@@ -232,7 +227,6 @@ name: "Features"
   width: 240px;
   height: 2px;
   background: #1d1d1d;
-
 }
 
 .header-text h3 span {
@@ -289,5 +283,4 @@ over-btn a i {
 .txt-left p {
   padding-right: 20px;
 }
-
 </style>
