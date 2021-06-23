@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header />
+    <Header v-if="!$route.meta.hideNavigation" />
     <router-view></router-view>
     <!--    <Preloader />-->
   </div>

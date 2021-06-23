@@ -3,6 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 
 import Home from "./pages/Home.vue";
 import ConnectWalletPage from "./pages/ConnectWalletPage.vue";
+import Dashboard from "./pages/Dashboard.vue";
 
 Vue.use(VueRouter);
 
@@ -13,7 +14,8 @@ const routes: RouteConfig[] = [
     name: "Home",
   },
 
-  { path: "/connect-wallet", component: ConnectWalletPage },
+  { path: "/connect-wallet", component: ConnectWalletPage, meta: { hideNavigation: true } },
+  { path: "/dashboard", component: Dashboard, meta: { hideNavigation: true } },
 ];
 
 const router: VueRouter = new VueRouter({

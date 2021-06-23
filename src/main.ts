@@ -4,6 +4,8 @@ import "bootstrap/dist/css/bootstrap.css";
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./routes";
+import store from "./store";
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faUserSecret } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -21,4 +23,5 @@ new Vue({
   components: { App },
   render: h => h(App),
   router,
+  store,
 });

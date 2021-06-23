@@ -1,0 +1,55 @@
+<template>
+  <div class="moonkat-sidebar">
+    <div class="logo-and-buy">
+      <div class="text-center"><img src="@/assets/images/moonKat.jpg" class="logo" /></div>
+      <div class="mrat-text hide-on-mobile">moonkat</div>
+      <div class="mrat-desc">Earn BNB by Holding MKAT</div>
+      <div class="button-buy-mrat hide-on-mobile">
+        <a href="#" target="_blank" class="button-custom-new button-sidebar"
+          ><i class="fa fa-shopping-cart"></i> BUY $MKAT
+        </a>
+      </div>
+    </div>
+    <div class="address-info">
+      <div class="text-1 hide-on-mobile">Address information</div>
+      <div class="text-2 hide-on-mobile">Your address</div>
+      <div id="myAddress" class="text-3 hide-on-mobile">
+        <div class="d-flex">
+          <span id="my-address" class="truncate"></span>
+        </div>
+      </div>
+      <div class="text-4 hide-on-mobile">
+        <span id="copy-address" onclick="copyAddress()">
+          <span style="margin-right: 3px;"> <i class="fa fa-clone"></i></span> Copy address
+        </span>
+        <a id="bscscan" href="https://bscscan.com/address/" target="_blank" style="margin-left: 10px;"
+          ><span style="margin-right: 3px;"><i class="fa fa-clone"></i></span> View on BscScan Explorer
+        </a>
+      </div>
+      <div class="text-2">Your MKAT balance:</div>
+      <div class="text-3">
+        MKAT
+        <span> <span id="mkat-balance"></span> </span><br />
+        (
+        <span>
+          0.00
+        </span>
+        $)
+      </div>
+    </div>
+    <div class="button-logout-wrapper hide-on-mobile " onclick="logout()" style="cursor: pointer;">
+      <a target="_blank" class="button-custom-new button-sidebar"><i class="fa fa-sign-out"></i> LOGOUT </a>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "Sidebar",
+  mounted() {
+    console.log(localStorage.contract);
+  },
+};
+</script>
+
+<style scoped></style>

@@ -20,9 +20,17 @@ import Team from "@/components/Team";
 import Media from "@/components/Media";
 import Contacts from "@/components/Contacts";
 import Footer from "@/components/Footer";
+import { mapGetters } from "vuex";
+
 export default {
   name: "Home",
   components: { Footer, Contacts, Media, Team, RoadMap, Tokenomics, Features, Banner },
+  computed: {
+    ...mapGetters(["signerAddress", "contract"]),
+  },
+  mounted() {
+    // console.log(this.signer, this.signerAddress, this.contract);
+  },
 };
 </script>
 
