@@ -1,4 +1,4 @@
-export const CONTRACT_ADDRESS = "0x7d8a3198575763bff7e17d1d392de0e6a48700dc";
+export const CONTRACT_ADDRESS = "0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce";
 
 export const erc20TokenContractAbi = [
   {
