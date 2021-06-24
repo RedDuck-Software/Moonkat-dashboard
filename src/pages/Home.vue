@@ -26,7 +26,7 @@ export default {
   name: "Home",
   components: { Footer, Contacts, Media, Team, RoadMap, Tokenomics, Features, Banner },
   computed: {
-    ...mapGetters(["signerAddress", "contract"]),
+    ...mapGetters(["signerAddress"]),
   },
   mounted() {
     // console.log(this.signer, this.signerAddress, this.contract);

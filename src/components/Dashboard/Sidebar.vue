@@ -15,21 +15,26 @@
       <div class="text-2 hide-on-mobile">Your address</div>
       <div id="myAddress" class="text-3 hide-on-mobile">
         <div class="d-flex">
-          <span id="my-address" class="truncate"></span>
+          <span id="my-address" ref="myAddr" class="truncate">{{ signerAddress }}</span>
+          <input id="testing-code" type="hidden" :value="signerAddress" />
         </div>
       </div>
       <div class="text-4 hide-on-mobile">
-        <span id="copy-address" onclick="copyAddress()">
+        <span id="copy-address" @click="copyAddress()">
           <span style="margin-right: 3px;"> <i class="fa fa-clone"></i></span> Copy address
         </span>
-        <a id="bscscan" href="https://bscscan.com/address/" target="_blank" style="margin-left: 10px;"
+        <a
+          id="bscscan"
+          :href="`https://bscscan.com/address/${signerAddress}`"
+          target="_blank"
+          style="margin-left: 10px;"
           ><span style="margin-right: 3px;"><i class="fa fa-clone"></i></span> View on BscScan Explorer
         </a>
       </div>
       <div class="text-2">Your MKAT balance:</div>
       <div class="text-3">
         MKAT
-        <span> <span id="mkat-balance"></span> </span><br />
+        <span> {{ myMkatBalance }} </span><br />
         (
         <span>
           0.00
@@ -44,10 +49,54 @@
 </template>
 
 <script>
+import { ContractFactory, FixedNumber } from "ethers";
+import { mapGetters } from "vuex";
+import BigNumber from "bignumber.js";
+import { formatNumberWithSpace } from "@/utils/utils";
+import MetamaskService from "@/MetamaskService";
+
+const service = new MetamaskService();
+
 export default {
   name: "Sidebar",
+  props: {
+    contract: {
+      type: ContractFactory,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      canCopy: false,
+      myMkatBalance: "0.00",
+    };
+  },
+  computed: {
+    ...mapGetters(["signerAddress"]),
+  },
+  watch: {
+    contract() {
+      this.loadContractInfo();
+    },
+  },
   mounted() {
-    console.log(localStorage.contract);
+    this.canCopy = !!navigator.clipboard;
+    this.loadContractInfo();
+
+    setTimeout(async function() {
+      await this.loadContractInfo();
+    }, 600000);
+  },
+  methods: {
+    async loadContractInfo() {
+      const service = new MetamaskService();
+      this.myMkatBalance = await service.getBalance(this.signerAddress);
+    },
+    async copyAddress() {
+      const address = this.$refs.myAddr;
+      await navigator.clipboard.writeText(address.innerHTML);
+      alert("Copied!");
+    },
   },
 };
 </script>

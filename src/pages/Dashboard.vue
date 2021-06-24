@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-3">
-          <Sidebar />
+          <Sidebar :contract="contract" />
         </div>
         <div class="col-sm-9">
           <div class="row">
@@ -69,12 +69,10 @@
                             <img src="@/assets/images/Max_trans.png" class="image-reward-pool" />
                           </div>
                           <div class="title-2">BNB <span class="card-panel-num"> </span></div>
-                          <br />
-                          <div class="title-2">Gift : $MKAT <span class="card-panel-num"> 200 </span></div>
                         </div>
                         <div class="col-sm-9 p-2">
                           <div class="title-1">
-                            My reward: <span class="bold"><span id="bnb-reward"></span> BNB</span>
+                            My reward: <span class="bold">{{ myBnbReward }} BNB</span>
                           </div>
                           <div class="title-noted">
                             *pool is always changing based on buys, sells, and collects by others, learn more here
@@ -87,10 +85,10 @@
                             <div>
                               <button
                                 id="claim-button"
-                                disabled="true"
-                                onclick="claimMyReward()"
                                 type="button"
+                                :disabled="myBnbReward === '0'"
                                 class="el-button button-custom-new el-button--default el-button--medium is-disabled"
+                                @click="claimMyReward()"
                               >
                                 <span><i class="fa fa-gift"></i> Claim My Reward </span>
                               </button>
@@ -106,9 +104,10 @@
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Max Transaction Amount</div>
                             <div class="text-2">
-                              <span id="max-mkat-tx">1,000,000</span><span class="card-panel-num"> MKAT </span
-                              ><a><i class="el-icon-document-copy"></i></a><span> | </span><span>2.6</span
-                              ><span class="card-panel-num"> BNB </span><a><i class="el-icon-document-copy"></i></a>
+                              <span id="max-mkat-tx">{{ maxMkatTx }}</span
+                              ><span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a
+                              ><span> | </span><span>2.6</span><span class="card-panel-num"> BNB </span
+                              ><a><i class="el-icon-document-copy"></i></a>
                             </div>
                           </div>
                         </div>
@@ -414,6 +413,7 @@ import { mapGetters } from "vuex";
 import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
+import axios from "axios";
 
 export default {
   name: "Dashboard",
@@ -422,18 +422,37 @@ export default {
     return {
       contract: null,
       activeItem: "one",
+      maxMkatTx: null,
+      myBnbReward: "0",
+      estimatedGas: {},
+      myMkatBalance: null,
     };
   },
   computed: {
     ...mapGetters(["signerAddress"]),
   },
+  watch: {
+    myBnbReward() {},
+  },
   mounted() {
     this.loadContractInfo();
+    setTimeout(async function() {
+      await this.getBnbReward(new MetamaskService());
+    }, 600000);
   },
   methods: {
     async loadContractInfo() {
-      this.contract = await MetamaskService.getContractInstance(CONTRACT_ADDRESS);
-      console.log(this.contract);
+      const service = new MetamaskService();
+      this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
+      this.maxMkatTx = await service.getMaxTx();
+      // this.myBnbReward = await service.getBnbReward(this.signerAddress);
+      this.myMkatBalance = await service.getBalance(this.signerAddress);
+      await this.getBnbReward(service);
+
+      // console.log(gasLimitBN);
+    },
+    async getBnbReward(service) {
+      // this.myBnbReward = await service.getBnbReward(this.signerAddress);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;
@@ -441,6 +460,64 @@ export default {
     setActive(menuItem) {
       this.activeItem = menuItem;
     },
+    async claimMyReward() {
+      const txResponse = await this.contract.claimBNBReward();
+      const txReceipt = await txResponse.wait();
+
+      console.log({ txResponse });
+      console.log({ txReceipt });
+
+      return txReceipt;
+
+      // const txReceipt = await txResponse.wait()
+      // return {transaction: txReceipt.transactionHash}
+    },
+    // async getGas() {
+    //   let gasLimit = 21000;
+    //   // random address just to estimate gas
+    //   const receiver = "0xF231C3443c2725E534c828B1e42e71c16875d0f3"; // TBD - replace with our address - estimate how crucial it is
+    //
+    //   const gasLimitBN = this.myBnbReward
+    //     ? await this.contract.estimateGas.transfer(receiver, this.myBnbReward, {
+    //         from: this.signerAddress,
+    //       })
+    //     : "0.00";
+    //
+    //   gasLimit = gasLimitBN.toNumber();
+    //
+    //   //   if (coin.value.toLowerCase() !== "eth") {
+    //   //     const amountToSend = this.amountToSend;
+    //   //     const contractInstance = await this.getContractInstance(coin.contractAddress);
+    //   //     const calculatedTransferValue = calculateTransferValue(contractInstance, amountToSend);
+    //   //
+    //   //     // random address just to estimate gas
+    //   //     const receiver = "0xF231C3443c2725E534c828B1e42e71c16875d0f3"; // TBD - replace with our address - estimate how crucial it is
+    //   //     const sender = await provider.getSigner().getAddress();
+    //   //
+    //   //     // using the promise
+    //   //     const gasLimitBN = await contractInstance.estimateGas.transfer(receiver, calculatedTransferValue, {
+    //   //       from: sender,
+    //   //     });
+    //   //     gasLimit = gasLimitBN.toNumber();
+    //   //
+    //   //     // console.log('fetched gas limit to be', gasLimit)
+    //   //   }
+    //
+    //   const gasPriceResponse = await axios.get(
+    //     "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=M18A5B2C77P86CC29B34NT15H7SDWU51Y2"
+    //   );
+    //
+    //   console.log(gasPriceResponse);
+    //   //
+    //   // const med = gasPriceResponse.data.result.ProposeGasPrice * 1_000_000_000;
+    //   //
+    //   // const gasInfo = {
+    //   //   gasLimit: gasLimit,
+    //   //   mediumGasPrice: med,
+    //   // };
+    //   //
+    //   // this.estimatedGas = gasInfo;
+    // },
   },
 };
 </script>

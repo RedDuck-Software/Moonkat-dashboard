@@ -63,7 +63,7 @@ import { mapGetters } from "vuex";
 export default {
   name: "WalletConnect",
   computed: {
-    ...mapGetters(["signerAddress", "signer"]),
+    ...mapGetters(["signerAddress"]),
   },
   mounted() {
     if (!window.ethereum) {
@@ -102,6 +102,14 @@ export default {
         const signer = await provider.getSigner();
         const address = await signer.getAddress();
         this.$store.commit("updateSignerAddress", address);
+        provider.on("network", (newNetwork, oldNetwork) => {
+          // When a Provider makes its initial connection, it emits a "network"
+          // event with a null oldNetwork along with the newNetwork. So, if the
+          // oldNetwork exists, it represents a changing network
+          if (oldNetwork) {
+            window.location.reload();
+          }
+        });
       } else {
         alert("Please install MetaMask!");
       }

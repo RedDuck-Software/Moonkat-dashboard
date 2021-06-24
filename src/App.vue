@@ -35,6 +35,13 @@ export default {
 </style>
 
 <style>
+a,
+a:focus,
+a:hover {
+  text-decoration: none;
+  outline: 0;
+}
+
 .team-pa {
   padding-top: 85px;
 }
