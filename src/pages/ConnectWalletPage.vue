@@ -4,6 +4,7 @@
 
 <script>
 import WalletConnect from "@/components/WalletConnect";
+import { CONTRACT_ADDRESS } from "@/constants";
 export default {
   name: "ConnectWalletPage",
   components: {
@@ -11,7 +12,7 @@ export default {
   },
   data() {
     return {
-      CONTRACT_ADDRESS: constants.CONTRACT_ADDRESS,
+      CONTRACT_ADDRESS: CONTRACT_ADDRESS,
     };
   },
 };
