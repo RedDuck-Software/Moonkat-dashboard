@@ -11,7 +11,7 @@ export default {
   },
   data() {
     return {
-      CONTRACT_ADDRESS: "0xcaab3e070517f250c3be78e5b427a66995effb89",
+      CONTRACT_ADDRESS: constants.CONTRACT_ADDRESS,
     };
   },
 };
