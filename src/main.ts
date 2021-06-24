@@ -1,5 +1,6 @@
 import "@/assets/styles/style.css";
 import "@/assets/styles/custom__style.css";
+import "@/assets/styles/responsive.css";
 import "bootstrap/dist/css/bootstrap.css";
 import Vue from "vue";
 import App from "./App.vue";
