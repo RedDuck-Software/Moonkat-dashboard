@@ -1,5 +1,5 @@
 import { erc20TokenContractAbi, CONTRACT_ADDRESS } from "./constants";
-import { ethers } from "ethers";
+import { ethers, Contract } from "ethers";
 import { formatNumberWithSpace } from "./utils/utils";
 
 declare global {
@@ -11,7 +11,7 @@ declare global {
 const provider = new ethers.providers.Web3Provider(window.ethereum);
 
 export default class MetamaskService {
-  // contract?: Contract;
+  contract?: Contract;
   // maxMkatTx?: string;
   // myBnbReward?: string;
 
@@ -21,19 +21,35 @@ export default class MetamaskService {
   }
 
   public async getMaxTx() {
-    const contract = await this.getContractInstance(CONTRACT_ADDRESS);
-    console.log(contract._maxTxAmount().toString());
-    return formatNumberWithSpace(contract._maxTxAmount().toString());
+    if (!this.contract) {
+      this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+    }
+
+    const maxTxAmount = await this.contract._maxTxAmount();
+    console.log("getMaxTx", maxTxAmount);
+
+    return maxTxAmount;
   }
   public async getBnbReward(addr: string) {
+    if (!this.contract) {
+      this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+    }
+    console.log("getBnbReward", this.contract);
     const contract = await this.getContractInstance(CONTRACT_ADDRESS);
     const bnbReward = await contract.calculateBNBReward(addr);
     return formatNumberWithSpace(bnbReward.toString());
   }
 
   public async getBalance(addr: string) {
-    const contract = await this.getContractInstance(CONTRACT_ADDRESS);
-    const tokenBalance = await contract.balanceOf(addr);
-    return formatNumberWithSpace(tokenBalance.toString());
+    if (!this.contract) {
+      this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+    }
+    console.log("getBalance", addr);
+
+    const tokenBalance = await this.contract.balanceOf(addr);
+    const tokenBalanceStr = ethers.utils.hexlify(ethers.BigNumber.from("" + tokenBalance));
+
+    console.log("getBalance tokenBalanceStr", tokenBalanceStr);
+    // return formatNumberWithSpace(tokenBalance.toString());
   }
 }

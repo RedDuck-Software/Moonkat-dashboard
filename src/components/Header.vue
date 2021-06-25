@@ -14,8 +14,6 @@
         <i class="fa fa-bars" aria-hidden="true"></i>
       </button>
       <div class="header-social">
-        <font-awesome-icon icon="twitter" />
-
         <a href="https://twitter.com/moonkatBSC"><i class="fa fa-twitter" aria-hidden="true"></i></a>
         <a href="https://t.me/moonkat_finance"><i class="fa fa-telegram" aria-hidden="true"></i></a>
         <a href="https://medium.com/@moonkatfinance"><i class="fa fa-medium" aria-hidden="true"></i></a>
