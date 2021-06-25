@@ -11,7 +11,7 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div class="mt-3">
-                    <div class=" tab-card-header">
+                    <div class="tab-card-header">
                       <ul id="myTab" class="nav nav-tabs card-header-tabs" role="tablist">
                         <li class="nav-item">
                           <a
@@ -58,9 +58,9 @@
                 </div>
                 <div class="col-sm-6"></div>
               </div>
-              <div class=" mt-3 ">
+              <div class="mt-3">
                 <div id="myTabContent" class="tab-content">
-                  <div id="one" class="tab-pane fade  p-3 claim-reward" :class="{ 'active show': isActive('one') }">
+                  <div id="one" class="tab-pane fade p-3 claim-reward" :class="{ 'active show': isActive('one') }">
                     <div class="claim-reward-content">
                       <div class="row">
                         <div class="col-sm-3 p-1">
@@ -119,12 +119,7 @@
                           </div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Total Liquidity Pool</div>
-                            <div class="text-2">
-                              <span>$</span
-                              ><span class="card-panel-num">
-                                3,044,668.38
-                              </span>
-                            </div>
+                            <div class="text-2"><span>$</span><span class="card-panel-num"> 3,044,668.38 </span></div>
                           </div>
                         </div>
                       </div>
@@ -144,12 +139,7 @@
                           <div class="col-sm-4 p-1"><img src="@/assets/images/moonKat.jpg" class="img-icon" /></div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Current 100,000 MKAT price</div>
-                            <div class="text-2">
-                              <span></span
-                              ><span class="card-panel-num">
-                                0.26 BNB
-                              </span>
-                            </div>
+                            <div class="text-2"><span></span><span class="card-panel-num"> 0.26 BNB </span></div>
                           </div>
                         </div>
                       </div>
@@ -321,7 +311,7 @@
                             <a
                               href="#"
                               target="_blank"
-                              style="color: rgb(4, 171, 234);    font-size: 12px;word-break: break-all;"
+                              style="color: rgb(4, 171, 234); font-size: 12px; word-break: break-all"
                             >
                               ...
                             </a>
@@ -338,9 +328,7 @@
                           <div class="text-1">Market Cap</div>
                           <div class="text-2">
                             $
-                            <span class="card-panel-num">
-                              63,500
-                            </span>
+                            <span class="card-panel-num"> 63,500 </span>
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
@@ -358,17 +346,13 @@
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Current 100,000 MKAT</div>
                           <div class="text-2">
-                            <span class="card-panel-num">
-                              0.26 BNB
-                            </span>
+                            <span class="card-panel-num"> 0.26 BNB </span>
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Total Liquidity Pool</div>
                           <div class="text-2">
-                            <span class="card-panel-num">
-                              --------
-                            </span>
+                            <span class="card-panel-num"> -------- </span>
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
@@ -433,7 +417,7 @@ export default {
   },
   mounted() {
     this.loadContractInfo();
-    setTimeout(async function() {
+    setTimeout(async function () {
       await this.getBnbReward(new MetamaskService());
     }, 600000);
   },
