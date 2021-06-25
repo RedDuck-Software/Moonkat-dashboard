@@ -437,7 +437,7 @@ export default {
       this.maxMkatTx = await service.getMaxTx();
       await this.getBnbReward(service);
       // this.myBnbRewardAfterTax = this.myBnbReward;
-      this.totalBnbInPool = await service.getPoolReservesBNB();
+      this.totalBnbInPool = utils.formatEther(await service.getPoolReservesBNB());
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
     async getBnbReward(service) { 

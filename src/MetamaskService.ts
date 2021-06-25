@@ -48,11 +48,11 @@ export default class MetamaskService {
   public async getMkatValueInBUSD(amount) {
     const contract = await this.getPancakeRouterContractInstance(await this.getPancakeRouterAddress());
 
-    const res = await contract.getAmountsOut(amount, [CONTRACT_ADDRESS, '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd', '0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7']);
+    const res = await contract.getAmountsOut(amount, [CONTRACT_ADDRESS, '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', '0x55d398326f99059ff775485246999027b3197955']);
 
     console.log("GET AMOUNTS OUT", res);
 
-    return res[3];
+    return res[1];
   }
 
   public async getPancakePairAddress() { 
