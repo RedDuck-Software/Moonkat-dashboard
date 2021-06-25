@@ -72,7 +72,7 @@
                         </div>
                         <div class="col-sm-9 p-2">
                           <div class="title-1">
-                            My reward: <span class="bold">{{ myBnbReward.toString() }} BNB</span>
+                            My reward: <span class="bold">{{ myBnbReward }} BNB</span>
                           </div>
                           <div class="title-noted">
                             *pool is always changing based on buys, sells, and collects by others, learn more here
@@ -80,9 +80,9 @@
                               ><a href="#" target="_blank"><i class="fa fa-question-circle"></i></a
                             ></span>
                           </div>
-                          <div class="title-2">
+                         <!--  <div class="title-2">
                             You will be received {{ myBnbRewardAfterTax.toString() }} BNB (after tax)
-                          </div>
+                          </div> -->
                           <div class="button-wrapper hide-on-mobile">
                             <div>
                               <button
@@ -395,6 +395,9 @@
 
 <script>
 import { mapGetters } from "vuex";
+
+var utils = require('ethers').utils;
+
 import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
@@ -433,12 +436,13 @@ export default {
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.maxMkatTx = await service.getMaxTx();
       await this.getBnbReward(service);
-      this.myBnbRewardAfterTax = this.myBnbReward;
-      this.totalBnbInPool = 0;
+      // this.myBnbRewardAfterTax = this.myBnbReward;
+      this.totalBnbInPool = await service.getPoolReservesBNB();
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
     async getBnbReward(service) { 
-      this.myBnbReward = await service.getBnbReward(this.signerAddress);
+      let reward = await service.getBnbReward(this.signerAddress);
+      this.myBnbReward  = utils.formatEther(reward);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;

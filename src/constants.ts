@@ -2,6 +2,31 @@ export const CONTRACT_ADDRESS = "0xb322BDd60C658BC4C3495faB86D3D11d2E8A7690";
 
 export const PANCAKE_CONTRACT_ADDRESS = "0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3";
 
+export const pancackePairContractAbi = [
+  {
+    inputs: [],
+    name: "getReserves",
+    outputs: [
+      {
+        internalType: "uint112",
+        name: "reserve0",
+        type: "uint112",
+      },
+      {
+        internalType: "uint112",
+        name: "reserve1",
+        type: "uint112",
+      },
+      {
+        internalType: "uint32",
+        name: "blockTimestampLast",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
 
 export const pancakeRouterContractAbi = [
   {

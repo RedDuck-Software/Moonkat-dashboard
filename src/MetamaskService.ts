@@ -1,4 +1,4 @@
-import { erc20TokenContractAbi, pancakeRouterContractAbi, CONTRACT_ADDRESS, PANCAKE_CONTRACT_ADDRESS } from "./constants";
+import { erc20TokenContractAbi, pancakeRouterContractAbi, pancackePairContractAbi ,CONTRACT_ADDRESS, PANCAKE_CONTRACT_ADDRESS } from "./constants";
 import { ethers, Contract } from "ethers";
 import { formatNumberWithSpace } from "./utils/utils";
 
@@ -27,6 +27,24 @@ export default class MetamaskService {
     return new ethers.Contract(pancakeContractAddress, pancakeRouterContractAbi, signer);
   }
 
+  public async getPancakePairContractInstance(pancakePairContractAddress: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    const signer = provider.getSigner();
+    return new ethers.Contract(pancakePairContractAddress, pancackePairContractAbi, signer);
+  }
+
+
+  public async getPoolReservesBNB() {
+    const contract = await this.getPancakePairContractInstance(await this.getPancakePairAddress());
+
+    const res = await contract.getReserves();
+
+    console.log("POOL RESERVES" +  res);
+
+    return res[0];
+  }
+
   public async getMkatValueInBUSD(amount) {
     const contract = await this.getPancakeRouterContractInstance(PANCAKE_CONTRACT_ADDRESS);
 
@@ -36,6 +54,13 @@ export default class MetamaskService {
 
     return res;
   }
+
+  public async getPancakePairAddress() { 
+    if (!this.contract) {
+      this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+    }
+    return await this.contract.pancakePair();
+  } 
 
   public async getMaxTx() { 
     if (!this.contract) {
