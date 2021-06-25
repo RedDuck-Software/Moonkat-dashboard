@@ -35,6 +35,8 @@ export default class MetamaskService {
       this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
     }
     console.log("getBnbReward", this.contract);
+    console.log("address: " + addr);
+    
     const contract = await this.getContractInstance(CONTRACT_ADDRESS);
     const bnbReward = await contract.calculateBNBReward(addr);
     return formatNumberWithSpace(bnbReward.toString());

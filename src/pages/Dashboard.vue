@@ -449,7 +449,7 @@ export default {
       // console.log(gasLimitBN);
     },
     async getBnbReward(service) {
-      // this.myBnbReward = await service.getBnbReward(this.signerAddress);
+      this.myBnbReward = await service.getBnbReward(this.signerAddress);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;
