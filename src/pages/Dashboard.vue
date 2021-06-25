@@ -81,7 +81,7 @@
                             ></span>
                           </div>
                           <div class="title-2">
-                            You will be received <!-- {{ myBnbRewardAfterTax.toString() }} --> BNB (after tax)
+                            You will be received {{ myBnbRewardAfterTax.toString() }} BNB (after tax)
                           </div>
                           <div class="button-wrapper hide-on-mobile">
                             <div>
@@ -409,6 +409,8 @@ export default {
       activeItem: "one",
       maxMkatTx: null,
       myBnbReward: "0",
+      myBnbRewardAfterTax: 0,
+      totalBnbInPool : 0,
       estimatedGas: {},
       myMkatBalance: null,
     };
@@ -430,14 +432,13 @@ export default {
       const service = new MetamaskService();
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.maxMkatTx = await service.getMaxTx();
-      this.myBnbReward = await service.getBnbReward(this.signerAddress);
-      this.myBnbRewardAfterTax = this.myBnbReward - (await this.contract.estimate.claimBNBReward());
-      this.totalBnbInPool = "0";
-      this.myMkatBalance = await service.getBalance(this.signerAddress);
-      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(this.myMkatBalance);
       await this.getBnbReward(service);
-      /*  */
-      // console.log(gasLimitBN);
+      this.myBnbRewardAfterTax = this.myBnbReward;
+      this.totalBnbInPool = 0;
+      console.log("total bnb in pool: " + this.totalBnbInPool);
+    },
+    async getBnbReward(service) { 
+      this.myBnbReward = await service.getBnbReward(this.signerAddress);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;
