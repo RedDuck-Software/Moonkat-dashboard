@@ -8,14 +8,14 @@ declare global {
   }
 }
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
-
 export default class MetamaskService {
   contract?: Contract;
   // maxMkatTx?: string;
   // myBnbReward?: string;
 
   public async getContractInstance(contractAddress: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
     const signer = provider.getSigner();
     return new ethers.Contract(contractAddress, erc20TokenContractAbi, signer);
   }
