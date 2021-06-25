@@ -1,4 +1,4 @@
-import { erc20TokenContractAbi, pancakeRouterContractAbi, CONTRACT_ADDRESS, PANCAKE_CONTRACT_ADDRESS } from "./constants";
+import { erc20TokenContractAbi, pancakeRouterContractAbi, pancackePairContractAbi ,CONTRACT_ADDRESS} from "./constants";
 import { ethers, Contract } from "ethers";
 import { formatNumberWithSpace } from "./utils/utils";
 
@@ -27,13 +27,51 @@ export default class MetamaskService {
     return new ethers.Contract(pancakeContractAddress, pancakeRouterContractAbi, signer);
   }
 
-  public async getMkatValueInBUSD(amount) { 
-    let contract = await this.getPancakeRouterContractInstance(PANCAKE_CONTRACT_ADDRESS);
+  public async getPancakePairContractInstance(pancakePairContractAddress: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-    return contract.getAmountsOut(amount,[CONTRACT_ADDRESS, 0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd, 0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7]);
+    const signer = provider.getSigner();
+    return new ethers.Contract(pancakePairContractAddress, pancackePairContractAbi, signer);
   }
 
-  public async getMaxTx() {
+
+  public async getPoolReservesBNB() {
+    const contract = await this.getPancakePairContractInstance(await this.getPancakePairAddress());
+
+    const res = await contract.getReserves();
+
+    console.log("POOL RESERVES" +  res);
+
+    return res[0];
+  }
+
+  public async getMkatValueInBUSD(amount) {
+    const contract = await this.getPancakeRouterContractInstance(await this.getPancakeRouterAddress());
+
+    const res = await contract.getAmountsOut(amount, [CONTRACT_ADDRESS, '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', '0x55d398326f99059ff775485246999027b3197955']);
+
+    console.log("GET AMOUNTS OUT", res);
+
+    return res[1];
+  }
+
+  public async getPancakePairAddress() { 
+    if (!this.contract) {
+      this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+    }
+    return await this.contract.pancakePair();
+  } 
+
+  public async getPancakeRouterAddress() {
+    if (!this.contract) {
+      this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+    }
+
+    return await this.contract.pancakeRouter();
+  }
+
+
+  public async getMaxTx() { 
     if (!this.contract) {
       this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
     }

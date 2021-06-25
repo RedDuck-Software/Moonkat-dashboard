@@ -72,7 +72,7 @@
                         </div>
                         <div class="col-sm-9 p-2">
                           <div class="title-1">
-                            My reward: <span class="bold">{{ myBnbReward.div(10 ** 18).toString() }} BNB</span>
+                            My reward: <span class="bold">{{ myBnbReward }} BNB</span>
                           </div>
                           <div class="title-noted">
                             *pool is always changing based on buys, sells, and collects by others, learn more here
@@ -80,7 +80,9 @@
                               ><a href="#" target="_blank"><i class="fa fa-question-circle"></i></a
                             ></span>
                           </div>
-                          <div class="title-2">You will be received {{ myBnbReward.div(10 ** 18).toString() }} BNB (after tax)</div>
+                         <!--  <div class="title-2">
+                            You will be received {{ myBnbRewardAfterTax.toString() }} BNB (after tax)
+                          </div> -->
                           <div class="button-wrapper hide-on-mobile">
                             <div>
                               <button
@@ -130,7 +132,9 @@
                           </div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Total BNB in liquidity pool</div>
-                            <div class="text-2"><span> {{ totalBnbInPool }} </span><span class="card-panel-num"> BNB </span></div>
+                            <div class="text-2">
+                              <span> {{ totalBnbInPool }} </span><span class="card-panel-num"> BNB </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -152,7 +156,7 @@
                     </div>
                     <div
                       class="sweet-modal-content sweet-modal-overlay theme-light sweet-modal-clickable"
-                      style="display: none;"
+                      style="display: none"
                     >
                       <div class="sweet-modal theme-light has-content is-alert">
                         <div class="sweet-box-actions">
@@ -209,7 +213,7 @@
                     <div class="form-wrapper">
                       <div class="text-main">
                         Disruptive Transfer between 2 wallets
-                        <span style="margin-left: 10px;"
+                        <span style="margin-left: 10px"
                           ><a href="#" target="_blank"><i class="el-icon-question"></i></a
                         ></span>
                       </div>
@@ -256,7 +260,7 @@
                     </div>
                     <div
                       class="sweet-modal-content sweet-modal-overlay theme-light sweet-modal-clickable"
-                      style="display: none;"
+                      style="display: none"
                     >
                       <div class="sweet-modal theme-light has-content is-alert">
                         <div class="sweet-box-actions">
@@ -391,6 +395,9 @@
 
 <script>
 import { mapGetters } from "vuex";
+
+var utils = require('ethers').utils;
+
 import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
@@ -405,6 +412,8 @@ export default {
       activeItem: "one",
       maxMkatTx: null,
       myBnbReward: "0",
+      myBnbRewardAfterTax: 0,
+      totalBnbInPool : 0,
       estimatedGas: {},
       myMkatBalance: null,
     };
@@ -426,14 +435,14 @@ export default {
       const service = new MetamaskService();
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.maxMkatTx = await service.getMaxTx();
-      this.myBnbReward = await service.getBnbReward(this.signerAddress);
-      this.myBnbRewardAfterTax = this.myBnbReward - (await this.contract.estimate.claimBNBReward());
-      this.totalBnbInPool = '0';
-      this.myMkatBalance = await service.getBalance(this.signerAddress);
-      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(myMkatBalance);
       await this.getBnbReward(service);
-/*  */
-      // console.log(gasLimitBN);
+      // this.myBnbRewardAfterTax = this.myBnbReward;
+      this.totalBnbInPool = utils.formatEther(await service.getPoolReservesBNB());
+      console.log("total bnb in pool: " + this.totalBnbInPool);
+    },
+    async getBnbReward(service) { 
+      let reward = await service.getBnbReward(this.signerAddress);
+      this.myBnbReward  = utils.formatEther(reward);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;

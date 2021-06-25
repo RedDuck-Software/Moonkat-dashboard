@@ -21,14 +21,10 @@
       </div>
       <div class="text-4 hide-on-mobile">
         <span id="copy-address" @click="copyAddress()">
-          <span style="margin-right: 3px;"> <i class="fa fa-clone"></i></span> Copy address
+          <span style="margin-right: 3px"> <i class="fa fa-clone"></i></span> Copy address
         </span>
-        <a
-          id="bscscan"
-          :href="`https://bscscan.com/address/${signerAddress}`"
-          target="_blank"
-          style="margin-left: 10px;"
-          ><span style="margin-right: 3px;"><i class="fa fa-clone"></i></span> View on BscScan Explorer
+        <a id="bscscan" :href="`https://bscscan.com/address/${signerAddress}`" target="_blank" style="margin-left: 10px"
+          ><span style="margin-right: 3px"><i class="fa fa-clone"></i></span> View on BscScan Explorer
         </a>
       </div>
       <div class="text-2">Your MKAT balance:</div>
@@ -37,12 +33,12 @@
         <span> {{ myMkatBalance }} </span><br />
         (
         <span>
-          0.00
+          {{ myMkatBalanceInBUSD }}
         </span>
         $)
       </div>
     </div>
-    <div class="button-logout-wrapper hide-on-mobile " onclick="logout()" style="cursor: pointer;">
+    <div class="button-logout-wrapper hide-on-mobile" onclick="logout()" style="cursor: pointer">
       <a target="_blank" class="button-custom-new button-sidebar"><i class="fa fa-sign-out"></i> LOGOUT </a>
     </div>
   </div>
@@ -69,6 +65,7 @@ export default {
     return {
       canCopy: false,
       myMkatBalance: "0.00",
+      myMkatBalanceInBUSD: "0.00",
     };
   },
   computed: {
@@ -83,7 +80,7 @@ export default {
     this.canCopy = !!navigator.clipboard;
     this.loadContractInfo();
 
-    setTimeout(async function() {
+    setTimeout(async function () {
       await this.loadContractInfo();
     }, 600000);
   },
@@ -91,6 +88,7 @@ export default {
     async loadContractInfo() {
       const service = new MetamaskService();
       this.myMkatBalance = await service.getBalance(this.signerAddress);
+      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(this.myMkatBalance);
     },
     async copyAddress() {
       const address = this.$refs.myAddr;
