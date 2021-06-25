@@ -72,7 +72,11 @@
                         </div>
                         <div class="col-sm-9 p-2">
                           <div class="title-1">
+<<<<<<< HEAD
                             My reward: <span class="bold">{{ myBnbReward.div(10 ** 19).toString() }} BNB</span>
+=======
+                            My reward: <span class="bold">{{ myBnbReward.div(10 ** 18).toString() }} BNB</span>
+>>>>>>> 67b444e4f8764cb5948e30877619af08397f7c4f
                           </div>
                           <div class="title-noted">
                             *pool is always changing based on buys, sells, and collects by others, learn more here
@@ -80,7 +84,11 @@
                               ><a href="#" target="_blank"><i class="fa fa-question-circle"></i></a
                             ></span>
                           </div>
+<<<<<<< HEAD
                           <div class="title-2">You will be received {{ myBnbRewardAfterTax.toString() }} BNB (after tax)</div>
+=======
+                          <div class="title-2">You will be received {{ myBnbReward.div(10 ** 18).toString() }} BNB (after tax)</div>
+>>>>>>> 67b444e4f8764cb5948e30877619af08397f7c4f
                           <div class="button-wrapper hide-on-mobile">
                             <div>
                               <button
