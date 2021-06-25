@@ -1,4 +1,4 @@
-import { erc20TokenContractAbi, pancakeRouterContractAbi, pancackePairContractAbi ,CONTRACT_ADDRESS, PANCAKE_CONTRACT_ADDRESS } from "./constants";
+import { erc20TokenContractAbi, pancakeRouterContractAbi, pancackePairContractAbi ,CONTRACT_ADDRESS} from "./constants";
 import { ethers, Contract } from "ethers";
 import { formatNumberWithSpace } from "./utils/utils";
 
@@ -46,7 +46,7 @@ export default class MetamaskService {
   }
 
   public async getMkatValueInBUSD(amount) {
-    const contract = await this.getPancakeRouterContractInstance(PANCAKE_CONTRACT_ADDRESS);
+    const contract = await this.getPancakeRouterContractInstance(await this.getPancakeRouterAddress());
 
     const res = await contract.getAmountsOut(amount, [CONTRACT_ADDRESS, '0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd', '0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7']);
 
@@ -61,6 +61,15 @@ export default class MetamaskService {
     }
     return await this.contract.pancakePair();
   } 
+
+  public async getPancakeRouterAddress() {
+    if (!this.contract) {
+      this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+    }
+
+    return await this.contract.pancakeRouter();
+  }
+
 
   public async getMaxTx() { 
     if (!this.contract) {

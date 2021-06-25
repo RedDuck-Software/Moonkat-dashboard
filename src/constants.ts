@@ -1,7 +1,5 @@
 export const CONTRACT_ADDRESS = "0xb322BDd60C658BC4C3495faB86D3D11d2E8A7690";
 
-export const PANCAKE_CONTRACT_ADDRESS = "0x9Ac64Cc6e4415144C455BD8E4837Fea55603e5c3";
-
 export const pancackePairContractAbi = [
   {
     inputs: [],
