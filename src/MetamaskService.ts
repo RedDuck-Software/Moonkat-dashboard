@@ -27,11 +27,11 @@ export default class MetamaskService {
     return new ethers.Contract(pancakeContractAddress, pancakeRouterContractAbi, signer);
   }
 
-  public async getMkatValueInBUSD(amount) { 
-    let contract = await this.getPancakeRouterContractInstance(PANCAKE_CONTRACT_ADDRESS);
-
-    return contract.getAmountsOut(amount,[CONTRACT_ADDRESS, 0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd, 0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7]);
-  }
+    public async getMkatValueInBUSD(amount) { 
+      const contract = await this.getPancakeRouterContractInstance(PANCAKE_CONTRACT_ADDRESS);
+  
+      return contract.getAmountsOut(amount,[CONTRACT_ADDRESS, 0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd, 0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7]);
+    }
 
   public async getMaxTx() {
     if (!this.contract) {
