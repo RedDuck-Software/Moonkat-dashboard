@@ -11,7 +11,7 @@
               <div class="row">
                 <div class="col-sm-6">
                   <div class="mt-3">
-                    <div class=" tab-card-header">
+                    <div class="tab-card-header">
                       <ul id="myTab" class="nav nav-tabs card-header-tabs" role="tablist">
                         <li class="nav-item">
                           <a
@@ -58,9 +58,9 @@
                 </div>
                 <div class="col-sm-6"></div>
               </div>
-              <div class=" mt-3 ">
+              <div class="mt-3">
                 <div id="myTabContent" class="tab-content">
-                  <div id="one" class="tab-pane fade  p-3 claim-reward" :class="{ 'active show': isActive('one') }">
+                  <div id="one" class="tab-pane fade p-3 claim-reward" :class="{ 'active show': isActive('one') }">
                     <div class="claim-reward-content">
                       <div class="row">
                         <div class="col-sm-3 p-1">
@@ -72,7 +72,7 @@
                         </div>
                         <div class="col-sm-9 p-2">
                           <div class="title-1">
-                            My reward: <span class="bold">{{ myBnbReward }} BNB</span>
+                            My reward: <span class="bold">{{ myBnbReward.div(10 ** 19).toString() }} BNB</span>
                           </div>
                           <div class="title-noted">
                             *pool is always changing based on buys, sells, and collects by others, learn more here
@@ -80,7 +80,7 @@
                               ><a href="#" target="_blank"><i class="fa fa-question-circle"></i></a
                             ></span>
                           </div>
-                          <div class="title-2">You will be received 0.000000 BNB (after tax)</div>
+                          <div class="title-2">You will be received {{ myBnbRewardAfterTax.toString() }} BNB (after tax)</div>
                           <div class="button-wrapper hide-on-mobile">
                             <div>
                               <button
@@ -119,12 +119,7 @@
                           </div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Total Liquidity Pool</div>
-                            <div class="text-2">
-                              <span>$</span
-                              ><span class="card-panel-num">
-                                3,044,668.38
-                              </span>
-                            </div>
+                            <div class="text-2"><span>$</span><span class="card-panel-num"> 3,044,668.38 </span></div>
                           </div>
                         </div>
                       </div>
@@ -135,7 +130,7 @@
                           </div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Total BNB in liquidity pool</div>
-                            <div class="text-2"><span>0 </span><span class="card-panel-num"> BNB </span></div>
+                            <div class="text-2"><span> {{ totalBnbInPool }} </span><span class="card-panel-num"> BNB </span></div>
                           </div>
                         </div>
                       </div>
@@ -144,12 +139,7 @@
                           <div class="col-sm-4 p-1"><img src="@/assets/images/moonKat.jpg" class="img-icon" /></div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Current 100,000 MKAT price</div>
-                            <div class="text-2">
-                              <span></span
-                              ><span class="card-panel-num">
-                                0.26 BNB
-                              </span>
-                            </div>
+                            <div class="text-2"><span></span><span class="card-panel-num"> 0.26 BNB </span></div>
                           </div>
                         </div>
                       </div>
@@ -162,7 +152,7 @@
                     </div>
                     <div
                       class="sweet-modal-content sweet-modal-overlay theme-light sweet-modal-clickable"
-                      style="display: none;"
+                      style="display: none"
                     >
                       <div class="sweet-modal theme-light has-content is-alert">
                         <div class="sweet-box-actions">
@@ -219,7 +209,7 @@
                     <div class="form-wrapper">
                       <div class="text-main">
                         Disruptive Transfer between 2 wallets
-                        <span style="margin-left: 10px;"
+                        <span style="margin-left: 10px"
                           ><a href="#" target="_blank"><i class="el-icon-question"></i></a
                         ></span>
                       </div>
@@ -266,7 +256,7 @@
                     </div>
                     <div
                       class="sweet-modal-content sweet-modal-overlay theme-light sweet-modal-clickable"
-                      style="display: none;"
+                      style="display: none"
                     >
                       <div class="sweet-modal theme-light has-content is-alert">
                         <div class="sweet-box-actions">
@@ -321,7 +311,7 @@
                             <a
                               href="#"
                               target="_blank"
-                              style="color: rgb(4, 171, 234);    font-size: 12px;word-break: break-all;"
+                              style="color: rgb(4, 171, 234); font-size: 12px; word-break: break-all"
                             >
                               ...
                             </a>
@@ -338,9 +328,7 @@
                           <div class="text-1">Market Cap</div>
                           <div class="text-2">
                             $
-                            <span class="card-panel-num">
-                              63,500
-                            </span>
+                            <span class="card-panel-num"> 63,500 </span>
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
@@ -358,17 +346,13 @@
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Current 100,000 MKAT</div>
                           <div class="text-2">
-                            <span class="card-panel-num">
-                              0.26 BNB
-                            </span>
+                            <span class="card-panel-num"> 0.26 BNB </span>
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Total Liquidity Pool</div>
                           <div class="text-2">
-                            <span class="card-panel-num">
-                              --------
-                            </span>
+                            <span class="card-panel-num"> -------- </span>
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
@@ -433,7 +417,7 @@ export default {
   },
   mounted() {
     this.loadContractInfo();
-    setTimeout(async function() {
+    setTimeout(async function () {
       await this.getBnbReward(new MetamaskService());
     }, 600000);
   },
@@ -442,14 +426,14 @@ export default {
       const service = new MetamaskService();
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.maxMkatTx = await service.getMaxTx();
-      // this.myBnbReward = await service.getBnbReward(this.signerAddress);
-      this.myMkatBalance = await service.getBalance(this.signerAddress);
-      await this.getBnbReward(service);
-
-      // console.log(gasLimitBN);
-    },
-    async getBnbReward(service) {
       this.myBnbReward = await service.getBnbReward(this.signerAddress);
+      this.myBnbRewardAfterTax = this.myBnbReward - (await this.contract.estimate.claimBNBReward());
+      this.totalBnbInPool = '0';
+      this.myMkatBalance = await service.getBalance(this.signerAddress);
+      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(myMkatBalance);
+      await this.getBnbReward(service);
+/*  */
+      // console.log(gasLimitBN);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;

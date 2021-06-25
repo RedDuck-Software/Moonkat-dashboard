@@ -1,4 +1,4 @@
-import { erc20TokenContractAbi, CONTRACT_ADDRESS } from "./constants";
+import { erc20TokenContractAbi, pancakeRouterContractAbi, CONTRACT_ADDRESS, PANCAKE_CONTRACT_ADDRESS } from "./constants";
 import { ethers, Contract } from "ethers";
 import { formatNumberWithSpace } from "./utils/utils";
 
@@ -20,6 +20,19 @@ export default class MetamaskService {
     return new ethers.Contract(contractAddress, erc20TokenContractAbi, signer);
   }
 
+  public async getPancakeRouterContractInstance(pancakeContractAddress: string) {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+
+    const signer = provider.getSigner();
+    return new ethers.Contract(pancakeContractAddress, pancakeRouterContractAbi, signer);
+  }
+
+  public async getMkatValueInBUSD(amount) { 
+    let contract = await this.getPancakeRouterContractInstance(PANCAKE_CONTRACT_ADDRESS);
+
+    return contract.getAmountsOut(amount,[CONTRACT_ADDRESS, 0xae13d989daC2f0dEbFf460aC112a837C89BAa7cd, 0x78867BbEeF44f2326bF8DDd1941a4439382EF2A7]);
+  }
+
   public async getMaxTx() {
     if (!this.contract) {
       this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
@@ -36,10 +49,10 @@ export default class MetamaskService {
     }
     console.log("getBnbReward", this.contract);
     console.log("address: " + addr);
-    
+
     const contract = await this.getContractInstance(CONTRACT_ADDRESS);
     const bnbReward = await contract.calculateBNBReward(addr);
-    return formatNumberWithSpace(bnbReward.toString());
+    return bnbReward;
   }
 
   public async getBalance(addr: string) {
@@ -49,9 +62,8 @@ export default class MetamaskService {
     console.log("getBalance", addr);
 
     const tokenBalance = await this.contract.balanceOf(addr);
-    const tokenBalanceStr = ethers.utils.hexlify(ethers.BigNumber.from("" + tokenBalance));
 
-    console.log("getBalance tokenBalanceStr", tokenBalanceStr);
-    // return formatNumberWithSpace(tokenBalance.toString());
+    console.log("getBalance tokenBalanceStr", tokenBalance.toString());
+    return tokenBalance;
   }
 }
