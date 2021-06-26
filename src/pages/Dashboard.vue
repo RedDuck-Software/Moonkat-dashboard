@@ -512,6 +512,11 @@ export default {
     },
 
     async claimMyReward() {
+      if(await this.contract.balanceOf(this.signerAddress) == 0) { 
+        alert(`You need to own MKAT first!`);
+        return;
+      }
+
       const txResponse = await this.contract.claimBNBReward();
       const txReceipt = await txResponse.wait();
 
