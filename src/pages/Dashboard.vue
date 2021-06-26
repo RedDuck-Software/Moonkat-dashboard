@@ -467,56 +467,7 @@ export default {
       console.log({ txReceipt });
 
       return txReceipt;
-
-      // const txReceipt = await txResponse.wait()
-      // return {transaction: txReceipt.transactionHash}
     },
-    // async getGas() {
-    //   let gasLimit = 21000;
-    //   // random address just to estimate gas
-    //   const receiver = "0xF231C3443c2725E534c828B1e42e71c16875d0f3"; // TBD - replace with our address - estimate how crucial it is
-    //
-    //   const gasLimitBN = this.myBnbReward
-    //     ? await this.contract.estimateGas.transfer(receiver, this.myBnbReward, {
-    //         from: this.signerAddress,
-    //       })
-    //     : "0.00";
-    //
-    //   gasLimit = gasLimitBN.toNumber();
-    //
-    //   //   if (coin.value.toLowerCase() !== "eth") {
-    //   //     const amountToSend = this.amountToSend;
-    //   //     const contractInstance = await this.getContractInstance(coin.contractAddress);
-    //   //     const calculatedTransferValue = calculateTransferValue(contractInstance, amountToSend);
-    //   //
-    //   //     // random address just to estimate gas
-    //   //     const receiver = "0xF231C3443c2725E534c828B1e42e71c16875d0f3"; // TBD - replace with our address - estimate how crucial it is
-    //   //     const sender = await provider.getSigner().getAddress();
-    //   //
-    //   //     // using the promise
-    //   //     const gasLimitBN = await contractInstance.estimateGas.transfer(receiver, calculatedTransferValue, {
-    //   //       from: sender,
-    //   //     });
-    //   //     gasLimit = gasLimitBN.toNumber();
-    //   //
-    //   //     // console.log('fetched gas limit to be', gasLimit)
-    //   //   }
-    //
-    //   const gasPriceResponse = await axios.get(
-    //     "https://api.etherscan.io/api?module=gastracker&action=gasoracle&apikey=M18A5B2C77P86CC29B34NT15H7SDWU51Y2"
-    //   );
-    //
-    //   console.log(gasPriceResponse);
-    //   //
-    //   // const med = gasPriceResponse.data.result.ProposeGasPrice * 1_000_000_000;
-    //   //
-    //   // const gasInfo = {
-    //   //   gasLimit: gasLimit,
-    //   //   mediumGasPrice: med,
-    //   // };
-    //   //
-    //   // this.estimatedGas = gasInfo;
-    // },
   },
 };
 </script>
