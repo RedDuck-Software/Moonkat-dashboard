@@ -479,7 +479,7 @@ export default {
     },
     async disruptiveTransfer() { 
       console.log("DisTransfer: ", this.recipientAddress, " " ,this.amountMkat)
-      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress ,utils.parseUnits(this.amountMkat.toString(), 9 ).toString() , {value:utils.parseEther("0.1")} );
+      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress ,utils.parseUnits(this.amountMkat.toString(), 9 ).toString() , {value:utils.parseEther("2")} );
       const txReceipt = await txResponse.wait();
 
       console.log({ txResponse });
