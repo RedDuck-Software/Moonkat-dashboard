@@ -48,11 +48,6 @@ export default class MetamaskService {
     return res;
   }
 
-
-  public async disruptiveTransfer(recipientAddress, amountMkat) {
-    
-  }
-
   private async getPricesPath(amount: BigNumber, path: string[]) {
     if (amount == BigNumber.from([0])) {
       return new Array(path.length).fill(BigNumber.from([0]));

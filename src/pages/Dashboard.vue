@@ -407,6 +407,7 @@ import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import axios from "axios";
+import { BigNumber } from '@ethersproject/bignumber';
 
 export default {
   name: "Dashboard",
@@ -478,7 +479,7 @@ export default {
     },
     async disruptiveTransfer() { 
       console.log("DisTransfer: ", this.recipientAddress, " " ,this.amountMkat)
-      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, this.amountMkat);
+      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress ,utils.parseUnits(this.amountMkat.toString(), 9 ).toString() , {value:utils.parseEther("0.1")} );
       const txReceipt = await txResponse.wait();
 
       console.log({ txResponse });
