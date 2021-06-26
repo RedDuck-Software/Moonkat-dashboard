@@ -5,7 +5,7 @@
       <div class="mrat-text hide-on-mobile">moonkat</div>
       <div class="mrat-desc">Earn BNB by Holding MKAT</div>
       <div class="button-buy-mrat hide-on-mobile">
-        <a href="#" target="_blank" class="button-custom-new button-sidebar"
+        <a href="https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce" target="_blank" class="button-custom-new button-sidebar"
           ><i class="fa fa-shopping-cart"></i> BUY $MKAT
         </a>
       </div>
