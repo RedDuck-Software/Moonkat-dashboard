@@ -74,12 +74,15 @@
                           <div class="title-1">
                             My reward: <span class="bold">{{ myBnbReward }} BNB</span>
                           </div>
+                          <div class="title-2">
+                            Next claim date: <span class="bold">{{ nextClaimDate }} UTC</span>
+                          </div>                          
                           <div class="title-noted">
                             *pool is always changing based on buys, sells, and collects by others, learn more here
                             <span
                               ><a href="#" target="_blank"><i class="fa fa-question-circle"></i></a
                             ></span>
-                          </div>
+                          </div>             
                          <!--  <div class="title-2">
                             You will be received {{ myBnbRewardAfterTax.toString() }} BNB (after tax)
                           </div> -->
@@ -414,6 +417,7 @@ export default {
       hundredThousandMKATUSD: null,
       totalLiquidityPoolInBUSD: null,
       myBnbReward: "0",
+      nextClaimDate: null,
       myBnbRewardAfterTax: 0,
       totalBnbInPool : 0,
       estimatedGas: {},
@@ -451,6 +455,7 @@ export default {
     },
     async getBnbReward(service) {
       let reward = await service.getBnbReward(this.signerAddress);
+      this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
       this.myBnbReward  = utils.formatEther(reward);
     },
     isActive(menuItem) {

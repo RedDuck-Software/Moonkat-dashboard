@@ -60,6 +60,13 @@ export default class MetamaskService {
     return this.getPricesPath(amount, [CONTRACT_ADDRESS, '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', '0x55d398326f99059ff775485246999027b3197955']);
   }  
 
+  public async getNextClaimDate(address: string) {
+    const claimDateUnixSeconds = await this.contract.nextAvailableClaimDate(address);
+    const ms = claimDateUnixSeconds * 1000;
+
+    return new Date(ms);
+  }
+
   public async getMkatValueInBUSD(amount: number) {
     const pathResult = await this.mkatBNBBUSDPath(amount);
     return amount == 0 ? 0 : pathResult[2] / 10**18;
