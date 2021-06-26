@@ -75,7 +75,7 @@
                             My reward: <span class="bold">{{ myBnbReward }} BNB</span>
                           </div>
                           <div class="title-2">
-                            Next claim date: <span class="bold">{{ nextClaimDate }} UTC</span>
+                            Next claim date: <span class="bold">{{ nextClaimDate }} </span>
                           </div>                          
                           <div class="title-noted">
                             *pool is always changing based on buys, sells, and collects by others, learn more here
