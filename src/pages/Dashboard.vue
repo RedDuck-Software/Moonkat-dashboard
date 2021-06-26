@@ -342,7 +342,7 @@
                         </div>
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Current Circulating Supply</div>
-                          <div class="text-2">Updating...</div>
+                          <div class="text-2">{{ currentCircularingBalance}}</div>
                         </div>
                         <div class="item-statistic col-sm-3">
                           <!-- <div  class="text-1"> Burned </div>
@@ -361,18 +361,14 @@
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Total Liquidity Pool</div>
                           <div class="text-2">
-                            <span class="card-panel-num"> -------- </span>
+                            <span class="card-panel-num"> $ {{totalLiquidityPoolUSD}} </span>
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Total BNB in liquidity pool</div>
                           <div class="text-2">
-                            <!-- BNB -->--------
-                            <!-- <span  class="card-panel-num">
-                                                4,559.36
-                                                </span> | BUSD <span  class="card-panel-num">
-                                                1,498,706.96
-                                                </span> -->
+                             {{ totalBnbInPool }}
+                            
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
@@ -403,7 +399,7 @@ import { mapGetters } from "vuex";
 
 var utils = require("ethers").utils;
 
-import { CONTRACT_ADDRESS } from "@/constants";
+import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import axios from "axios";
@@ -427,6 +423,8 @@ export default {
       totalLiquidityPoolUSD: null,
       recipientAddress: "",
       amountMkat: 0,
+      currentCircularingBalance: 0,
+      maxBNBTx: 0,
     };
   },
   computed: {
@@ -458,6 +456,8 @@ export default {
 
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
       this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
+      this.currentCircularingBalance =  utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
+
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
     async getMaxAmountForDisruptiveTransfer() { 
@@ -478,13 +478,21 @@ export default {
       this.activeItem = menuItem;
     },
     async disruptiveTransfer() { 
-      console.log("DisTransfer: ", this.recipientAddress, " " ,this.amountMkat)
+      console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat)
       const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress ,utils.parseUnits(this.amountMkat.toString(), 9 ).toString() , {value:utils.parseEther("2")} );
       const txReceipt = await txResponse.wait();
 
       console.log({ txResponse });
       console.log({ txReceipt });
     },
+    async getCurrentCircularingBalance() { 
+      let total = await this.contract.totalSupply();
+      let zero = await this.contract.balanceOf("0x0000000000000000000000000000000000000000");
+      let burn = await this.contract.balanceOf(BURN_ADDRESS);
+ 
+      return total.sub(burn).sub(zero);
+    },
+
     async claimMyReward() {
       const txResponse = await this.contract.claimBNBReward();
       const txReceipt = await txResponse.wait();
