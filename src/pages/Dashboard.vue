@@ -108,7 +108,7 @@
                             <div class="text-2">
                               <span id="max-mkat-tx">{{ maxMkatTx }}</span
                               ><span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a
-                              ><span> | </span><span>-</span><span class="card-panel-num"> BNB </span
+                              ><span> | </span><span class="card-panel-num"> {{maxBNBTx}} BNB </span
                               ><a><i class="el-icon-document-copy"></i></a>
                             </div>
                           </div>
@@ -442,15 +442,18 @@ export default {
       const service = new MetamaskService();
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.maxMkatTx = await service.getMaxTx();
+      this.maxBNBTx = await service.getMaxTxBNB();
       await this.getBnbReward(service);
       // this.myBnbRewardAfterTax = this.myBnbReward;
 
-      this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(100000);
+      const hundredThousandMKAT = 100000 * 10**9;
+      this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(hundredThousandMKAT);
       this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
       console.log("hundredThousandMKATUSD", this.hundredThousandMKATUSD);
       console.log("totalLiquidityPoolUSD", this.totalLiquidityPoolUSD);
 
-      this.totalBnbInPool = utils.formatEther(await service.getPoolReservesBNB());
+      const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
+      this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
     async getBnbReward(service) {
