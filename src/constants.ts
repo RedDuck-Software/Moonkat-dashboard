@@ -1,5 +1,7 @@
 export const CONTRACT_ADDRESS = "0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce";
 
+export const BURN_ADDRESS = "0x000000000000000000000000000000000000dEaD";
+
 export const pancackePairContractAbi = [
   {
     inputs: [],
