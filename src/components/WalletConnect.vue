@@ -32,6 +32,8 @@
                   <span v-show="!signerAddress">Connect to a wallet </span>
                   <span v-show="signerAddress">{{ signerAddress }}</span>
                 </button>
+                <br>
+                <a class="el-button button-custom-new el-button--secondary el-button--small" href="https://link.trustwallet.com/open_url?coin_id=60&url=https://moonkat.net/dashboard">Trust wallet</a>
 
                 <!---->
               </div>
