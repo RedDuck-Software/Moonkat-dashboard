@@ -45,10 +45,9 @@
 </template>
 
 <script>
-import { ContractFactory, FixedNumber } from "ethers";
+import { CONTRACT_ADDRESS } from "@/constants";
+import { ContractFactory } from "ethers";
 import { mapGetters } from "vuex";
-import BigNumber from "bignumber.js";
-import { formatNumberWithSpace } from "@/utils/utils";
 import MetamaskService from "@/MetamaskService";
 import { ethers } from "ethers";
 
@@ -67,6 +66,7 @@ export default {
       canCopy: false,
       myMkatBalance: "0.00",
       myMkatBalanceInBUSD: "0.00",
+      mkatContract: null,
     };
   },
   computed: {
@@ -88,7 +88,8 @@ export default {
   methods: {
     async loadContractInfo() {
       const service = new MetamaskService();
-      this.myMkatBalance = await service.getBalance(this.signerAddress);
+      this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
+      this.myMkatBalance = await this.mkatContract.balanceOf(this.signerAddress);
       this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(this.myMkatBalance);
     },
     async copyAddress() {

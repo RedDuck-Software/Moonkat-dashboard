@@ -403,7 +403,6 @@ import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import axios from "axios";
-import { BigNumber } from '@ethersproject/bignumber';
 
 export default {
   name: "Dashboard",
@@ -479,7 +478,26 @@ export default {
     },
     async disruptiveTransfer() { 
       console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat)
-      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress ,utils.parseUnits(this.amountMkat.toString(), 9 ).toString() , {value:utils.parseEther("2")} );
+
+      const regex = /[a-zA-Z0-9]{42}/i;
+
+
+
+      if(!this.recipientAddress.match(regex)) { 
+        alert("Invalid recepient address");
+        return;
+      }
+
+      const senderBalance = await this.contract.balanceOf(this.signerAddress);
+      
+      const amountMkatToSend = utils.parseUnits(this.amountMkat.toString(), 9 );
+
+      if(senderBalance < amountMkatToSend || senderBalance == 0) { 
+        alert(`Insufficient funds. Current MKAT balance is ${senderBalance}`);
+        return;
+      }
+
+      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress,amountMkatToSend , {value:utils.parseEther("2")} );
       const txReceipt = await txResponse.wait();
 
       console.log({ txResponse });
