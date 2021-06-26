@@ -95,20 +95,16 @@ export default {
         console.log("signer:", signer);
         const address = await signer.getAddress();
         this.$store.commit("updateSignerAddress", address);
-        provider.on("network", (newNetwork, oldNetwork) => {
-          // When a Provider makes its initial connection, it emits a "network"
-          // event with a null oldNetwork along with the newNetwork. So, if the
-          // oldNetwork exists, it represents a changing network
-          if (oldNetwork) {
-            this.$store.commit("logout");
-            window.location.reload();
-          }
+        window.ethereum.on("accountsChanged", function(accounts) {
+          // Time to reload your interface with accounts[0]!
+          this.$store.commit("logout");
+          window.location.reload();
         });
-        provider.on("account", (newAccount, oldAccount) => {
-          if (oldAccount) {
-            this.$store.commit("logout");
-            window.location.reload();
-          }
+
+        window.ethereum.on("networkChanged", function(networkId) {
+          // Time to reload your interface with the new networkId
+          this.$store.commit("logout");
+          window.location.reload();
         });
       } else {
         alert("Please install MetaMask!");
