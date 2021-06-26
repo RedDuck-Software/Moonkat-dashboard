@@ -361,18 +361,14 @@
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Total Liquidity Pool</div>
                           <div class="text-2">
-                            <span class="card-panel-num"> -------- </span>
+                            <span class="card-panel-num"> $ {{totalLiquidityPoolUSD}} </span>
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
                           <div class="text-1">Total BNB in liquidity pool</div>
                           <div class="text-2">
-                            <!-- BNB -->--------
-                            <!-- <span  class="card-panel-num">
-                                                4,559.36
-                                                </span> | BUSD <span  class="card-panel-num">
-                                                1,498,706.96
-                                                </span> -->
+                             {{ totalBnbInPool }}
+                            
                           </div>
                         </div>
                         <div class="item-statistic col-sm-3">
