@@ -38,7 +38,7 @@
         $)
       </div>
     </div>
-    <div class="button-logout-wrapper hide-on-mobile" onclick="logout()" style="cursor: pointer">
+    <div class="button-logout-wrapper hide-on-mobile" style="cursor: pointer" @click="logout()">
       <a target="_blank" class="button-custom-new button-sidebar"><i class="fa fa-sign-out"></i> LOGOUT </a>
     </div>
   </div>
@@ -80,7 +80,7 @@ export default {
     this.canCopy = !!navigator.clipboard;
     this.loadContractInfo();
 
-    setTimeout(async function () {
+    setTimeout(async function() {
       await this.loadContractInfo();
     }, 600000);
   },
@@ -94,6 +94,10 @@ export default {
       const address = this.$refs.myAddr;
       await navigator.clipboard.writeText(address.innerHTML);
       alert("Copied!");
+    },
+    logout() {
+      this.$store.commit("logout");
+      alert("You logged out!");
     },
   },
 };
