@@ -38,8 +38,11 @@
         $)
       </div>
     </div>
-    <div class="button-logout-wrapper hide-on-mobile" onclick="logout()" style="cursor: pointer">
+    <div class="button-logout-wrapper hide-on-mobile" style="cursor: pointer" @click="logout()">
       <a target="_blank" class="button-custom-new button-sidebar"><i class="fa fa-sign-out"></i> LOGOUT </a>
+    </div>
+    <div class="button-logout-wrapper hide-on-mobile" style="cursor: pointer" @click="connectMetamask()">
+      <a target="_blank" class="button-custom-new button-sidebar"><i class="fa fa-sign-out"></i> Connect </a>
     </div>
   </div>
 </template>
@@ -50,6 +53,7 @@ import { mapGetters } from "vuex";
 import BigNumber from "bignumber.js";
 import { formatNumberWithSpace } from "@/utils/utils";
 import MetamaskService from "@/MetamaskService";
+import { ethers } from "ethers";
 
 const service = new MetamaskService();
 
@@ -80,7 +84,7 @@ export default {
     this.canCopy = !!navigator.clipboard;
     this.loadContractInfo();
 
-    setTimeout(async function () {
+    setTimeout(async function() {
       await this.loadContractInfo();
     }, 600000);
   },
@@ -94,6 +98,30 @@ export default {
       const address = this.$refs.myAddr;
       await navigator.clipboard.writeText(address.innerHTML);
       alert("Copied!");
+    },
+    logout() {
+      this.$store.commit("logout");
+      alert("You logged out!");
+    },
+    async connectMetamask() {
+      if (typeof window.ethereum !== undefined) {
+        await window.ethereum.enable(); // deprecated - need to use eth_requestAccounts
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        this.$store.commit("updateSignerAddress", address);
+        console.log(address);
+        provider.on("network", (newNetwork, oldNetwork) => {
+          // When a Provider makes its initial connection, it emits a "network"
+          // event with a null oldNetwork along with the newNetwork. So, if the
+          // oldNetwork exists, it represents a changing network
+          if (oldNetwork) {
+            window.location.reload();
+          }
+        });
+      } else {
+        alert("Please install MetaMask!");
+      }
     },
   },
 };

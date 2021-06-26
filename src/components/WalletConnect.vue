@@ -32,15 +32,6 @@
                   <span v-show="!signerAddress">Connect to a wallet </span>
                   <span v-show="signerAddress">{{ signerAddress }}</span>
                 </button>
-                <button
-                  v-show="signerAddress"
-                  id="addressBtn"
-                  type="button"
-                  class="el-button button-custom-new el-button--primary el-button--medium"
-                  @click="logout()"
-                >
-                  <i class="el-icon-connection"></i><span id="showAddress">logout </span>
-                </button>
 
                 <!---->
               </div>
@@ -98,7 +89,7 @@ export default {
   methods: {
     async connectMetamask() {
       if (typeof window.ethereum !== undefined) {
-        await window.ethereum.enable() // deprecated - need to use eth_requestAccounts
+        await window.ethereum.enable(); // deprecated - need to use eth_requestAccounts
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         console.log("signer:", signer);
@@ -115,9 +106,6 @@ export default {
       } else {
         alert("Please install MetaMask!");
       }
-    },
-    logout() {
-      this.$store.commit("logout");
     },
   },
 };

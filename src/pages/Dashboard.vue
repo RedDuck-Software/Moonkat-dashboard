@@ -82,10 +82,7 @@
                             <span
                               ><a href="#" target="_blank"><i class="fa fa-question-circle"></i></a
                             ></span>
-                          </div>             
-                         <!--  <div class="title-2">
-                            You will be received {{ myBnbRewardAfterTax.toString() }} BNB (after tax)
-                          </div> -->
+                          </div>
                           <div class="button-wrapper hide-on-mobile">
                             <div>
                               <button
@@ -124,7 +121,9 @@
                           </div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Total Liquidity Pool</div>
-                            <div class="text-2"><span>$</span><span class="card-panel-num"> {{ totalLiquidityPoolUSD }} </span></div>
+                            <div class="text-2">
+                              <span>$</span><span class="card-panel-num"> {{ totalLiquidityPoolUSD }} </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -146,7 +145,9 @@
                           <div class="col-sm-4 p-1"><img src="@/assets/images/moonKat.jpg" class="img-icon" /></div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Current 100,000 MKAT price</div>
-                            <div class="text-2"><span></span><span class="card-panel-num"> {{ hundredThousandMKATUSD }} </span></div>
+                            <div class="text-2">
+                              <span></span><span class="card-panel-num"> {{ hundredThousandMKATUSD }} </span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -399,7 +400,7 @@
 <script>
 import { mapGetters } from "vuex";
 
-var utils = require('ethers').utils;
+var utils = require("ethers").utils;
 
 import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
@@ -415,13 +416,13 @@ export default {
       activeItem: "one",
       maxMkatTx: null,
       hundredThousandMKATUSD: null,
-      totalLiquidityPoolInBUSD: null,
       myBnbReward: "0",
       nextClaimDate: null,
       myBnbRewardAfterTax: 0,
-      totalBnbInPool : 0,
+      totalBnbInPool: 0,
       estimatedGas: {},
       myMkatBalance: null,
+      totalLiquidityPoolUSD: null,
     };
   },
   computed: {
@@ -431,9 +432,8 @@ export default {
     myBnbReward() {},
   },
   mounted() {
-    
     this.loadContractInfo();
-    setTimeout(async function () {
+    setTimeout(async function() {
       await this.getBnbReward(new MetamaskService());
     }, 600000);
   },
@@ -444,19 +444,20 @@ export default {
       this.maxMkatTx = await service.getMaxTx();
       await this.getBnbReward(service);
       // this.myBnbRewardAfterTax = this.myBnbReward;
-      
-      //this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(100_000);
-      //this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
-      //console.log("hundredThousandMKATUSD", this.hundredThousandMKATUSD);
-      //console.log("totalLiquidityPoolUSD", this.totalLiquidityPoolUSD);
+
+      this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(100000);
+      this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
+      console.log("hundredThousandMKATUSD", this.hundredThousandMKATUSD);
+      console.log("totalLiquidityPoolUSD", this.totalLiquidityPoolUSD);
 
       this.totalBnbInPool = utils.formatEther(await service.getPoolReservesBNB());
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
     async getBnbReward(service) {
+      console.log("getBnbReward");
       let reward = await service.getBnbReward(this.signerAddress);
       this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
-      this.myBnbReward  = utils.formatEther(reward);
+      this.myBnbReward = utils.formatEther(reward);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;
