@@ -100,6 +100,13 @@ export default {
           // event with a null oldNetwork along with the newNetwork. So, if the
           // oldNetwork exists, it represents a changing network
           if (oldNetwork) {
+            this.$store.commit("logout");
+            window.location.reload();
+          }
+        });
+        provider.on("account", (newAccount, oldAccount) => {
+          if (oldAccount) {
+            this.$store.commit("logout");
             window.location.reload();
           }
         });
