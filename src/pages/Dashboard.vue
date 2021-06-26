@@ -227,10 +227,10 @@
                             <div class="el-input el-input--medium">
                               <input
                                 id="addressEnter"
-                                type="text"
                                 autocomplete="off"
                                 placeholder="Recipient (address)"
                                 class="el-input__inner"
+                                v-model.trim="recipientAddress"
                               />
                             </div>
                           </div>
@@ -240,14 +240,15 @@
                             <div class="el-input el-input--medium">
                               <input
                                 id="amount"
-                                type="text"
+                                type="number"
                                 autocomplete="off"
                                 placeholder="Amount (MKAT)"
                                 class="el-input__inner"
+                                v-model.number="amountMkat"
                               />
                             </div>
                             <div class="button-max">
-                              <button type="button" class="el-button el-button--text el-button--medium">
+                              <button type="button" class="el-button el-button--text el-button--medium" @click="getMaxAmountForDisruptiveTransfer()">
                                 <span>Max</span>
                               </button>
                             </div>
@@ -256,7 +257,7 @@
                         <button
                           type="button"
                           class="el-button button-send-disruptive el-button--primary el-button--medium"
-                          @click="send()"
+                          @click="disruptiveTransfer()"
                         >
                           <i class="el-icon-position"></i><span>Send </span>
                         </button>
@@ -406,6 +407,7 @@ import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import axios from "axios";
+import { BigNumber } from '@ethersproject/bignumber';
 
 export default {
   name: "Dashboard",
@@ -423,6 +425,8 @@ export default {
       estimatedGas: {},
       myMkatBalance: null,
       totalLiquidityPoolUSD: null,
+      recipientAddress: "",
+      amountMkat: 0,
     };
   },
   computed: {
@@ -456,6 +460,11 @@ export default {
       this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
+    async getMaxAmountForDisruptiveTransfer() { 
+      this.amountMkat = utils.formatUnits((await this.contract.balanceOf(this.signerAddress)), 9);
+      console.log(this.amountMkat);
+    },
+
     async getBnbReward(service) {
       console.log("getBnbReward");
       let reward = await service.getBnbReward(this.signerAddress);
@@ -468,14 +477,20 @@ export default {
     setActive(menuItem) {
       this.activeItem = menuItem;
     },
+    async disruptiveTransfer() { 
+      console.log("DisTransfer: ", this.recipientAddress, " " ,this.amountMkat)
+      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress ,utils.parseUnits(this.amountMkat.toString(), 9 ).toString() , {value:utils.parseEther("0.1")} );
+      const txReceipt = await txResponse.wait();
+
+      console.log({ txResponse });
+      console.log({ txReceipt });
+    },
     async claimMyReward() {
       const txResponse = await this.contract.claimBNBReward();
       const txReceipt = await txResponse.wait();
 
       console.log({ txResponse });
       console.log({ txReceipt });
-
-      return txReceipt;
     },
   },
 };

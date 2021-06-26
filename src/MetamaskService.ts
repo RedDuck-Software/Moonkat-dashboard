@@ -59,6 +59,7 @@ export default class MetamaskService {
     }
   }
 
+
   private async mkatBNBBUSDPath(amount: BigNumber) {
     return this.getPricesPath(amount, [
       CONTRACT_ADDRESS,
