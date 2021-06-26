@@ -108,7 +108,7 @@
                             <div class="text-2">
                               <span id="max-mkat-tx">{{ maxMkatTx }}</span
                               ><span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a
-                              ><span> | </span><span>2.6</span><span class="card-panel-num"> BNB </span
+                              ><span> | </span><span>-</span><span class="card-panel-num"> BNB </span
                               ><a><i class="el-icon-document-copy"></i></a>
                             </div>
                           </div>
@@ -121,7 +121,7 @@
                           </div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Total Liquidity Pool</div>
-                            <div class="text-2"><span>$</span><span class="card-panel-num"> 3,044,668.38 </span></div>
+                            <div class="text-2"><span>$</span><span class="card-panel-num"> {{ totalLiquidityPoolUSD }} </span></div>
                           </div>
                         </div>
                       </div>
@@ -143,7 +143,7 @@
                           <div class="col-sm-4 p-1"><img src="@/assets/images/moonKat.jpg" class="img-icon" /></div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Current 100,000 MKAT price</div>
-                            <div class="text-2"><span></span><span class="card-panel-num"> 0.26 BNB </span></div>
+                            <div class="text-2"><span></span><span class="card-panel-num"> {{ hundredThousandMKATUSD }} </span></div>
                           </div>
                         </div>
                       </div>
@@ -411,6 +411,8 @@ export default {
       contract: null,
       activeItem: "one",
       maxMkatTx: null,
+      hundredThousandMKATUSD: null,
+      totalLiquidityPoolInBUSD: null,
       myBnbReward: "0",
       myBnbRewardAfterTax: 0,
       totalBnbInPool : 0,
@@ -425,6 +427,7 @@ export default {
     myBnbReward() {},
   },
   mounted() {
+    
     this.loadContractInfo();
     setTimeout(async function () {
       await this.getBnbReward(new MetamaskService());
@@ -437,10 +440,16 @@ export default {
       this.maxMkatTx = await service.getMaxTx();
       await this.getBnbReward(service);
       // this.myBnbRewardAfterTax = this.myBnbReward;
+      
+      //this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(100_000);
+      //this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
+      //console.log("hundredThousandMKATUSD", this.hundredThousandMKATUSD);
+      //console.log("totalLiquidityPoolUSD", this.totalLiquidityPoolUSD);
+
       this.totalBnbInPool = utils.formatEther(await service.getPoolReservesBNB());
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
-    async getBnbReward(service) { 
+    async getBnbReward(service) {
       let reward = await service.getBnbReward(this.signerAddress);
       this.myBnbReward  = utils.formatEther(reward);
     },

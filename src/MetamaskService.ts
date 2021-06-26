@@ -36,25 +36,57 @@ export default class MetamaskService {
 
 
   public async getPoolReservesBNB() {
-    const contract = await this.getPancakePairContractInstance(await this.getPancakePairAddress());
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-    const res = await contract.getReserves();
-
+    const res = provider.getBalance(CONTRACT_ADDRESS);
     console.log("POOL RESERVES" +  res);
 
+    return res;
+  }
+
+  private async getPricesPath(amount: number, path: string[])
+  {
+    if (amount == 0) {
+      return 0;
+    }
+    else {
+      const contract = await this.getPancakeRouterContractInstance(await this.getPancakeRouterAddress());
+      const res = await contract.getAmountsOut(amount, path);
+      return res;
+    }    
+  }
+
+  private async mkatBNBBUSDPath(amount: number) {
+    return this.getPricesPath(amount, [CONTRACT_ADDRESS, '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', '0x55d398326f99059ff775485246999027b3197955']);
+  }  
+
+  public async getMkatValueInBUSD(amount: number) {
+    const pathResult = await this.mkatBNBBUSDPath(amount);
+    return amount == 0 ? 0 : pathResult[2] / 10**18;
+  }
+  
+  public async getMKATValueInBNB(amount: number) {
+    const pathResult = await this.mkatBNBBUSDPath(amount);
+    return amount == 0 ? 0 : pathResult[1] / 10**18;
+  }
+  
+  public async totalLiquidityPoolInBUSD() {
+    const poolReserves = await this.getPancakePairPoolReserves();
+    const bnb = poolReserves[0];
+    const mkat = poolReserves[1];
+    
+    const bnbUSD = await this.getPricesPath(bnb, ['0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', '0x55d398326f99059ff775485246999027b3197955'])[1];
+    const mkatUSD = await this.getMkatValueInBUSD(mkat);
+
+    return bnbUSD + mkatUSD;
+  }
+
+  public async getPancakePairPoolReserves() {
+    const contract = await this.getPancakePairContractInstance(await this.getPancakePairAddress());
+    const res = await contract.getReserves();
     return res[0];
   }
-
-  public async getMkatValueInBUSD(amount) {
-    const contract = await this.getPancakeRouterContractInstance(await this.getPancakeRouterAddress());
-
-    const res = await contract.getAmountsOut(amount, [CONTRACT_ADDRESS, '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c', '0x55d398326f99059ff775485246999027b3197955']);
-
-    console.log("GET AMOUNTS OUT", res);
-
-    return res[1];
-  }
-
+  
   public async getPancakePairAddress() { 
     if (!this.contract) {
       this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
@@ -70,7 +102,6 @@ export default class MetamaskService {
     return await this.contract.pancakeRouter();
   }
 
-
   public async getMaxTx() { 
     if (!this.contract) {
       this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
@@ -79,7 +110,7 @@ export default class MetamaskService {
     const maxTxAmount = await this.contract._maxTxAmount();
     console.log("getMaxTx", maxTxAmount);
 
-    return maxTxAmount;
+    return maxTxAmount / 10**9;
   }
   public async getBnbReward(addr: string) {
     if (!this.contract) {
