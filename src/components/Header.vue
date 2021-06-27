@@ -2,15 +2,7 @@
   <nav class="navbar navbar-expand-lg  navbar-light bg-light fixed-top" :class="isSticky ? stickyClass : ''">
     <div class="container">
       <a class="navbar-brand" href="/">MoonKat<b>.</b></a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button v-show="isMobile" type="button" @click="toggleMenu()">
         <i class="fa fa-bars" aria-hidden="true"></i>
       </button>
       <div class="header-social">
@@ -18,31 +10,33 @@
         <a href="https://t.me/moonkat_finance"><i class="fa fa-telegram" aria-hidden="true"></i></a>
         <a href="https://medium.com/@moonkatfinance"><i class="fa fa-medium" aria-hidden="true"></i></a>
       </div>
-      <div id="navbarSupportedContent" class="collapse navbar-collapse menu-main">
-        <ul class="navbar-nav ml-auto menu-item">
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'Home' }">Home</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'Home', hash: '#tokenomics' }">Tokenomics</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/#roadmap">Roadmap</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/#team">Team</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/#media">Media</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" to="/#contact">FAQs</router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link bor" to="/connect-wallet">Launch Dapp</router-link>
-          </li>
-        </ul>
-      </div>
+      <transition name="list">
+        <div v-show="isMobile && showMenuMobile" id="navbarSupportedContent" class=" navbar-collapse menu-main">
+          <ul class="navbar-nav ml-auto menu-item">
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ name: 'Home' }">Home</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" :to="{ name: 'Home', hash: '#tokenomics' }">Tokenomics</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/#roadmap">Roadmap</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/#team">Team</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/#media">Media</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link" to="/#contact">FAQs</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link class="nav-link bor" to="/connect-wallet">Launch Dapp</router-link>
+            </li>
+          </ul>
+        </div>
+      </transition>
     </div>
   </nav>
 </template>
@@ -50,15 +44,24 @@
 <script lang="ts">
 export default {
   name: "Header",
+  components: {},
   data() {
     return {
       isSticky: false,
       stickyClass: "nav-bg",
       scrollPosition: 0,
+      showMenuMobile: false,
+      isMobile: null,
     };
   },
   mounted() {
     window.addEventListener("scroll", this.handleScroll);
+
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+      this.isMobile = true;
+    } else {
+      this.isMobile = false;
+    }
   },
   destroyed() {
     window.removeEventListener("scroll", this.handleScroll);
@@ -67,6 +70,9 @@ export default {
     handleScroll() {
       this.scrollPosition = window.scrollY;
       this.isSticky = this.scrollPosition >= 100;
+    },
+    toggleMenu() {
+      this.showMenuMobile = !this.showMenuMobile;
     },
   },
 };
@@ -203,5 +209,29 @@ export default {
 
 .nav-bg .navbar-nav .nav-link {
   color: #fff;
+}
+
+.menu-main {
+  /*position: absolute;*/
+}
+
+.fa-navicon:before,
+.fa-reorder:before,
+.fa-bars:before {
+  content: "\f0c9";
+}
+
+.list-enter,
+.list-leave-to {
+  visibility: hidden;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s;
 }
 </style>

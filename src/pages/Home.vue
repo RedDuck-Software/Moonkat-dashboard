@@ -24,7 +24,16 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "Home",
-  components: { Footer, Contacts, Media, Team, RoadMap, Tokenomics, Features, Banner },
+  components: {
+    Footer,
+    Contacts,
+    Media,
+    Team,
+    RoadMap,
+    Tokenomics,
+    Features,
+    Banner,
+  },
   computed: {
     ...mapGetters(["signerAddress"]),
   },

@@ -73,4 +73,10 @@ export default {
   font-size: 16px;
   color: #ff7657;
 }
+
+@media (max-width: 575px) {
+  #team {
+    padding: 60px 0;
+  }
+}
 </style>
