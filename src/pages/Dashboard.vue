@@ -349,7 +349,7 @@
                           </div>
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Current Circulating Supply</div>
-                            <div class="text-2">{{ currentCircularingBalance }}</div>
+                            <div class="text-2">{{ currentCircularingBalance }} MKAT</div>
                           </div>
                           <div class="item-statistic col-sm-3">
                             <!-- <div  class="text-1"> Burned </div>
@@ -362,7 +362,7 @@
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Current 100,000 MKAT</div>
                             <div class="text-2">
-                              <span class="card-panel-num"> 0.26 BNB </span>
+                              <span class="card-panel-num">$ {{ hundredThousandMKATUSD }} </span>
                             </div>
                           </div>
                           <div class="item-statistic col-sm-3">
@@ -420,19 +420,19 @@ export default {
       contract: null,
       activeItem: "one",
       maxMkatTx: null,
-      hundredThousandMKATUSD: null,
-      myBnbReward: "0",
-      nextClaimDate: null,
+      hundredThousandMKATUSD: "...",
+      myBnbReward: "...",
+      nextClaimDate: "...",
       myBnbRewardAfterTax: 0,
-      totalBnbInPool: 0,
+      totalBnbInPool: "...",
       estimatedGas: {},
-      myMkatBalance: null,
-      totalLiquidityPoolUSD: null,
+      myMkatBalance: "...",
+      totalLiquidityPoolUSD: "...",
       recipientAddress: "",
       amountMkat: 0,
-      currentCircularingBalance: 0,
-      maxBNBTx: 0,
-      marketCap: 0,
+      currentCircularingBalance: "...",
+      maxBNBTx: "...",
+      marketCap: "...",
     };
   },
   computed: {
