@@ -64,7 +64,7 @@ export default {
   data() {
     return {
       canCopy: false,
-      myMkatBalance: "0.00",
+      myMkatBalance: "...",
       myMkatBalanceInBUSD: "0.00",
       mkatContract: null,
     };
@@ -89,7 +89,7 @@ export default {
     async loadContractInfo() {
       const service = new MetamaskService();
       this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
-      this.myMkatBalance = await this.mkatContract.balanceOf(this.signerAddress);
+      this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
       this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(this.myMkatBalance);
     },
     async copyAddress() {
