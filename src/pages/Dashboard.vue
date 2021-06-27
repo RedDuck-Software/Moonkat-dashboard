@@ -1,3 +1,19 @@
+<style> 
+  .modal-content { 
+    background-color: black;
+    color: white !important;
+    -webkit-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+-moz-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+  }
+  .share-network-twitter { 
+    color: white ;
+  }
+  .share-network-twitter:hover { 
+    color: white ;
+  }
+</style>
+
 <template>
   <section class="dashboard-content">
     <div class="container-fluid">
@@ -16,7 +32,8 @@
                         <li class="nav-item">
                           <a
                             id="one-tab"
-                            class="nav-link active show"
+                            class="nav-link"
+                            :class="{ 'active show': isActive('one') }"
                             data-toggle="tab"
                             href="#"
                             role="tab"
@@ -30,6 +47,7 @@
                           <a
                             id="two-tab"
                             class="nav-link"
+                            :class="{ 'active show': isActive('two') }"
                             data-toggle="tab"
                             href="#"
                             role="tab"
@@ -43,6 +61,7 @@
                           <a
                             id="three-tab"
                             class="nav-link"
+                            :class="{ 'active show': isActive('three') }"
                             data-toggle="tab"
                             href="#three"
                             role="tab"
@@ -146,7 +165,7 @@
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Current 100,000 MKAT price</div>
                             <div class="text-2">
-                              <span></span><span class="card-panel-num"> {{ hundredThousandMKATUSD }} </span>
+                              <span></span><span class="card-panel-num">$ {{ hundredThousandMKATUSD }} </span>
                             </div>
                           </div>
                         </div>
@@ -325,11 +344,11 @@
                             <div class="text-1">Token Address</div>
                             <div class="text-2">
                               <a
-                                href="#"
+                                :href="`https://bscscan.com/address/${mkatAddress}`"
                                 target="_blank"
                                 style="color: rgb(4, 171, 234); font-size: 12px; word-break: break-all"
                               >
-                                ...
+                                view on bscscan.com...
                               </a>
                             </div>
                           </div>
@@ -349,11 +368,11 @@
                           </div>
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Current Circulating Supply</div>
-                            <div class="text-2">{{ currentCircularingBalance }}</div>
+                            <div class="text-2">{{ currentCircularingBalance }} MKAT</div>
                           </div>
                           <div class="item-statistic col-sm-3">
-                            <!-- <div  class="text-1"> Burned </div>
-                              <div  class="text-2"> 8.56% </div> -->
+                            <div  class="text-1"> Contract BNB reward pool </div>
+                              <div  class="text-2"> {{ contractBNBRewardPool}} BNB</div>
                           </div>
                         </div>
                       </div>
@@ -362,7 +381,7 @@
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Current 100,000 MKAT</div>
                             <div class="text-2">
-                              <span class="card-panel-num"> 0.26 BNB </span>
+                              <span class="card-panel-num">$ {{ hundredThousandMKATUSD }} </span>
                             </div>
                           </div>
                           <div class="item-statistic col-sm-3">
@@ -374,7 +393,7 @@
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Total BNB in liquidity pool</div>
                             <div class="text-2">
-                              {{ totalBnbInPool }}
+                              {{ totalBnbInPool }} BNB
                             </div>
                           </div>
                           <div class="item-statistic col-sm-3">
@@ -398,13 +417,36 @@
         </div>
       </div>
     </div>
+    <div>
+
+    <b-modal id="bv-share-modal" hide-footer>
+      <template #modal-title>
+        Congratulations!
+      </template>
+      <div class="d-block text-center">
+         You just withdrawed {{ myBnbReward }}. Wanna share it on twitter?
+      </div>
+      <b-button class="mt-3" block>  
+        <ShareNetwork
+          @open="open"
+          network="twitter"
+          url="https://moonkat.net/"
+          :title="`I just claimed ${myBnbReward} BNB only by holding MKAT token. You can try it too!`"
+        > 
+          Of course!
+        </ShareNetwork></b-button>
+    </b-modal>
+</div>
+   
+
   </section>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 
-var utils = require("ethers").utils;
+var ethers = require("ethers");
+var utils =ethers.utils;
 
 import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
@@ -420,19 +462,22 @@ export default {
       contract: null,
       activeItem: "one",
       maxMkatTx: null,
-      hundredThousandMKATUSD: null,
-      myBnbReward: "0",
-      nextClaimDate: null,
+      hundredThousandMKATUSD: "...",
+      myBnbReward: "...",
+      nextClaimDate: "...",
       myBnbRewardAfterTax: 0,
-      totalBnbInPool: 0,
+      totalBnbInPool: "...",
       estimatedGas: {},
-      myMkatBalance: null,
-      totalLiquidityPoolUSD: null,
+      myMkatBalance: "...",
+      totalLiquidityPoolUSD: "...",
       recipientAddress: "",
       amountMkat: 0,
-      currentCircularingBalance: 0,
-      maxBNBTx: 0,
-      marketCap: 0,
+      currentCircularingBalance: "...",
+      maxBNBTx: "...",
+      marketCap: "...",
+      mkatAddress: CONTRACT_ADDRESS,
+      contractBNBRewardPool: "...", 
+      provider: null,
     };
   },
   computed: {
@@ -447,10 +492,12 @@ export default {
       await this.getBnbReward(new MetamaskService());
     }, 600000);
   },
+  
   methods: {
     async loadContractInfo() {
       const service = new MetamaskService();
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
+      this.provider = new ethers.providers.Web3Provider(window.ethereum);
       this.maxMkatTx = await service.getMaxTx();
       this.maxBNBTx = await service.getMaxTxBNB();
       await this.getBnbReward(service);
@@ -464,8 +511,18 @@ export default {
 
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
       this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
-      this.currentCircularingBalance = utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
-      this.marketCap = await this.calculateMarketCap(service);
+      this.currentCircularingBalance =  utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
+
+      let marketCap =  utils.formatUnits(await this.calculateMarketCap(service, hundredThousandMKAT, this.hundredThousandMKATUSD),18);
+      
+      const dotIndex= marketCap.indexOf('.');
+
+      marketCap = dotIndex + 2 > marketCap.length - 1 || dotIndex == -1 ? marketCap:  marketCap.substring(0, dotIndex + 2 ); // leave only one digit after .
+
+      this.marketCap = marketCap;
+
+      this.contractBNBRewardPool = utils.formatEther(await this.provider.getBalance(CONTRACT_ADDRESS));
+      
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
     async getMaxAmountForDisruptiveTransfer() {
@@ -485,12 +542,20 @@ export default {
     setActive(menuItem) {
       this.activeItem = menuItem;
     },
-    async calculateMarketCap(service) {
-      const circularingBalance = await this.getCurrentCircularingBalance();
+    async calculateMarketCap(service,hundredThousandMKAT,hundredThousandMKATPrice ) { 
+      var circularingBalance =  await this.getCurrentCircularingBalance();
 
-      const oneTokenPrice = await service.getMkatValueInBUSD(BigNumber.from(circularingBalance.toString()));
+      var oneTokenPrice = Math.floor(hundredThousandMKAT / hundredThousandMKATPrice);
 
-      return circularingBalance.mul(oneTokenPrice);
+      console.log("ONE TOKEN PRICE: ", oneTokenPrice);
+
+      return  circularingBalance.mul(oneTokenPrice);
+    },
+    open() { 
+      this.$bvModal.hide('bv-share-modal')
+    },
+    openShareOnTwitterModal() { 
+      this.$bvModal.show('bv-share-modal');
     },
     async disruptiveTransfer() {
       console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat);
@@ -506,18 +571,37 @@ export default {
 
       const amountMkatToSend = utils.parseUnits(this.amountMkat.toString(), 9);
 
-      if (senderBalance < amountMkatToSend || senderBalance === 0) {
-        alert(`Insufficient funds. Current MKAT balance is ${senderBalance}`);
+      const bnbBalance = await this.provider.getBalance(this.signerAddress);
+
+      console.log(amountMkatToSend.toString());
+
+      console.log("balance: ", senderBalance);
+
+
+      if (senderBalance.lt(amountMkatToSend) || senderBalance.isZero()) {
+        alert(`Insufficient funds. Current MKAT balance is ${utils.formatUnits(senderBalance, 9)}`);
+        return;
+      }
+            
+      if(bnbBalance.lt(utils.parseEther("2"))) { 
+        alert(`Insufficient funds.Your BNB balance is ${utils.formatUnits(bnbBalance, 18)}, but transfer requiers 2 BNB to send with transaction`);
         return;
       }
 
-      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, amountMkatToSend, {
-        value: utils.parseEther("2"),
-      });
-      const txReceipt = await txResponse.wait();
+      this.$loading(true);
+      try { 
+        const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, amountMkatToSend, {
+          value: utils.parseEther("2"),
+        });
+        const txReceipt = await txResponse.wait();
 
-      console.log({ txResponse });
-      console.log({ txReceipt });
+        console.log({ txResponse });
+        console.log({ txReceipt });
+      }catch(ex) { 
+        console.log("claimBNB exception: ", ex);
+      }finally{ 
+        this.$loading(false);
+      }
     },
     async getCurrentCircularingBalance() {
       let total = await this.contract.totalSupply();
@@ -532,12 +616,22 @@ export default {
         alert(`You need to own MKAT first!`);
         return;
       }
+      this.$loading(true);
 
-      const txResponse = await this.contract.claimBNBReward();
-      const txReceipt = await txResponse.wait();
+      try { 
+        const txResponse = await this.contract.claimBNBReward();
+        const txReceipt = await txResponse.wait();
 
-      console.log({ txResponse });
-      console.log({ txReceipt });
+        this.openShareOnTwitterModal();
+
+        console.log({ txResponse });
+        console.log({ txReceipt });
+      }catch(ex) { 
+        console.log("claimBNB exception: ", ex);
+      }
+      finally { 
+        this.$loading(false);
+      }
     },
   },
 };
