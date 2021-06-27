@@ -325,7 +325,7 @@
                             <div class="text-1">Token Address</div>
                             <div class="text-2">
                               <a
-                                href="#"
+                                :href="`https://bscscan.com/address/${mkatAddress}`"
                                 target="_blank"
                                 style="color: rgb(4, 171, 234); font-size: 12px; word-break: break-all"
                               >
@@ -433,6 +433,7 @@ export default {
       currentCircularingBalance: "...",
       maxBNBTx: "...",
       marketCap: "...",
+      mkatAddress: CONTRACT_ADDRESS,
     };
   },
   computed: {
@@ -451,6 +452,7 @@ export default {
     async loadContractInfo() {
       const service = new MetamaskService();
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
+      // this.mkatAddress = CONTRACT_ADDRESS;
       this.maxMkatTx = await service.getMaxTx();
       this.maxBNBTx = await service.getMaxTxBNB();
       await this.getBnbReward(service);
