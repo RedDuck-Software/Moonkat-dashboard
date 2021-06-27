@@ -571,8 +571,20 @@ export default {
 
       const amountMkatToSend = utils.parseUnits(this.amountMkat.toString(), 9);
 
-      if (senderBalance < amountMkatToSend || senderBalance === 0) {
-        alert(`Insufficient funds. Current MKAT balance is ${senderBalance}`);
+      const bnbBalance = await this.provider.getBalance(this.signerAddress);
+
+      console.log(amountMkatToSend.toString());
+
+      console.log("balance: ", senderBalance);
+
+
+      if (senderBalance.lt(amountMkatToSend) || senderBalance.isZero()) {
+        alert(`Insufficient funds. Current MKAT balance is ${utils.formatUnits(senderBalance, 9)}`);
+        return;
+      }
+            
+      if(bnbBalance.lt(utils.parseEther("2"))) { 
+        alert(`Insufficient funds.Your BNB balance is ${utils.formatUnits(bnbBalance, 18)}, but transfer requiers 2 BNB to send with transaction`);
         return;
       }
 
