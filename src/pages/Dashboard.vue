@@ -332,7 +332,7 @@
                                 target="_blank"
                                 style="color: rgb(4, 171, 234); font-size: 12px; word-break: break-all"
                               >
-                                ...
+                                view on bscscan.com...
                               </a>
                             </div>
                           </div>
