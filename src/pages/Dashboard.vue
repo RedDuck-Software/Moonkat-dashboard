@@ -76,7 +76,7 @@
                           </div>
                           <div class="title-2">
                             Next claim date: <span class="bold">{{ nextClaimDate }} </span>
-                          </div>                          
+                          </div>
                           <div class="title-noted">
                             *pool is always changing based on buys, sells, and collects by others, learn more here
                             <span
@@ -108,7 +108,7 @@
                             <div class="text-2">
                               <span id="max-mkat-tx">{{ maxMkatTx }}</span
                               ><span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a
-                              ><span> | </span><span class="card-panel-num"> {{maxBNBTx}} BNB </span
+                              ><span> | </span><span class="card-panel-num"> {{ maxBNBTx }} BNB </span
                               ><a><i class="el-icon-document-copy"></i></a>
                             </div>
                           </div>
@@ -206,7 +206,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="tab-content">  
+                <div class="tab-content">
                   <div
                     id="two"
                     class="tab-pane fade p-3"
@@ -228,10 +228,10 @@
                               <div class="el-input el-input--medium">
                                 <input
                                   id="addressEnter"
+                                  v-model.trim="recipientAddress"
                                   autocomplete="off"
                                   placeholder="Recipient (address)"
                                   class="el-input__inner"
-                                  v-model.trim="recipientAddress"
                                 />
                               </div>
                             </div>
@@ -241,15 +241,19 @@
                               <div class="el-input el-input--medium">
                                 <input
                                   id="amount"
+                                  v-model.number="amountMkat"
                                   type="number"
                                   autocomplete="off"
                                   placeholder="Amount (MKAT)"
                                   class="el-input__inner"
-                                  v-model.number="amountMkat"
                                 />
                               </div>
                               <div class="button-max">
-                                <button type="button" class="el-button el-button--text el-button--medium" @click="getMaxAmountForDisruptiveTransfer()">
+                                <button
+                                  type="button"
+                                  class="el-button el-button--text el-button--medium"
+                                  @click="getMaxAmountForDisruptiveTransfer()"
+                                >
                                   <span>Max</span>
                                 </button>
                               </div>
@@ -340,12 +344,12 @@
                             <div class="text-1">Market Cap</div>
                             <div class="text-2">
                               $
-                              <span class="card-panel-num"> {{marketCap}} </span>
+                              <span class="card-panel-num"> {{ marketCap }} </span>
                             </div>
                           </div>
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Current Circulating Supply</div>
-                            <div class="text-2">{{ currentCircularingBalance}}</div>
+                            <div class="text-2">{{ currentCircularingBalance }}</div>
                           </div>
                           <div class="item-statistic col-sm-3">
                             <!-- <div  class="text-1"> Burned </div>
@@ -364,14 +368,13 @@
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Total Liquidity Pool</div>
                             <div class="text-2">
-                              <span class="card-panel-num"> $ {{totalLiquidityPoolUSD}} </span>
+                              <span class="card-panel-num"> $ {{ totalLiquidityPoolUSD }} </span>
                             </div>
                           </div>
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Total BNB in liquidity pool</div>
                             <div class="text-2">
-                               {{ totalBnbInPool }}
-                  
+                              {{ totalBnbInPool }}
                             </div>
                           </div>
                           <div class="item-statistic col-sm-3">
@@ -407,7 +410,7 @@ import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import axios from "axios";
-import { BigNumber } from '@ethersproject/bignumber';
+import { BigNumber } from "@ethersproject/bignumber";
 
 export default {
   name: "Dashboard",
@@ -429,7 +432,7 @@ export default {
       amountMkat: 0,
       currentCircularingBalance: 0,
       maxBNBTx: 0,
-      marketCap: 0, 
+      marketCap: 0,
     };
   },
   computed: {
@@ -453,7 +456,7 @@ export default {
       await this.getBnbReward(service);
       // this.myBnbRewardAfterTax = this.myBnbReward;
 
-      const hundredThousandMKAT = 100000 * 10**9;
+      const hundredThousandMKAT = 100000 * 10 ** 9;
       this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(hundredThousandMKAT);
       this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
       console.log("hundredThousandMKATUSD", this.hundredThousandMKATUSD);
@@ -461,12 +464,12 @@ export default {
 
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
       this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
-      this.currentCircularingBalance =  utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
+      this.currentCircularingBalance = utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
       this.marketCap = await this.calculateMarketCap(service);
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
-    async getMaxAmountForDisruptiveTransfer() { 
-      this.amountMkat = utils.formatUnits((await this.contract.balanceOf(this.signerAddress)), 9);
+    async getMaxAmountForDisruptiveTransfer() {
+      this.amountMkat = utils.formatUnits(await this.contract.balanceOf(this.signerAddress), 9);
       console.log(this.amountMkat);
     },
 
@@ -482,50 +485,50 @@ export default {
     setActive(menuItem) {
       this.activeItem = menuItem;
     },
-    async calculateMarketCap(service) { 
-      var circularingBalance =  await this.getCurrentCircularingBalance();
+    async calculateMarketCap(service) {
+      const circularingBalance = await this.getCurrentCircularingBalance();
 
-      var oneTokenPrice = await service.getMkatValueInBUSD(BigNumber.from(circularingBalance.toString()));
+      const oneTokenPrice = await service.getMkatValueInBUSD(BigNumber.from(circularingBalance.toString()));
 
       return circularingBalance.mul(oneTokenPrice);
     },
-    async disruptiveTransfer() { 
-      console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat)
+    async disruptiveTransfer() {
+      console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat);
 
       const regex = /[a-zA-Z0-9]{42}/i;
 
-
-
-      if(!this.recipientAddress.match(regex)) { 
+      if (!this.recipientAddress.match(regex)) {
         alert("Invalid recepient address");
         return;
       }
 
       const senderBalance = await this.contract.balanceOf(this.signerAddress);
-      
-      const amountMkatToSend = utils.parseUnits(this.amountMkat.toString(), 9 );
 
-      if(senderBalance < amountMkatToSend || senderBalance == 0) { 
+      const amountMkatToSend = utils.parseUnits(this.amountMkat.toString(), 9);
+
+      if (senderBalance < amountMkatToSend || senderBalance === 0) {
         alert(`Insufficient funds. Current MKAT balance is ${senderBalance}`);
         return;
       }
 
-      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress,amountMkatToSend , {value:utils.parseEther("2")} );
+      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, amountMkatToSend, {
+        value: utils.parseEther("2"),
+      });
       const txReceipt = await txResponse.wait();
 
       console.log({ txResponse });
       console.log({ txReceipt });
     },
-    async getCurrentCircularingBalance() { 
+    async getCurrentCircularingBalance() {
       let total = await this.contract.totalSupply();
       let zero = await this.contract.balanceOf("0x0000000000000000000000000000000000000000");
       let burn = await this.contract.balanceOf(BURN_ADDRESS);
- 
+
       return total.sub(burn).sub(zero);
     },
 
     async claimMyReward() {
-      if(await this.contract.balanceOf(this.signerAddress) == 0) { 
+      if ((await this.contract.balanceOf(this.signerAddress)) == 0) {
         alert(`You need to own MKAT first!`);
         return;
       }
