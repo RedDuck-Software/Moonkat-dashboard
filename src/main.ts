@@ -36,7 +36,7 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 Vue.use(VueSocialSharing);
 Vue.use(PortalVue)
-Vue.use(VueLoading);
+Vue.use(VueLoading, {dark: true});
 
 Vue.config.productionTip = false;
 

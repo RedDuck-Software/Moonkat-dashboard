@@ -575,15 +575,21 @@ export default {
         alert(`Insufficient funds. Current MKAT balance is ${senderBalance}`);
         return;
       }
-;
 
-      const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, amountMkatToSend, {
-        value: utils.parseEther("2"),
-      });
-      const txReceipt = await txResponse.wait();
+      this.$loading(true);
+      try { 
+        const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, amountMkatToSend, {
+          value: utils.parseEther("2"),
+        });
+        const txReceipt = await txResponse.wait();
 
-      console.log({ txResponse });
-      console.log({ txReceipt });
+        console.log({ txResponse });
+        console.log({ txReceipt });
+      }catch(ex) { 
+        console.log("claimBNB exception: ", ex);
+      }finally{ 
+        this.$loading(false);
+      }
     },
     async getCurrentCircularingBalance() {
       let total = await this.contract.totalSupply();
@@ -598,14 +604,22 @@ export default {
         alert(`You need to own MKAT first!`);
         return;
       }
+      this.$loading(true);
 
-      const txResponse = await this.contract.claimBNBReward();
-      const txReceipt = await txResponse.wait();
+      try { 
+        const txResponse = await this.contract.claimBNBReward();
+        const txReceipt = await txResponse.wait();
 
-      this.openShareOnTwitterModal();
+        this.openShareOnTwitterModal();
 
-      console.log({ txResponse });
-      console.log({ txReceipt });
+        console.log({ txResponse });
+        console.log({ txReceipt });
+      }catch(ex) { 
+        console.log("claimBNB exception: ", ex);
+      }
+      finally { 
+        this.$loading(false);
+      }
     },
   },
 };
