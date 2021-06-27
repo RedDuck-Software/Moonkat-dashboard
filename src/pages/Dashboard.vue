@@ -16,7 +16,8 @@
                         <li class="nav-item">
                           <a
                             id="one-tab"
-                            class="nav-link active show"
+                            class="nav-link"
+                            :class="{ 'active show': isActive('one') }"
                             data-toggle="tab"
                             href="#"
                             role="tab"
@@ -30,6 +31,7 @@
                           <a
                             id="two-tab"
                             class="nav-link"
+                            :class="{ 'active show': isActive('two') }"
                             data-toggle="tab"
                             href="#"
                             role="tab"
@@ -43,6 +45,7 @@
                           <a
                             id="three-tab"
                             class="nav-link"
+                            :class="{ 'active show': isActive('three') }"
                             data-toggle="tab"
                             href="#three"
                             role="tab"
