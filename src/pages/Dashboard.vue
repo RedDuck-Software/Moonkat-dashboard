@@ -206,85 +206,87 @@
                     </div>
                   </div>
                 </div>
-                <div
-                  id="two"
-                  class="tab-pane fade p-3"
-                  role="tabpanel"
-                  aria-labelledby="two-tab"
-                  :class="{ 'active show': isActive('two') }"
-                >
-                  <div class="disruptive-transfer-wrapper">
-                    <div class="form-wrapper">
-                      <div class="text-main">
-                        Disruptive Transfer between 2 wallets
-                        <span style="margin-left: 10px"
-                          ><a href="#" target="_blank"><i class="el-icon-question"></i></a
-                        ></span>
+                <div class="tab-content">  
+                  <div
+                    id="two"
+                    class="tab-pane fade p-3"
+                    role="tabpanel"
+                    aria-labelledby="two-tab"
+                    :class="{ 'active show': isActive('two') }"
+                  >
+                    <div class="disruptive-transfer-wrapper">
+                      <div class="form-wrapper">
+                        <div class="text-main">
+                          Disruptive Transfer between 2 wallets
+                          <span style="margin-left: 10px"
+                            ><a href="#" target="_blank"><i class="el-icon-question"></i></a
+                          ></span>
+                        </div>
+                        <form class="el-form">
+                          <div class="el-form-item el-form-item--medium">
+                            <div class="el-form-item__content">
+                              <div class="el-input el-input--medium">
+                                <input
+                                  id="addressEnter"
+                                  autocomplete="off"
+                                  placeholder="Recipient (address)"
+                                  class="el-input__inner"
+                                  v-model.trim="recipientAddress"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div class="el-form-item el-form-item--medium">
+                            <div class="el-form-item__content">
+                              <div class="el-input el-input--medium">
+                                <input
+                                  id="amount"
+                                  type="number"
+                                  autocomplete="off"
+                                  placeholder="Amount (MKAT)"
+                                  class="el-input__inner"
+                                  v-model.number="amountMkat"
+                                />
+                              </div>
+                              <div class="button-max">
+                                <button type="button" class="el-button el-button--text el-button--medium" @click="getMaxAmountForDisruptiveTransfer()">
+                                  <span>Max</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            class="el-button button-send-disruptive el-button--primary el-button--medium"
+                            @click="disruptiveTransfer()"
+                          >
+                            <i class="el-icon-position"></i><span>Send </span>
+                          </button>
+                        </form>
                       </div>
-                      <form class="el-form">
-                        <div class="el-form-item el-form-item--medium">
-                          <div class="el-form-item__content">
-                            <div class="el-input el-input--medium">
-                              <input
-                                id="addressEnter"
-                                autocomplete="off"
-                                placeholder="Recipient (address)"
-                                class="el-input__inner"
-                                v-model.trim="recipientAddress"
-                              />
+                      <div
+                        class="sweet-modal-content sweet-modal-overlay theme-light sweet-modal-clickable"
+                        style="display: none"
+                      >
+                        <div class="sweet-modal theme-light has-content is-alert">
+                          <div class="sweet-box-actions">
+                            <div class="sweet-action-close">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                <path
+                                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+                                  fill="#292c34"
+                                ></path>
+                              </svg>
                             </div>
                           </div>
-                        </div>
-                        <div class="el-form-item el-form-item--medium">
-                          <div class="el-form-item__content">
-                            <div class="el-input el-input--medium">
-                              <input
-                                id="amount"
-                                type="number"
-                                autocomplete="off"
-                                placeholder="Amount (MKAT)"
-                                class="el-input__inner"
-                                v-model.number="amountMkat"
-                              />
-                            </div>
-                            <div class="button-max">
-                              <button type="button" class="el-button el-button--text el-button--medium" @click="getMaxAmountForDisruptiveTransfer()">
-                                <span>Max</span>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          class="el-button button-send-disruptive el-button--primary el-button--medium"
-                          @click="disruptiveTransfer()"
-                        >
-                          <i class="el-icon-position"></i><span>Send </span>
-                        </button>
-                      </form>
-                    </div>
-                    <div
-                      class="sweet-modal-content sweet-modal-overlay theme-light sweet-modal-clickable"
-                      style="display: none"
-                    >
-                      <div class="sweet-modal theme-light has-content is-alert">
-                        <div class="sweet-box-actions">
-                          <div class="sweet-action-close">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                              <path
-                                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                                fill="#292c34"
-                              ></path>
-                            </svg>
-                          </div>
-                        </div>
-                        <div class="sweet-content">
-                          <div class="sweet-content-content">
-                            <div class="content-dialog-claim-success">
-                              <!--                                  <img src="@/assets/images/anti_whales.25f69da2.png" style="width: 200px;" />-->
-                              <div class="text-1">Congratulations!</div>
-                              <div class="text-2">You transferred <span class="bnb">0.00 MKAT</span></div>
-                              <div class="text-4">to</div>
+                          <div class="sweet-content">
+                            <div class="sweet-content-content">
+                              <div class="content-dialog-claim-success">
+                                <!--                                  <img src="@/assets/images/anti_whales.25f69da2.png" style="width: 200px;" />-->
+                                <div class="text-1">Congratulations!</div>
+                                <div class="text-2">You transferred <span class="bnb">0.00 MKAT</span></div>
+                                <div class="text-4">to</div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -292,96 +294,98 @@
                     </div>
                   </div>
                 </div>
-                <div
-                  id="three"
-                  class="tab-pane fade p-3"
-                  role="tabpanel"
-                  aria-labelledby="three-tab"
-                  :class="{ 'active show': isActive('three') }"
-                >
-                  <div class="statistic-all">
-                    <div class="statistic-p1">
-                      <div class="row">
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Symbol</div>
-                          <div class="text-2">MKAT</div>
+                <div class="tab-content">
+                  <div
+                    id="three"
+                    class="tab-pane fade p-3"
+                    role="tabpanel"
+                    aria-labelledby="three-tab"
+                    :class="{ 'active show': isActive('three') }"
+                  >
+                    <div class="statistic-all">
+                      <div class="statistic-p1">
+                        <div class="row">
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Symbol</div>
+                            <div class="text-2">MKAT</div>
+                          </div>
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Total Supply</div>
+                            <div class="text-2">1,000,000,000 MKAT</div>
+                          </div>
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Holders</div>
+                            <div class="text-2">Updating...</div>
+                          </div>
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Token Address</div>
+                            <div class="text-2">
+                              <a
+                                href="#"
+                                target="_blank"
+                                style="color: rgb(4, 171, 234); font-size: 12px; word-break: break-all"
+                              >
+                                ...
+                              </a>
+                            </div>
+                          </div>
                         </div>
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Total Supply</div>
-                          <div class="text-2">1,000,000,000 MKAT</div>
-                        </div>
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Holders</div>
-                          <div class="text-2">Updating...</div>
-                        </div>
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Token Address</div>
-                          <div class="text-2">
-                            <a
-                              href="#"
-                              target="_blank"
-                              style="color: rgb(4, 171, 234); font-size: 12px; word-break: break-all"
-                            >
-                              ...
-                            </a>
+                        <div class="row-2 hide-on-mobile"></div>
+                        <div class="row">
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Volume (24h)</div>
+                            <div class="text-2">Updating...</div>
+                          </div>
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Market Cap</div>
+                            <div class="text-2">
+                              $
+                              <span class="card-panel-num"> {{marketCap}} </span>
+                            </div>
+                          </div>
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Current Circulating Supply</div>
+                            <div class="text-2">{{ currentCircularingBalance}}</div>
+                          </div>
+                          <div class="item-statistic col-sm-3">
+                            <!-- <div  class="text-1"> Burned </div>
+                              <div  class="text-2"> 8.56% </div> -->
                           </div>
                         </div>
                       </div>
-                      <div class="row-2 hide-on-mobile"></div>
-                      <div class="row">
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Volume (24h)</div>
-                          <div class="text-2">Updating...</div>
-                        </div>
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Market Cap</div>
-                          <div class="text-2">
-                            $
-                            <span class="card-panel-num"> 63,500 </span>
+                      <div class="statistic-p1 mt-25">
+                        <div class="row">
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Current 100,000 MKAT</div>
+                            <div class="text-2">
+                              <span class="card-panel-num"> 0.26 BNB </span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Current Circulating Supply</div>
-                          <div class="text-2">{{ currentCircularingBalance}}</div>
-                        </div>
-                        <div class="item-statistic col-sm-3">
-                          <!-- <div  class="text-1"> Burned </div>
-                            <div  class="text-2"> 8.56% </div> -->
-                        </div>
-                      </div>
-                    </div>
-                    <div class="statistic-p1 mt-25">
-                      <div class="row">
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Current 100,000 MKAT</div>
-                          <div class="text-2">
-                            <span class="card-panel-num"> 0.26 BNB </span>
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Total Liquidity Pool</div>
+                            <div class="text-2">
+                              <span class="card-panel-num"> $ {{totalLiquidityPoolUSD}} </span>
+                            </div>
                           </div>
-                        </div>
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Total Liquidity Pool</div>
-                          <div class="text-2">
-                            <span class="card-panel-num"> $ {{totalLiquidityPoolUSD}} </span>
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Total BNB in liquidity pool</div>
+                            <div class="text-2">
+                               {{ totalBnbInPool }}
+                  
+                            </div>
                           </div>
-                        </div>
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Total BNB in liquidity pool</div>
-                          <div class="text-2">
-                             {{ totalBnbInPool }}
-                            
-                          </div>
-                        </div>
-                        <div class="item-statistic col-sm-3">
-                          <div class="text-1">Max Transaction Amount</div>
-                          <div class="text-2">
-                            1,000,000
-                            <span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a>
+                          <div class="item-statistic col-sm-3">
+                            <div class="text-1">Max Transaction Amount</div>
+                            <div class="text-2">
+                              1,000,000
+                              <span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="hidden-input el-input el-input--medium">
-                      <input id="copy-value-max" type="text" autocomplete="off" class="el-input__inner" />
+                      <div class="hidden-input el-input el-input--medium">
+                        <input id="copy-value-max" type="text" autocomplete="off" class="el-input__inner" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -403,6 +407,7 @@ import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import axios from "axios";
+import { BigNumber } from '@ethersproject/bignumber';
 
 export default {
   name: "Dashboard",
@@ -424,6 +429,7 @@ export default {
       amountMkat: 0,
       currentCircularingBalance: 0,
       maxBNBTx: 0,
+      marketCap: 0, 
     };
   },
   computed: {
@@ -456,7 +462,7 @@ export default {
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
       this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
       this.currentCircularingBalance =  utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
-
+      this.marketCap = await this.calculateMarketCap(service);
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
     async getMaxAmountForDisruptiveTransfer() { 
@@ -475,6 +481,13 @@ export default {
     },
     setActive(menuItem) {
       this.activeItem = menuItem;
+    },
+    async calculateMarketCap(service) { 
+      var circularingBalance =  await this.getCurrentCircularingBalance();
+
+      var oneTokenPrice = await service.getMkatValueInBUSD(BigNumber.from(circularingBalance.toString()));
+
+      return circularingBalance.mul(oneTokenPrice);
     },
     async disruptiveTransfer() { 
       console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat)
