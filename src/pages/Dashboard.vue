@@ -352,8 +352,8 @@
                             <div class="text-2">{{ currentCircularingBalance }} MKAT</div>
                           </div>
                           <div class="item-statistic col-sm-3">
-                            <!-- <div  class="text-1"> Burned </div>
-                              <div  class="text-2"> 8.56% </div> -->
+                            <div  class="text-1"> Contract BNB reward pool </div>
+                              <div  class="text-2"> {{ contractBNBRewardPool}} BNB</div>
                           </div>
                         </div>
                       </div>
@@ -374,7 +374,7 @@
                           <div class="item-statistic col-sm-3">
                             <div class="text-1">Total BNB in liquidity pool</div>
                             <div class="text-2">
-                              {{ totalBnbInPool }}
+                              {{ totalBnbInPool }} BNB
                             </div>
                           </div>
                           <div class="item-statistic col-sm-3">
@@ -404,7 +404,8 @@
 <script>
 import { mapGetters } from "vuex";
 
-var utils = require("ethers").utils;
+var ethers = require("ethers");
+var utils =ethers.utils;
 
 import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
@@ -434,6 +435,8 @@ export default {
       maxBNBTx: "...",
       marketCap: "...",
       mkatAddress: CONTRACT_ADDRESS,
+      contractBNBRewardPool: "...", 
+      provider: null,
     };
   },
   computed: {
@@ -452,7 +455,7 @@ export default {
     async loadContractInfo() {
       const service = new MetamaskService();
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
-      // this.mkatAddress = CONTRACT_ADDRESS;
+      this.provider = new ethers.providers.Web3Provider(window.ethereum);
       this.maxMkatTx = await service.getMaxTx();
       this.maxBNBTx = await service.getMaxTxBNB();
       await this.getBnbReward(service);
@@ -475,6 +478,8 @@ export default {
       marketCap = dotIndex + 2 > marketCap.length - 1 || dotIndex == -1 ? marketCap:  marketCap.substring(0, dotIndex + 2 ); // leave only one digit after .
 
       this.marketCap = marketCap;
+
+      this.contractBNBRewardPool = utils.formatEther(await this.provider.getBalance(CONTRACT_ADDRESS));
       
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
