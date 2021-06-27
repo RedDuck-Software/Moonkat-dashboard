@@ -146,7 +146,7 @@
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Current 100,000 MKAT price</div>
                             <div class="text-2">
-                              <span></span><span class="card-panel-num"> {{ hundredThousandMKATUSD }} </span>
+                              <span></span><span class="card-panel-num">$ {{ hundredThousandMKATUSD }} </span>
                             </div>
                           </div>
                         </div>
@@ -462,7 +462,15 @@ export default {
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
       this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
       this.currentCircularingBalance =  utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
-      this.marketCap = await this.calculateMarketCap(service);
+
+      let marketCap =  utils.formatUnits(await this.calculateMarketCap(service, hundredThousandMKAT, this.hundredThousandMKATUSD),18);
+      
+      const dotIndex= marketCap.indexOf('.');
+
+      marketCap = dotIndex + 2 > marketCap.length - 1 || dotIndex == -1 ? marketCap:  marketCap.substring(0, dotIndex + 2 ); // leave only one digit after .
+
+      this.marketCap = marketCap;
+      
       console.log("total bnb in pool: " + this.totalBnbInPool);
     },
     async getMaxAmountForDisruptiveTransfer() { 
@@ -482,12 +490,14 @@ export default {
     setActive(menuItem) {
       this.activeItem = menuItem;
     },
-    async calculateMarketCap(service) { 
+    async calculateMarketCap(service,hundredThousandMKAT,hundredThousandMKATPrice ) { 
       var circularingBalance =  await this.getCurrentCircularingBalance();
 
-      var oneTokenPrice = await service.getMkatValueInBUSD(BigNumber.from(circularingBalance.toString()));
+      var oneTokenPrice = Math.floor(hundredThousandMKAT / hundredThousandMKATPrice);
 
-      return circularingBalance.mul(oneTokenPrice);
+      console.log("ONE TOKEN PRICE: ", oneTokenPrice);
+
+      return  circularingBalance.mul(oneTokenPrice);
     },
     async disruptiveTransfer() { 
       console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat)
