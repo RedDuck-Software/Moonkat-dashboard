@@ -1,3 +1,19 @@
+<style> 
+  .modal-content { 
+    background-color: black;
+    color: white !important;
+    -webkit-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+-moz-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+  }
+  .share-network-twitter { 
+    color: white ;
+  }
+  .share-network-twitter:hover { 
+    color: white ;
+  }
+</style>
+
 <template>
   <section class="dashboard-content">
     <div class="container-fluid">
@@ -401,6 +417,28 @@
         </div>
       </div>
     </div>
+    <div>
+
+    <b-modal id="bv-share-modal" hide-footer>
+      <template #modal-title>
+        Congratulations!
+      </template>
+      <div class="d-block text-center">
+         You just withdrawed {{ myBnbReward }}. Wanna share it on twitter?
+      </div>
+      <b-button class="mt-3" block>  
+        <ShareNetwork
+          @open="open"
+          network="twitter"
+          url="https://moonkat.net/"
+          :title="`I just claimed ${myBnbReward} BNB only by holding MKAT token. You can try it too!`"
+        > 
+          Of course!
+        </ShareNetwork></b-button>
+    </b-modal>
+</div>
+   
+
   </section>
 </template>
 
@@ -454,6 +492,7 @@ export default {
       await this.getBnbReward(new MetamaskService());
     }, 600000);
   },
+  
   methods: {
     async loadContractInfo() {
       const service = new MetamaskService();
@@ -512,6 +551,12 @@ export default {
 
       return  circularingBalance.mul(oneTokenPrice);
     },
+    open() { 
+      this.$bvModal.hide('bv-share-modal')
+    },
+    openShareOnTwitterModal() { 
+      this.$bvModal.show('bv-share-modal');
+    },
     async disruptiveTransfer() {
       console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat);
 
@@ -530,6 +575,7 @@ export default {
         alert(`Insufficient funds. Current MKAT balance is ${senderBalance}`);
         return;
       }
+;
 
       const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, amountMkatToSend, {
         value: utils.parseEther("2"),
@@ -555,6 +601,8 @@ export default {
 
       const txResponse = await this.contract.claimBNBReward();
       const txReceipt = await txResponse.wait();
+
+      this.openShareOnTwitterModal();
 
       console.log({ txResponse });
       console.log({ txReceipt });

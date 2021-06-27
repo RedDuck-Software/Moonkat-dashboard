@@ -9,6 +9,8 @@
 <script>
 import Header from "./components/Header";
 
+
+
 export default {
   name: "App",
   components: {
@@ -124,4 +126,5 @@ input::placeholder,
 textarea::placeholder {
   color: white !important;
 }
+
 </style>
