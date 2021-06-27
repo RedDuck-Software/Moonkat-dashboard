@@ -23,6 +23,7 @@
               </div>
               <div class="button-wrapper">
                 <button
+                  v-if="!isAndroid && !isIos"
                   id="connectBtn"
                   type="button"
                   class="el-button button-custom-new el-button--primary el-button--medium"
@@ -32,6 +33,21 @@
                   <span v-show="!signerAddress">Connect to a wallet </span>
                   <span v-show="signerAddress">{{ signerAddress }}</span>
                 </button>
+                <br />
+                <a
+                  v-if="isAndroid"
+                  class="el-button button-custom-new el-button--secondary el-button--small"
+                  href="https://link.trustwallet.com/open_url?coin_id=60&url=https://moonkat.net/dashboard"
+                  >Trust wallet</a
+                >
+
+                <a
+                  v-if="isIos"
+                  class="el-button button-custom-new el-button--secondary el-button--small"
+                  href="https://moonkat.net/dashboard/wc?uri=wc:00e46b69-d0cc-4b3e-b6a2-cee442f97188@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=91303dedf64285cbbaf9120f6e9d160a5c8aa3deb67017a3874cd272323f48ae
+"
+                  >Trust wallet</a
+                >
 
                 <!---->
               </div>
@@ -53,10 +69,19 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "WalletConnect",
+
+  data() {
+    return {
+      isAndroid: false,
+      isIos: false,
+    };
+  },
   computed: {
     ...mapGetters(["signerAddress"]),
   },
   mounted() {
+    this.detectMobile();
+
     if (!window.ethereum) {
       alert("Please install MetaMask!");
       return;
@@ -108,6 +133,13 @@ export default {
         });
       } else {
         alert("Please install MetaMask!");
+      }
+    },
+    detectMobile() {
+      if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        this.isAndroid = true;
+      } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        this.isIos = true;
       }
     },
   },
