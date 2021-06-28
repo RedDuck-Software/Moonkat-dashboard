@@ -513,13 +513,7 @@ export default {
       this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
       this.currentCircularingBalance =  utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
 
-      let marketCap =  utils.formatUnits(await this.calculateMarketCap(service, hundredThousandMKAT, this.hundredThousandMKATUSD),18);
-      
-      const dotIndex= marketCap.indexOf('.');
-
-      marketCap = dotIndex + 2 > marketCap.length - 1 || dotIndex == -1 ? marketCap:  marketCap.substring(0, dotIndex + 2 ); // leave only one digit after .
-
-      this.marketCap = marketCap;
+      this.marketCap =  await this.calculateMarketCap( service);  
 
       this.contractBNBRewardPool = utils.formatEther(await this.provider.getBalance(CONTRACT_ADDRESS));
       
@@ -542,14 +536,10 @@ export default {
     setActive(menuItem) {
       this.activeItem = menuItem;
     },
-    async calculateMarketCap(service,hundredThousandMKAT,hundredThousandMKATPrice ) { 
+    async calculateMarketCap(service) { 
       var circularingBalance =  await this.getCurrentCircularingBalance();
 
-      var oneTokenPrice = Math.floor(hundredThousandMKAT / hundredThousandMKATPrice);
-
-      console.log("ONE TOKEN PRICE: ", oneTokenPrice);
-
-      return  circularingBalance.mul(oneTokenPrice);
+      return await service.getMkatValueInBUSD(circularingBalance);
     },
     open() { 
       this.$bvModal.hide('bv-share-modal')
