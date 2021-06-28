@@ -23,7 +23,6 @@
               </div>
               <div class="button-wrapper">
                 <button
-                  v-if="!isAndroid && !isIos"
                   id="connectBtn"
                   type="button"
                   class="el-button button-custom-new el-button--primary el-button--medium"
@@ -34,13 +33,14 @@
                   <span v-show="signerAddress">{{ signerAddress }}</span>
                 </button>
                 <br />
+                <br   />
                 <a
                   v-if="isAndroid"
                   class="el-button button-custom-new el-button--secondary el-button--small"
                   href="https://link.trustwallet.com/open_url?coin_id=60&url=https://moonkat.net/dashboard"
                   >Trust wallet</a
                 >
-
+    
                 <a
                   v-if="isIos"
                   class="el-button button-custom-new el-button--secondary el-button--small"
