@@ -347,7 +347,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { BigNumber, ethers, utils } from "ethers";
+import { ethers, utils } from "ethers";
 
 import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
@@ -410,7 +410,7 @@ export default {
       this.maxBNBTx = parseFloat(this.maxBNBTx).toFixed(2);
       await this.getBnbReward(service);
 
-      const hundredThousandMKAT = utils.parseUnits("100000", 9);
+      const hundredThousandMKAT = 100000 * 10 ** 9;
       this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(hundredThousandMKAT);
       this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
 
@@ -430,7 +430,7 @@ export default {
       this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
 
       this.myBnbReward = await utils.formatEther(reward);
-      this.myBnbReward = parseFloat(this.myBnbReward).toFixed(2);
+      this.myBnbReward = parseFloat(this.myBnbReward);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;
