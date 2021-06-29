@@ -29,8 +29,7 @@
                   @click="connectMetamask()"
                 >
                   <i class="el-icon-connection"></i>
-                  <span v-show="!signerAddress">Connect to a wallet </span>
-                  <span v-show="signerAddress">{{ signerAddress }}</span>
+                  <span>Connect wallet </span>
                 </button>
                 <br />
                 <br   />
@@ -44,7 +43,7 @@
                 <a
                   class="el-button button-custom-new el-button--secondary el-button--small"
                   @click="connectWalletConnect()"
-                  >Wallet connect</a
+                  >WalletConnect</a
                 >
 
                 <!---->
@@ -78,26 +77,11 @@ export default {
   },
   computed: {
     ...mapGetters(["signerAddress"]),
+    ...mapGetters(["walletProviderType"]),
+
   },
   mounted() {
     this.detectMobile();
-
-    if (!window.ethereum) {
-      alert("Please install MetaMask!");
-      return;
-    }
-
-    if (this.signerAddress) {
-      this.$router.push({ path: "dashboard" });
-    }
-
-    window.ethereum
-      .request({ method: "eth_accounts" })
-      .then(res => {
-        console.log(res);
-        return res;
-      })
-      .catch(e => alert(e));
 
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === "logout") {
@@ -152,8 +136,6 @@ export default {
       console.log("web3 provider:", provider);
       console.log("wallet provider:", walletConnectProvider);
       
-
-
       const signer = provider.getSigner();
       console.log("signer:", signer);
       const address = await signer.getAddress();
@@ -180,10 +162,11 @@ export default {
         console.log("Dsiconnect", reason);
 
         this.$store.commit("logout");
-
-        //  window.location.reload();
-
+        this.$router.push({ path: "connect-wallet" });
       });
+    },
+    async updateDataOnMetamaskChange() { 
+
     },
     detectMobile() {
       if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
