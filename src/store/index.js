@@ -2,6 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
 
+let CircularJSON = require('circular-json');
+
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
@@ -22,7 +24,7 @@ const store = new Vuex.Store({
       state.contract = contract;
     },
     updateWalletProvider(state, walletProvider) {
-      state.walletProvider = JSON.stringify(walletProvider);
+      state.walletProvider = CircularJSON.stringify(walletProvider);
     },
     logout: state => {
       state.signerAddress = null;
@@ -31,7 +33,7 @@ const store = new Vuex.Store({
   },
   getters: {
     signerAddress: state => state.signerAddress,
-    walletProvider: state => JSON.parse(state.walletProvider),
+    walletProvider: state => CircularJSON.parse(state.walletProvider),
 
   },
   actions: {

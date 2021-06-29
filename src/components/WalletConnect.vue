@@ -119,6 +119,8 @@ export default {
         console.log("signer:", signer);
         const address = await signer.getAddress();
         this.$store.commit("updateSignerAddress", address);
+        this.$store.commit("updateWalletProvider", window.ethereum);
+
         window.ethereum.on("accountsChanged", function(accounts) {
           // Time to reload your interface with accounts[0]!
           this.$store.commit("logout");
@@ -148,6 +150,8 @@ export default {
       console.log("signer:", signer);
       const address = await signer.getAddress();
       this.$store.commit("updateSignerAddress", address);
+      this.$store.commit("updateWalletProvider", walletConnectProvider);
+
 
       walletConnectProvider.on("connect", (error, payload) => {
         if (error) {
