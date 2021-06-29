@@ -149,7 +149,7 @@ export default {
 
       // Subscribe to accounts change
       walletConnectProvider.on("accountsChanged", (accounts) => {
-        console.log(accounts);
+        console.log("account changed: ", accounts);
       });
 
       // Subscribe to chainId change
@@ -165,7 +165,7 @@ export default {
         this.$router.push({ path: "connect-wallet" });
       });
     },
-    async updateDataOnMetamaskChange() { 
+    async updateDataOnAccountChange() { 
 
     },
     detectMobile() {
