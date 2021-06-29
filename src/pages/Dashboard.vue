@@ -396,8 +396,12 @@ export default {
       const service = new MetamaskService();
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.provider = new ethers.providers.Web3Provider(window.ethereum);
+
       this.maxMkatTx = await service.getMaxTx();
+      this.maxMkatTx = parseFloat(this.maxMkatTx).toFixed(2);
+
       this.maxBNBTx = await service.getMaxTxBNB();
+      this.maxBNBTx = parseFloat(this.maxBNBTx).toFixed(2);
       await this.getBnbReward(service);
 
       const hundredThousandMKAT = 100000 * 10 ** 9;
@@ -418,7 +422,9 @@ export default {
     async getBnbReward(service) {
       let reward = await service.getBnbReward(this.signerAddress);
       this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
-      this.myBnbReward = utils.formatEther(reward);
+
+      this.myBnbReward = await utils.formatEther(reward);
+      this.myBnbReward = parseFloat(this.myBnbReward).toFixed(2);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;

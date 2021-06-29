@@ -1,6 +1,6 @@
 <template>
   <section id="banner">
-    <!--    <div id="particles-js" class=".particles-js-canvas-el"></div>-->
+    <vue-particles lines-color="#212529" color="#212529" :particle-opacity="0.7" />
     <div class="design-layer"></div>
     <div class="backtotop">
       <a href="#banner"><i class="fa fa-arrow-up" aria-hidden="true"></i></a>

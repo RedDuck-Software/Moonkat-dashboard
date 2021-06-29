@@ -33,14 +33,14 @@
                   <span v-show="signerAddress">{{ signerAddress }}</span>
                 </button>
                 <br />
-                <br   />
+                <br />
                 <a
                   v-if="isAndroid"
                   class="el-button button-custom-new el-button--secondary el-button--small"
                   href="https://link.trustwallet.com/open_url?coin_id=60&url=https://moonkat.net/dashboard"
                   >Trust wallet</a
                 >
-    
+
                 <a
                   v-if="isIos"
                   class="el-button button-custom-new el-button--secondary el-button--small"
@@ -83,8 +83,10 @@ export default {
     this.detectMobile();
 
     if (!window.ethereum) {
-      alert("Please install MetaMask!");
-      return;
+      if (!this.isAndroid && !this.isIos) {
+        alert("Please install MetaMask!");
+        return;
+      }
     }
 
     if (this.signerAddress) {
@@ -132,7 +134,7 @@ export default {
           window.location.reload();
         });
       } else {
-        alert("Please install MetaMask!");
+        if (!this.isAndroid && !this.isIos) alert("Please install MetaMask!");
       }
     },
     detectMobile() {
