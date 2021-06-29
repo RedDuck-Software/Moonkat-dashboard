@@ -1,11 +1,18 @@
 <template>
   <div class="moonkat-sidebar">
     <div class="logo-and-buy">
-      <div class="text-center"><img src="@/assets/images/moonKat.jpg" class="logo" /></div>
+      <div class="text-center">
+        <router-link :to="{ name: 'Home' }">
+          <img src="@/assets/images/moonKat.jpg" class="logo" alt="moonKat" />
+        </router-link>
+      </div>
       <div class="mrat-text hide-on-mobile">moonkat</div>
       <div class="mrat-desc">Earn BNB by Holding MKAT</div>
       <div class="button-buy-mrat hide-on-mobile">
-        <a href="https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce" target="_blank" class="button-custom-new button-sidebar"
+        <a
+          href="https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce"
+          target="_blank"
+          class="button-custom-new button-sidebar"
           ><i class="fa fa-shopping-cart"></i> BUY $MKAT
         </a>
       </div>
@@ -91,8 +98,11 @@ export default {
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
 
       this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
-      this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
-      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD( ethers.utils.parseUnits(this.myMkatBalance, 9));
+      this.myMkatBalance = await ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
+      this.myMkatBalance = parseFloat(this.myMkatBalance).toFixed(2);
+
+      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(this.myMkatBalance);
+      this.myMkatBalanceInBUSD = parseFloat(this.myMkatBalanceInBUSD).toFixed(2);
     },
     async copyAddress() {
       const address = this.$refs.myAddr;

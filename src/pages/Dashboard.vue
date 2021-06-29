@@ -1,19 +1,3 @@
-<style> 
-  .modal-content { 
-    background-color: black;
-    color: white !important;
-    -webkit-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
--moz-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
-  }
-  .share-network-twitter { 
-    color: white ;
-  }
-  .share-network-twitter:hover { 
-    color: white ;
-  }
-</style>
-
 <template>
   <section class="dashboard-content">
     <div class="container-fluid">
@@ -325,90 +309,13 @@ box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
                     aria-labelledby="three-tab"
                     :class="{ 'active show': isActive('three') }"
                   >
-                    <div class="statistic-all">
-                      <div class="statistic-p1">
-                        <div class="row">
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Symbol</div>
-                            <div class="text-2">MKAT</div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Total Supply</div>
-                            <div class="text-2">1,000,000,000 MKAT</div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Holders</div>
-                            <div class="text-2">Updating...</div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Token Address</div>
-                            <div class="text-2">
-                              <a
-                                :href="`https://bscscan.com/address/${mkatAddress}`"
-                                target="_blank"
-                                style="color: rgb(4, 171, 234); font-size: 12px; word-break: break-all"
-                              >
-                                view on bscscan.com...
-                              </a>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="row-2 hide-on-mobile"></div>
-                        <div class="row">
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Volume (24h)</div>
-                            <div class="text-2">Updating...</div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Market Cap</div>
-                            <div class="text-2">
-                              $
-                              <span class="card-panel-num"> {{ marketCap }} </span>
-                            </div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Current Circulating Supply</div>
-                            <div class="text-2">{{ currentCircularingBalance }} MKAT</div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div  class="text-1"> Contract BNB reward pool </div>
-                              <div  class="text-2"> {{ contractBNBRewardPool}} BNB</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="statistic-p1 mt-25">
-                        <div class="row">
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Current 100,000 MKAT</div>
-                            <div class="text-2">
-                              <span class="card-panel-num">$ {{ hundredThousandMKATUSD }} </span>
-                            </div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Total Liquidity Pool</div>
-                            <div class="text-2">
-                              <span class="card-panel-num"> $ {{ totalLiquidityPoolUSD }} </span>
-                            </div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Total BNB in liquidity pool</div>
-                            <div class="text-2">
-                              {{ totalBnbInPool }} BNB
-                            </div>
-                          </div>
-                          <div class="item-statistic col-sm-3">
-                            <div class="text-1">Max Transaction Amount</div>
-                            <div class="text-2">
-                              1,000,000
-                              <span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="hidden-input el-input el-input--medium">
-                        <input id="copy-value-max" type="text" autocomplete="off" class="el-input__inner" />
-                      </div>
-                    </div>
+                    <Statistic
+                      v-if="contract"
+                      :hundredthousandmkatusd="hundredThousandMKATUSD"
+                      :totalliquiditypoolusd="totalLiquidityPoolUSD"
+                      :totalbnbinpool="totalBnbInPool"
+                      :contract="contract"
+                    />
                   </div>
                 </div>
               </div>
@@ -418,45 +325,38 @@ box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
       </div>
     </div>
     <div>
-
-    <b-modal id="bv-share-modal" hide-footer>
-      <template #modal-title>
-        Congratulations!
-      </template>
-      <div class="d-block text-center">
-         You just withdrawed {{ myBnbReward }}. Wanna share it on twitter?
-      </div>
-      <b-button class="mt-3" block>  
-        <ShareNetwork
-          @open="open"
-          network="twitter"
-          url="https://moonkat.net/"
-          :title="`I just claimed ${myBnbReward} BNB only by holding MKAT token. You can try it too!`"
-        > 
-          Of course!
-        </ShareNetwork></b-button>
-    </b-modal>
-</div>
-   
-
+      <b-modal id="bv-share-modal" hide-footer>
+        <template #modal-title>
+          Congratulations!
+        </template>
+        <div class="d-block text-center">You just withdrawed {{ myBnbReward }}. Wanna share it on twitter?</div>
+        <b-button class="mt-3" block>
+          <ShareNetwork
+            network="twitter"
+            url="https://moonkat.net/"
+            :title="`I just claimed ${myBnbReward} BNB only by holding MKAT token. You can try it too!`"
+            @open="open"
+          >
+            Of course!
+          </ShareNetwork></b-button
+        >
+      </b-modal>
+    </div>
   </section>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
+import { ethers, utils } from "ethers";
 
-var ethers = require("ethers");
-var utils =ethers.utils;
-
-import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
+import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
-import axios from "axios";
-import { BigNumber } from "@ethersproject/bignumber";
+import Statistic from "@/components/Dashboard/Statistic";
 
 export default {
   name: "Dashboard",
-  components: { Sidebar },
+  components: { Statistic, Sidebar },
   data() {
     return {
       contract: null,
@@ -472,11 +372,9 @@ export default {
       totalLiquidityPoolUSD: "...",
       recipientAddress: "",
       amountMkat: 0,
-      currentCircularingBalance: "...",
+
       maxBNBTx: "...",
-      marketCap: "...",
-      mkatAddress: CONTRACT_ADDRESS,
-      contractBNBRewardPool: "...", 
+
       provider: null,
     };
   },
@@ -493,7 +391,7 @@ export default {
       await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
     }, 600000);
   },
-  
+
   methods: {
     async loadContractInfo() {
       console.log("wallet provider: ", this.walletProviderType);
@@ -506,36 +404,33 @@ export default {
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.provider = service.getWeb3Provider();
       this.maxMkatTx = await service.getMaxTx();
+      this.maxMkatTx = parseFloat(this.maxMkatTx).toFixed(2);
+
       this.maxBNBTx = await service.getMaxTxBNB();
+      this.maxBNBTx = parseFloat(this.maxBNBTx).toFixed(2);
       await this.getBnbReward(service);
-      // this.myBnbRewardAfterTax = this.myBnbReward;
 
       const hundredThousandMKAT = 100000 * 10 ** 9;
       this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(hundredThousandMKAT);
       this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
-      console.log("hundredThousandMKATUSD", this.hundredThousandMKATUSD);
-      console.log("totalLiquidityPoolUSD", this.totalLiquidityPoolUSD);
+
+      this.hundredThousandMKATUSD = this.hundredThousandMKATUSD.toFixed(2);
+      this.totalLiquidityPoolUSD = this.totalLiquidityPoolUSD.toFixed(2);
 
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
-      this.totalBnbInPool = utils.formatEther(totalBnbInLiquidityPool);
-      this.currentCircularingBalance =  utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
-
-      this.marketCap =  await this.calculateMarketCap( service);  
-
-      this.contractBNBRewardPool = utils.formatEther(await this.provider.getBalance(CONTRACT_ADDRESS));
-      
-      console.log("total bnb in pool: " + this.totalBnbInPool);
+      this.totalBnbInPool = await utils.formatEther(totalBnbInLiquidityPool);
+      this.totalBnbInPool = parseFloat(this.totalBnbInPool).toFixed(2);
     },
     async getMaxAmountForDisruptiveTransfer() {
       this.amountMkat = utils.formatUnits(await this.contract.balanceOf(this.signerAddress), 9);
-      console.log(this.amountMkat);
     },
 
     async getBnbReward(service) {
-      console.log("getBnbReward");
       let reward = await service.getBnbReward(this.signerAddress);
       this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
-      this.myBnbReward = utils.formatEther(reward);
+
+      this.myBnbReward = await utils.formatEther(reward);
+      this.myBnbReward = parseFloat(this.myBnbReward).toFixed(2);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;
@@ -543,20 +438,14 @@ export default {
     setActive(menuItem) {
       this.activeItem = menuItem;
     },
-    async calculateMarketCap(service) { 
-      var circularingBalance =  await this.getCurrentCircularingBalance();
 
-      return await service.getMkatValueInBUSD(circularingBalance);
+    open() {
+      this.$bvModal.hide("bv-share-modal");
     },
-    open() { 
-      this.$bvModal.hide('bv-share-modal')
-    },
-    openShareOnTwitterModal() { 
-      this.$bvModal.show('bv-share-modal');
+    openShareOnTwitterModal() {
+      this.$bvModal.show("bv-share-modal");
     },
     async disruptiveTransfer() {
-      console.log("DisTransfer: ", this.recipientAddress, " ", this.amountMkat);
-
       const regex = /[a-zA-Z0-9]{42}/i;
 
       if (!this.recipientAddress.match(regex)) {
@@ -570,42 +459,32 @@ export default {
 
       const bnbBalance = await this.provider.getBalance(this.signerAddress);
 
-      console.log(amountMkatToSend.toString());
-
-      console.log("balance: ", senderBalance);
-
-
       if (senderBalance.lt(amountMkatToSend) || senderBalance.isZero()) {
         alert(`Insufficient funds. Current MKAT balance is ${utils.formatUnits(senderBalance, 9)}`);
         return;
       }
-            
-      if(bnbBalance.lt(utils.parseEther("2"))) { 
-        alert(`Insufficient funds.Your BNB balance is ${utils.formatUnits(bnbBalance, 18)}, but transfer requiers 2 BNB to send with transaction`);
+
+      if (bnbBalance.lt(utils.parseEther("2"))) {
+        alert(
+          `Insufficient funds.Your BNB balance is ${utils.formatUnits(
+            bnbBalance,
+            18
+          )}, but transfer requiers 2 BNB to send with transaction`
+        );
         return;
       }
 
       this.$loading(true);
-      try { 
+      try {
         const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, amountMkatToSend, {
           value: utils.parseEther("2"),
         });
         const txReceipt = await txResponse.wait();
-
-        console.log({ txResponse });
-        console.log({ txReceipt });
-      }catch(ex) { 
+      } catch (ex) {
         console.log("claimBNB exception: ", ex);
-      }finally{ 
+      } finally {
         this.$loading(false);
       }
-    },
-    async getCurrentCircularingBalance() {
-      let total = await this.contract.totalSupply();
-      let zero = await this.contract.balanceOf("0x0000000000000000000000000000000000000000");
-      let burn = await this.contract.balanceOf(BURN_ADDRESS);
-
-      return total.sub(burn).sub(zero);
     },
 
     async claimMyReward() {
@@ -615,18 +494,14 @@ export default {
       }
       this.$loading(true);
 
-      try { 
+      try {
         const txResponse = await this.contract.claimBNBReward();
         const txReceipt = await txResponse.wait();
 
         this.openShareOnTwitterModal();
-
-        console.log({ txResponse });
-        console.log({ txReceipt });
-      }catch(ex) { 
+      } catch (ex) {
         console.log("claimBNB exception: ", ex);
-      }
-      finally { 
+      } finally {
         this.$loading(false);
       }
     },
@@ -634,4 +509,18 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style>
+.modal-content {
+  background-color: black;
+  color: white !important;
+  -webkit-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+  -moz-box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+  box-shadow: 3px 3px 46px 31px rgba(9, 9, 9, 0.43);
+}
+.share-network-twitter {
+  color: white;
+}
+.share-network-twitter:hover {
+  color: white;
+}
+</style>

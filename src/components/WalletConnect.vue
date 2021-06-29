@@ -32,14 +32,14 @@
                   <span>Connect wallet </span>
                 </button>
                 <br />
-                <br   />
+                <br />
                 <a
                   v-if="isAndroid"
                   class="el-button button-custom-new el-button--secondary el-button--small"
                   href="https://link.trustwallet.com/open_url?coin_id=60&url=https://moonkat.net/dashboard"
                   >Trust wallet</a
                 >
-    
+
                 <a
                   class="el-button button-custom-new el-button--secondary el-button--small"
                   @click="connectWalletConnect()"
@@ -83,6 +83,25 @@ export default {
   mounted() {
     this.detectMobile();
 
+    if (!window.ethereum) {
+      if (!this.isAndroid && !this.isIos) {
+        alert("Please install MetaMask!");
+        return;
+      }
+    }
+
+    if (this.signerAddress) {
+      this.$router.push({ path: "dashboard" });
+    }
+
+    window.ethereum
+      .request({ method: "eth_accounts" })
+      .then(res => {
+        console.log(res);
+        return res;
+      })
+      .catch(e => alert(e));
+
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === "logout") {
         this.$router.push({ path: "connect-wallet" });
@@ -119,7 +138,7 @@ export default {
           window.location.reload();
         });
       } else {
-        alert("Please install MetaMask!");
+        if (!this.isAndroid && !this.isIos) alert("Please install MetaMask!");
       }
     },
     async connectWalletConnect() {

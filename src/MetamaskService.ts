@@ -5,7 +5,6 @@ import {
   CONTRACT_ADDRESS,
 } from "./constants";
 import { ethers, Contract, BigNumber } from "ethers";
-import { formatNumberWithSpace } from "./utils/utils";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 declare global {
@@ -77,7 +76,7 @@ export default class MetamaskService {
     const provider = this.web3Provider;
 
     const res = provider.getBalance(CONTRACT_ADDRESS);
-    console.log("POOL RESERVES" + res);
+    // console.log("POOL RESERVES" + res);
 
     return res;
   }
@@ -88,11 +87,9 @@ export default class MetamaskService {
     } else {
       const contract = await this.getPancakeRouterContractInstance(await this.getPancakeRouterAddress());
       const res = await contract.getAmountsOut(amount, path);
-      console.log("getPricePath res:", res);
       return res;
     }
   }
-
 
   private async mkatBNBBUSDPath(amount: BigNumber) {
     return this.getPricesPath(amount, [
@@ -110,8 +107,11 @@ export default class MetamaskService {
   }
 
   public async getMkatValueInBUSD(amount: BigNumber) {
+    if (amount == BigNumber.from([0])) {
+      return 0;
+    }
     const pathResult = await this.mkatBNBBUSDPath(amount);
-    return amount == BigNumber.from([0]) ? 0 : pathResult[2] / 10 ** 18;
+    return pathResult[2] / 10 ** 18;
   }
 
   public async getMKATValueInBNB(amount: BigNumber) {
@@ -121,21 +121,25 @@ export default class MetamaskService {
 
   public async totalLiquidityPoolInBUSD() {
     const poolReserves = await this.getPancakePairPoolReserves();
-    console.log("poolRes:", poolReserves);
-    
+    // console.log("poolRes:", poolReserves);
+
     const mkat = poolReserves[0];
     const bnb = poolReserves[1];
 
-    const bnbUSD = (await this.getPricesPath(bnb, [
-      "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-      "0x55d398326f99059ff775485246999027b3197955",
-    ]))[1] / 10**18;
+    const bnbUSD =
+      (
+        await this.getPricesPath(bnb, [
+          "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x55d398326f99059ff775485246999027b3197955",
+        ])
+      )[1] /
+      10 ** 18;
     const mkatUSD = await this.getMkatValueInBUSD(mkat);
 
-    console.log("bnbUSD:", bnbUSD);
-    console.log("mkatUSD:", mkatUSD);
+    // console.log("bnbUSD:", bnbUSD);
+    // console.log("mkatUSD:", mkatUSD);
 
-    return (bnbUSD + mkatUSD);
+    return bnbUSD + mkatUSD;
   }
 
   public async getPancakePairPoolReserves() {
@@ -165,14 +169,14 @@ export default class MetamaskService {
     }
 
     const maxTxAmount = await this.contract._maxTxAmount();
-    console.log("getMaxTx", maxTxAmount);
+    // console.log("getMaxTx", maxTxAmount);
 
     return maxTxAmount / 10 ** 9;
   }
 
   public async getMaxTxBNB() {
     const maxTxMKAT = await this.getMaxTx();
-    const nonCastedMKAT = BigNumber.from(maxTxMKAT).mul(BigNumber.from(10**9));
+    const nonCastedMKAT = BigNumber.from(maxTxMKAT).mul(BigNumber.from(10 ** 9));
     return await this.getMKATValueInBNB(nonCastedMKAT);
   }
 
@@ -180,8 +184,8 @@ export default class MetamaskService {
     if (!this.contract) {
       this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
     }
-    console.log("getBnbReward", this.contract);
-    console.log("address: " + addr);
+    // console.log("getBnbReward", this.contract);
+    // console.log("address: " + addr);
 
     const contract = await this.getContractInstance(CONTRACT_ADDRESS);
     const bnbReward = await contract.calculateBNBReward(addr);
@@ -192,11 +196,9 @@ export default class MetamaskService {
     if (!this.contract) {
       this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
     }
-    console.log("getBalance", addr);
 
     const tokenBalance = await this.contract.balanceOf(addr);
 
-    console.log("getBalance tokenBalanceStr", tokenBalance.toString());
     return tokenBalance;
   }
 }
