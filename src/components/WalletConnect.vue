@@ -131,6 +131,31 @@ export default {
 
       await walletConnectProvider.enable();
       
+      await this.updateDataOnAccountChange(walletConnectProvider)
+      
+      this.$router.push({ path: "dashboard" });
+
+      // Subscribe to accounts change
+      walletConnectProvider.on("accountsChanged", (accounts) => {
+        console.log("account changed: ", accounts);
+
+        this.updateDataOnAccountChange(walletConnectProvider)
+      });
+
+      // Subscribe to chainId change
+      walletConnectProvider.on("chainChanged", (chainId) => {
+        console.log("chain changed: ", chainId);
+      });
+
+      // Subscribe to session disconnection
+      walletConnectProvider.on("disconnect", (code, reason) => {
+        console.log("Dsiconnect", reason);
+
+        this.$store.commit("logout");
+        this.$router.push({ path: "connect-wallet" });
+      });
+    },
+    async updateDataOnAccountChange(walletConnectProvider) { 
       const provider = new ethers.providers.Web3Provider(walletConnectProvider)
 
       console.log("web3 provider:", provider);
@@ -144,29 +169,6 @@ export default {
 
       this.$store.commit("updateSignerAddress", address);
       this.$store.commit("updateWalletProviderType", WalletType.WalletConnect);
-      
-      this.$router.push({ path: "dashboard" });
-
-      // Subscribe to accounts change
-      walletConnectProvider.on("accountsChanged", (accounts) => {
-        console.log("account changed: ", accounts);
-      });
-
-      // Subscribe to chainId change
-      walletConnectProvider.on("chainChanged", (chainId) => {
-        console.log(chainId);
-      });
-
-      // Subscribe to session disconnection
-      walletConnectProvider.on("disconnect", (code, reason) => {
-        console.log("Dsiconnect", reason);
-
-        this.$store.commit("logout");
-        this.$router.push({ path: "connect-wallet" });
-      });
-    },
-    async updateDataOnAccountChange() { 
-
     },
     detectMobile() {
       if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
