@@ -6,6 +6,7 @@ import {
 } from "./constants";
 import { ethers, Contract, BigNumber } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { faThinkPeaks } from "@fortawesome/free-brands-svg-icons";
 
 declare global {
   interface Window {
@@ -33,6 +34,7 @@ export default class MetamaskService {
 
 
   public static async createWalletProviderFromType(type: WalletType) {
+    console.log("Creating wallet provider: ", type);
     if(type == WalletType.WalletConnect) { 
       const walletConnectProvider = new WalletConnectProvider({
         rpc:  {56: "https://bsc-dataseed.binance.org/"} ,
@@ -106,10 +108,11 @@ export default class MetamaskService {
   }
 
   public async getMkatValueInBUSD(amount: BigNumber) {
+    console.log("amount:", amount);
     if (amount.isZero()) {
       return 0;
     }
-
+    console.log("amount3:", amount);
     const pathResult = await this.mkatBNBBUSDPath(amount);
     return pathResult[2] / 10 ** 18;
   }
@@ -200,5 +203,25 @@ export default class MetamaskService {
     const tokenBalance = await this.contract.balanceOf(addr);
 
     return tokenBalance;
+  }
+
+  public async getPriceFromLastTrade() { 
+    const block = await this.web3Provider.getBlockNumber();
+
+    let priceFound = false;
+    let router = await this.getPancakeRouterAddress();
+
+
+    do {
+      const txs = await this.web3Provider.getBlockWithTransactions(block);
+
+      txs.filter(function(t)  {
+        t.to == router;        
+      });
+
+      console.log(txs);
+      
+      priceFound = true;
+    }while(priceFound);
   }
 }
