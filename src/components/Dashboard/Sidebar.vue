@@ -1,11 +1,18 @@
 <template>
   <div class="moonkat-sidebar">
     <div class="logo-and-buy">
-      <div class="text-center"><img src="@/assets/images/moonKat.jpg" class="logo" /></div>
+      <div class="text-center">
+        <router-link :to="{ name: 'Home' }">
+          <img src="@/assets/images/moonKat.jpg" class="logo" alt="moonKat" />
+        </router-link>
+      </div>
       <div class="mrat-text hide-on-mobile">moonkat</div>
       <div class="mrat-desc">Earn BNB by Holding MKAT</div>
       <div class="button-buy-mrat hide-on-mobile">
-        <a href="https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce" target="_blank" class="button-custom-new button-sidebar"
+        <a
+          href="https://exchange.pancakeswap.finance/#/swap?outputCurrency=0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce"
+          target="_blank"
+          class="button-custom-new button-sidebar"
           ><i class="fa fa-shopping-cart"></i> BUY $MKAT
         </a>
       </div>

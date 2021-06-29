@@ -32,14 +32,14 @@
                   <span>Connect wallet </span>
                 </button>
                 <br />
-                <br   />
+                <br />
                 <a
                   v-if="isAndroid"
                   class="el-button button-custom-new el-button--secondary el-button--small"
                   href="https://link.trustwallet.com/open_url?coin_id=60&url=https://moonkat.net/dashboard"
                   >Trust wallet</a
                 >
-    
+
                 <a
                   class="el-button button-custom-new el-button--secondary el-button--small"
                   @click="connectWalletConnect()"
@@ -119,7 +119,7 @@ export default {
           window.location.reload();
         });
       } else {
-        alert("Please install MetaMask!");
+        if (!this.isAndroid && !this.isIos) alert("Please install MetaMask!");
       }
     },
     async connectWalletConnect() {
