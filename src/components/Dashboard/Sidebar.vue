@@ -92,7 +92,7 @@ export default {
 
       this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
-      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(this.myMkatBalance);
+      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD( ethers.utils.parseUnits(this.myMkatBalance, 9));
     },
     async copyAddress() {
       const address = this.$refs.myAddr;
