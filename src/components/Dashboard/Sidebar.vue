@@ -51,8 +51,6 @@ import { mapGetters } from "vuex";
 import MetamaskService from "@/MetamaskService";
 import { ethers } from "ethers";
 
-const service = new MetamaskService();
-
 export default {
   name: "Sidebar",
   props: {
@@ -71,6 +69,7 @@ export default {
   },
   computed: {
     ...mapGetters(["signerAddress"]),
+    ...mapGetters(["walletProvider"]),
   },
   watch: {
     contract() {
@@ -87,7 +86,10 @@ export default {
   },
   methods: {
     async loadContractInfo() {
-      const service = new MetamaskService();
+      console.log(this.walletProvider);
+
+      const service = new MetamaskService(this.walletProvider);
+
       this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
       this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(this.myMkatBalance);
@@ -97,11 +99,11 @@ export default {
       await navigator.clipboard.writeText(address.innerHTML);
       alert("Copied!");
     },
-    logout() {
+    async logout() {
       this.$store.commit("logout");
       this.$router.push("/connect-wallet");
-
       alert("You logged out!");
+      await this.walletProvider.disconnect();
     },
   },
 };

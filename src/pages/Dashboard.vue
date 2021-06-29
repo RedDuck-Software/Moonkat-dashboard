@@ -490,18 +490,20 @@ export default {
   mounted() {
     this.loadContractInfo();
     setTimeout(async function() {
-      await this.getBnbReward(new MetamaskService());
+      await this.getBnbReward(new MetamaskService(this.walletProvider));
     }, 600000);
   },
   
   methods: {
     async loadContractInfo() {
-      console.log(this.walletProvider);
-      
+      console.log("wallet provider: ", this.walletProvider);
+      console.log("signer address: ", this.signerAddress);
+
+
       const service = new MetamaskService(this.walletProvider);
 
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
-      this.provider = new ethers.providers.Web3Provider(window.ethereum);
+      this.provider = service.getWeb3Provider();
       this.maxMkatTx = await service.getMaxTx();
       this.maxBNBTx = await service.getMaxTxBNB();
       await this.getBnbReward(service);

@@ -28,6 +28,7 @@ const store = new Vuex.Store({
     },
     logout: state => {
       state.signerAddress = null;
+      state.walletProvider = null;
       state.signer = null;
     },
   },

@@ -99,9 +99,9 @@ export default {
       .catch(e => alert(e));
 
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      if (mutation.type === "updateSignerAddress") {
+      if (mutation.type === "logout") {
         if (state.signerAddress) {
-          this.$router.push({ path: "dashboard" });
+          this.$router.push({ path: "connect-wallet" });
         }
       }
     });
@@ -121,6 +121,9 @@ export default {
         this.$store.commit("updateSignerAddress", address);
         this.$store.commit("updateWalletProvider", window.ethereum);
 
+        this.$router.push({ path: "dashboard" });
+
+
         window.ethereum.on("accountsChanged", function(accounts) {
           // Time to reload your interface with accounts[0]!
           this.$store.commit("logout");
@@ -138,7 +141,8 @@ export default {
     },
     async connectWalletConnect() {
       const walletConnectProvider = new WalletConnectProvider({
-        rpc: "https://bsc-dataseed.binance.org/",
+        rpc:  {56: "https://bsc-dataseed.binance.org/"} ,
+        chainId: 56,
         qrcode: true, // Required
       });
 
@@ -146,34 +150,40 @@ export default {
       
       const provider = new ethers.providers.Web3Provider(walletConnectProvider)
 
+      console.log("web3 provider:", provider);
+      console.log("wallet provider:", walletConnectProvider);
+      
+
+
       const signer = provider.getSigner();
       console.log("signer:", signer);
       const address = await signer.getAddress();
+      
+      console.log("signer address:", address);
+
       this.$store.commit("updateSignerAddress", address);
       this.$store.commit("updateWalletProvider", walletConnectProvider);
+      
+      this.$router.push({ path: "dashboard" });
 
+      // Subscribe to accounts change
+      walletConnectProvider.on("accountsChanged", (accounts) => {
+        console.log(accounts);
+      });
 
-      walletConnectProvider.on("connect", (error, payload) => {
-        if (error) {
-          throw error;
-        }
-        // Get provided accounts and chainId
-        const { accounts, chainId } = payload.params[0];
+      // Subscribe to chainId change
+      walletConnectProvider.on("chainChanged", (chainId) => {
+        console.log(chainId);
       });
-      
-      walletConnectProvider.on("session_update", (error, payload) => {
-        if (error) {
-          throw error;
-        }
-      
-        // Get updated accounts and chainId
-        const { accounts, chainId } = payload.params[0];
-      });
-      
-      walletConnectProvider.on("disconnect", (error, payload) => {
+
+      // Subscribe to session disconnection
+      walletConnectProvider.on("disconnect", (code, reason) => {
+        console.log("Dsiconnect", reason);
+
         this.$store.commit("logout");
-        window.location.reload();
-        // Delete connector
+
+        //  window.location.reload();
+
       });
     },
     detectMobile() {

@@ -6,6 +6,7 @@ import {
 } from "./constants";
 import { ethers, Contract, BigNumber } from "ethers";
 import { formatNumberWithSpace } from "./utils/utils";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 declare global {
   interface Window {
@@ -20,7 +21,7 @@ export default class MetamaskService {
 
   constructor(walletProvider) { 
     this.walletProvider = walletProvider;
-    this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+    this.web3Provider = new ethers.providers.Web3Provider(walletProvider);
   }
 
   public getWeb3Provider() { 
@@ -28,28 +29,28 @@ export default class MetamaskService {
   }
 
   public async getContractInstance(contractAddress: string) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = this.web3Provider;
 
     const signer = provider.getSigner();
     return new ethers.Contract(contractAddress, erc20TokenContractAbi, signer);
   }
 
   public async getPancakeRouterContractInstance(pancakeContractAddress: string) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = this.web3Provider;
 
     const signer = provider.getSigner();
     return new ethers.Contract(pancakeContractAddress, pancakeRouterContractAbi, signer);
   }
 
   public async getPancakePairContractInstance(pancakePairContractAddress: string) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = this.web3Provider;
 
     const signer = provider.getSigner();
     return new ethers.Contract(pancakePairContractAddress, pancackePairContractAbi, signer);
   }
 
   public async getPoolReservesBNB() {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = this.web3Provider;
 
     const res = provider.getBalance(CONTRACT_ADDRESS);
     console.log("POOL RESERVES" + res);
