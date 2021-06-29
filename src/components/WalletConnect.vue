@@ -29,8 +29,7 @@
                   @click="connectMetamask()"
                 >
                   <i class="el-icon-connection"></i>
-                  <span v-show="!signerAddress">Connect to a wallet </span>
-                  <span v-show="signerAddress">{{ signerAddress }}</span>
+                  <span>Connect wallet </span>
                 </button>
                 <br />
                 <br />
@@ -42,11 +41,9 @@
                 >
 
                 <a
-                  v-if="isIos"
                   class="el-button button-custom-new el-button--secondary el-button--small"
-                  href="https://moonkat.net/dashboard/wc?uri=wc:00e46b69-d0cc-4b3e-b6a2-cee442f97188@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=91303dedf64285cbbaf9120f6e9d160a5c8aa3deb67017a3874cd272323f48ae
-"
-                  >Trust wallet</a
+                  @click="connectWalletConnect()"
+                  >WalletConnect</a
                 >
 
                 <!---->
@@ -66,6 +63,8 @@
 <script>
 import { ethers } from "ethers";
 import { mapGetters } from "vuex";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+import { WalletType } from '../MetamaskService';
 
 export default {
   name: "WalletConnect",
@@ -78,34 +77,15 @@ export default {
   },
   computed: {
     ...mapGetters(["signerAddress"]),
+    ...mapGetters(["walletProviderType"]),
+
   },
   mounted() {
     this.detectMobile();
 
-    if (!window.ethereum) {
-      if (!this.isAndroid && !this.isIos) {
-        alert("Please install MetaMask!");
-        return;
-      }
-    }
-
-    if (this.signerAddress) {
-      this.$router.push({ path: "dashboard" });
-    }
-
-    window.ethereum
-      .request({ method: "eth_accounts" })
-      .then(res => {
-        console.log(res);
-        return res;
-      })
-      .catch(e => alert(e));
-
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      if (mutation.type === "updateSignerAddress") {
-        if (state.signerAddress) {
-          this.$router.push({ path: "dashboard" });
-        }
+      if (mutation.type === "logout") {
+        this.$router.push({ path: "connect-wallet" });
       }
     });
   },
@@ -122,6 +102,11 @@ export default {
         console.log("signer:", signer);
         const address = await signer.getAddress();
         this.$store.commit("updateSignerAddress", address);
+        this.$store.commit("updateWalletProviderType", WalletType.Metamask);
+
+        this.$router.push({ path: "dashboard" });
+
+
         window.ethereum.on("accountsChanged", function(accounts) {
           // Time to reload your interface with accounts[0]!
           this.$store.commit("logout");
@@ -136,6 +121,54 @@ export default {
       } else {
         if (!this.isAndroid && !this.isIos) alert("Please install MetaMask!");
       }
+    },
+    async connectWalletConnect() {
+      const walletConnectProvider = new WalletConnectProvider({
+        rpc:  {56: "https://bsc-dataseed.binance.org/"} ,
+        chainId: 56,
+        qrcode: true, // Required
+      });
+
+      await walletConnectProvider.enable();
+      
+      await this.updateDataOnAccountChange(walletConnectProvider)
+      
+      this.$router.push({ path: "dashboard" });
+
+      // Subscribe to accounts change
+      walletConnectProvider.on("accountsChanged", (accounts) => {
+        console.log("account changed: ", accounts);
+
+        this.updateDataOnAccountChange(walletConnectProvider)
+      });
+
+      // Subscribe to chainId change
+      walletConnectProvider.on("chainChanged", (chainId) => {
+        console.log("chain changed: ", chainId);
+      });
+
+      // Subscribe to session disconnection
+      walletConnectProvider.on("disconnect", (code, reason) => {
+        console.log("Dsiconnect", reason);
+
+        this.$store.commit("logout");
+        this.$router.push({ path: "connect-wallet" });
+      });
+    },
+    async updateDataOnAccountChange(walletConnectProvider) { 
+      const provider = new ethers.providers.Web3Provider(walletConnectProvider)
+
+      console.log("web3 provider:", provider);
+      console.log("wallet provider:", walletConnectProvider);
+      
+      const signer = provider.getSigner();
+      console.log("signer:", signer);
+      const address = await signer.getAddress();
+      
+      console.log("signer address:", address);
+
+      this.$store.commit("updateSignerAddress", address);
+      this.$store.commit("updateWalletProviderType", WalletType.WalletConnect);
     },
     detectMobile() {
       if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {

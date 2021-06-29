@@ -86,6 +86,7 @@
 import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import { ethers, utils } from "ethers";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Statistic",
@@ -113,13 +114,18 @@ export default {
       totalBurn: "...",
     };
   },
+  computed: {
+    ...mapGetters(["signerAddress"]),
+    ...mapGetters(["walletProviderType"]),
+  },
   mounted() {
     this.loadContractInfo();
   },
   methods: {
     async loadContractInfo() {
-      const service = new MetamaskService();
-      this.provider = await new ethers.providers.Web3Provider(window.ethereum);
+      const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+
+      this.provider = service.getWeb3Provider();
 
       this.marketCap = await this.calculateMarketCap(service);
       this.marketCap = this.marketCap.toFixed(2);

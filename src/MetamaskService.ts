@@ -5,42 +5,74 @@ import {
   CONTRACT_ADDRESS,
 } from "./constants";
 import { ethers, Contract, BigNumber } from "ethers";
-import { formatNumberWithSpace } from "./utils/utils";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 declare global {
   interface Window {
     ethereum: any;
   }
 }
+export enum WalletType{ 
+  Metamask,
+  WalletConnect
+}
 
 export default class MetamaskService {
   contract?: Contract;
-  // maxMkatTx?: string;
-  // myBnbReward?: string;
+  walletProvider;
+  web3Provider;
+
+  constructor(walletProvider) { 
+    this.walletProvider = walletProvider;
+    this.web3Provider = new ethers.providers.Web3Provider(walletProvider);
+  }
+
+  public getWeb3Provider() { 
+    return this.web3Provider;
+  }
+
+
+  public static async createWalletProviderFromType(type: WalletType) {
+    if(type == WalletType.WalletConnect) { 
+      const walletConnectProvider = new WalletConnectProvider({
+        rpc:  {56: "https://bsc-dataseed.binance.org/"} ,
+        chainId: 56,
+        qrcode: true, // Required
+      });
+
+      await walletConnectProvider.enable();
+
+      return walletConnectProvider;
+    }
+    if(type == WalletType.Metamask) { 
+      return window.ethereum;
+    }
+    else throw new Error("Invalid type");
+  }
 
   public async getContractInstance(contractAddress: string) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = this.web3Provider;
 
     const signer = provider.getSigner();
     return new ethers.Contract(contractAddress, erc20TokenContractAbi, signer);
   }
 
   public async getPancakeRouterContractInstance(pancakeContractAddress: string) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = this.web3Provider;
 
     const signer = provider.getSigner();
     return new ethers.Contract(pancakeContractAddress, pancakeRouterContractAbi, signer);
   }
 
   public async getPancakePairContractInstance(pancakePairContractAddress: string) {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = this.web3Provider;
 
     const signer = provider.getSigner();
     return new ethers.Contract(pancakePairContractAddress, pancackePairContractAbi, signer);
   }
 
   public async getPoolReservesBNB() {
-    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const provider = this.web3Provider;
 
     const res = provider.getBalance(CONTRACT_ADDRESS);
     // console.log("POOL RESERVES" + res);
@@ -49,7 +81,7 @@ export default class MetamaskService {
   }
 
   private async getPricesPath(amount: BigNumber, path: string[]) {
-    if (amount == BigNumber.from([0])) {
+    if (amount.isZero()) {
       return new Array(path.length).fill(BigNumber.from([0]));
     } else {
       const contract = await this.getPancakeRouterContractInstance(await this.getPancakeRouterAddress());
@@ -74,16 +106,17 @@ export default class MetamaskService {
   }
 
   public async getMkatValueInBUSD(amount: BigNumber) {
-    if (amount == BigNumber.from([0])) {
+    if (amount.isZero()) {
       return 0;
     }
+
     const pathResult = await this.mkatBNBBUSDPath(amount);
     return pathResult[2] / 10 ** 18;
   }
 
   public async getMKATValueInBNB(amount: BigNumber) {
     const pathResult = await this.mkatBNBBUSDPath(amount);
-    return amount == BigNumber.from([0]) ? 0 : pathResult[1] / 10 ** 18;
+    return amount.isZero() ? 0 : pathResult[1] / 10 ** 18;
   }
 
   public async totalLiquidityPoolInBUSD() {

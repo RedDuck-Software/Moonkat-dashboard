@@ -347,7 +347,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { ethers, utils } from "ethers";
+import { BigNumber, ethers, utils } from "ethers";
 
 import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
@@ -380,6 +380,7 @@ export default {
   },
   computed: {
     ...mapGetters(["signerAddress"]),
+    ...mapGetters(["walletProviderType"]),
   },
   watch: {
     myBnbReward() {},
@@ -387,16 +388,21 @@ export default {
   mounted() {
     this.loadContractInfo();
     setTimeout(async function() {
-      await this.getBnbReward(new MetamaskService());
+      await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
     }, 600000);
   },
 
   methods: {
     async loadContractInfo() {
-      const service = new MetamaskService();
-      this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
-      this.provider = new ethers.providers.Web3Provider(window.ethereum);
+      console.log("wallet provider: ", this.walletProviderType);
+      console.log("signer address: ", this.signerAddress);
 
+
+      const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+
+
+      this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
+      this.provider = service.getWeb3Provider();
       this.maxMkatTx = await service.getMaxTx();
       this.maxMkatTx = parseFloat(this.maxMkatTx).toFixed(2);
 
@@ -404,7 +410,7 @@ export default {
       this.maxBNBTx = parseFloat(this.maxBNBTx).toFixed(2);
       await this.getBnbReward(service);
 
-      const hundredThousandMKAT = 100000 * 10 ** 9;
+      const hundredThousandMKAT = utils.parseUnits("100000", 9);
       this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(hundredThousandMKAT);
       this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
 
