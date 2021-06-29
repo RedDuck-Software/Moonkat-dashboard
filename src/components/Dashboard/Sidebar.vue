@@ -103,7 +103,6 @@ export default {
       this.$store.commit("logout");
       this.$router.push("/connect-wallet");
       alert("You logged out!");
-      await this.walletProvider.disconnect();
     },
   },
 };

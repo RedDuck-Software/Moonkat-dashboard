@@ -101,9 +101,7 @@ export default {
 
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === "logout") {
-        if (state.signerAddress) {
-          this.$router.push({ path: "connect-wallet" });
-        }
+        this.$router.push({ path: "connect-wallet" });
       }
     });
   },
