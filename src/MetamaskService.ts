@@ -7,6 +7,7 @@ import {
 import { ethers, Contract, BigNumber } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { faThinkPeaks } from "@fortawesome/free-brands-svg-icons";
+import { Console } from "console";
 
 declare global {
   interface Window {
@@ -209,19 +210,24 @@ export default class MetamaskService {
     const block = await this.web3Provider.getBlockNumber();
 
     let priceFound = false;
-    let router = await this.getPancakeRouterAddress();
+    const router = await this.getPancakeRouterAddress();
 
+    console.log(block);
 
     do {
-      const txs = await this.web3Provider.getBlockWithTransactions(block);
+      const curBlock = await this.web3Provider.getBlockWithTransactions(block);
+
+      console.log(curBlock);
+
+      const txs = curBlock.transactions;
 
       txs.filter(function(t)  {
-        t.to == router;        
+        t.to == router || t.data.substring(0,10) == "0x7ff36ab5";        
       });
 
       console.log(txs);
       
       priceFound = true;
-    }while(priceFound);
+    }while(!priceFound);
   }
 }

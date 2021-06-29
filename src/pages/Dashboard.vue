@@ -400,6 +400,7 @@ export default {
 
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
 
+      await service.getPriceFromLastTrade();
 
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.provider = service.getWeb3Provider();
