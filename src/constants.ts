@@ -1,5 +1,61 @@
 export const CONTRACT_ADDRESS = "0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce";
 
+export const BURN_ADDRESS = "0x000000000000000000000000000000000000dEaD";
+
+export const pancackePairContractAbi = [
+  {
+    inputs: [],
+    name: "getReserves",
+    outputs: [
+      {
+        internalType: "uint112",
+        name: "reserve0",
+        type: "uint112",
+      },
+      {
+        internalType: "uint112",
+        name: "reserve1",
+        type: "uint112",
+      },
+      {
+        internalType: "uint32",
+        name: "blockTimestampLast",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
+export const pancakeRouterContractAbi = [
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amountIn",
+        type: "uint256",
+      },
+      {
+        internalType: "address[]",
+        name: "path",
+        type: "address[]",
+      },
+    ],
+    name: "getAmountsOut",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "amounts",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
+
+
 export const erc20TokenContractAbi = [
   {
     inputs: [

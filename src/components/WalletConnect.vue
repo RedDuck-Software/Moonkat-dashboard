@@ -32,15 +32,22 @@
                   <span v-show="!signerAddress">Connect to a wallet </span>
                   <span v-show="signerAddress">{{ signerAddress }}</span>
                 </button>
-                <button
-                  v-show="signerAddress"
-                  id="addressBtn"
-                  type="button"
-                  class="el-button button-custom-new el-button--primary el-button--medium"
-                  @click="logout()"
+                <br />
+                <br   />
+                <a
+                  v-if="isAndroid"
+                  class="el-button button-custom-new el-button--secondary el-button--small"
+                  href="https://link.trustwallet.com/open_url?coin_id=60&url=https://moonkat.net/dashboard"
+                  >Trust wallet</a
                 >
-                  <i class="el-icon-connection"></i><span id="showAddress">logout </span>
-                </button>
+    
+                <a
+                  v-if="isIos"
+                  class="el-button button-custom-new el-button--secondary el-button--small"
+                  href="https://moonkat.net/dashboard/wc?uri=wc:00e46b69-d0cc-4b3e-b6a2-cee442f97188@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=91303dedf64285cbbaf9120f6e9d160a5c8aa3deb67017a3874cd272323f48ae
+"
+                  >Trust wallet</a
+                >
 
                 <!---->
               </div>
@@ -62,10 +69,19 @@ import { mapGetters } from "vuex";
 
 export default {
   name: "WalletConnect",
+
+  data() {
+    return {
+      isAndroid: false,
+      isIos: false,
+    };
+  },
   computed: {
     ...mapGetters(["signerAddress"]),
   },
   mounted() {
+    this.detectMobile();
+
     if (!window.ethereum) {
       alert("Please install MetaMask!");
       return;
@@ -98,26 +114,33 @@ export default {
   methods: {
     async connectMetamask() {
       if (typeof window.ethereum !== undefined) {
-        await window.ethereum.enable() // deprecated - need to use eth_requestAccounts
+        await window.ethereum.enable(); // deprecated - need to use eth_requestAccounts
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         console.log("signer:", signer);
         const address = await signer.getAddress();
         this.$store.commit("updateSignerAddress", address);
-        provider.on("network", (newNetwork, oldNetwork) => {
-          // When a Provider makes its initial connection, it emits a "network"
-          // event with a null oldNetwork along with the newNetwork. So, if the
-          // oldNetwork exists, it represents a changing network
-          if (oldNetwork) {
-            window.location.reload();
-          }
+        window.ethereum.on("accountsChanged", function(accounts) {
+          // Time to reload your interface with accounts[0]!
+          this.$store.commit("logout");
+          window.location.reload();
+        });
+
+        window.ethereum.on("networkChanged", function(networkId) {
+          // Time to reload your interface with the new networkId
+          this.$store.commit("logout");
+          window.location.reload();
         });
       } else {
         alert("Please install MetaMask!");
       }
     },
-    logout() {
-      this.$store.commit("logout");
+    detectMobile() {
+      if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        this.isAndroid = true;
+      } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        this.isIos = true;
+      }
     },
   },
 };
