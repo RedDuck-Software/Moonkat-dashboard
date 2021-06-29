@@ -86,6 +86,7 @@
 import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import { ethers, utils } from "ethers";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Statistic",
@@ -112,6 +113,10 @@ export default {
       provider: null,
       totalBurn: "...",
     };
+  },
+  computed: {
+    ...mapGetters(["signerAddress"]),
+    ...mapGetters(["walletProviderType"]),
   },
   mounted() {
     this.loadContractInfo();

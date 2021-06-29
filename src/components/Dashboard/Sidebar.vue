@@ -98,16 +98,8 @@ export default {
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
 
       this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
-<<<<<<< HEAD
-      this.myMkatBalance = await ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
-      this.myMkatBalance = parseFloat(this.myMkatBalance).toFixed(2);
-
-      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD(this.myMkatBalance);
-      this.myMkatBalanceInBUSD = parseFloat(this.myMkatBalanceInBUSD).toFixed(2);
-=======
       this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
       this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD( ethers.utils.parseUnits(this.myMkatBalance, 9));
->>>>>>> 39bf647b96c95b9f1d25a6edc91131ce06360d6c
     },
     async copyAddress() {
       const address = this.$refs.myAddr;

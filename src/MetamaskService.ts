@@ -33,7 +33,6 @@ export default class MetamaskService {
 
 
   public static async createWalletProviderFromType(type: WalletType) {
-    console.log("Creating wallet provider: ", type);
     if(type == WalletType.WalletConnect) { 
       const walletConnectProvider = new WalletConnectProvider({
         rpc:  {56: "https://bsc-dataseed.binance.org/"} ,
@@ -82,7 +81,7 @@ export default class MetamaskService {
   }
 
   private async getPricesPath(amount: BigNumber, path: string[]) {
-    if (amount == BigNumber.from([0])) {
+    if (amount.isZero()) {
       return new Array(path.length).fill(BigNumber.from([0]));
     } else {
       const contract = await this.getPancakeRouterContractInstance(await this.getPancakeRouterAddress());
@@ -107,16 +106,17 @@ export default class MetamaskService {
   }
 
   public async getMkatValueInBUSD(amount: BigNumber) {
-    if (amount == BigNumber.from([0])) {
+    if (amount.isZero()) {
       return 0;
     }
+
     const pathResult = await this.mkatBNBBUSDPath(amount);
     return pathResult[2] / 10 ** 18;
   }
 
   public async getMKATValueInBNB(amount: BigNumber) {
     const pathResult = await this.mkatBNBBUSDPath(amount);
-    return amount == BigNumber.from([0]) ? 0 : pathResult[1] / 10 ** 18;
+    return amount.isZero() ? 0 : pathResult[1] / 10 ** 18;
   }
 
   public async totalLiquidityPoolInBUSD() {

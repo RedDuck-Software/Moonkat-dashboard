@@ -83,28 +83,6 @@ export default {
   mounted() {
     this.detectMobile();
 
-<<<<<<< HEAD
-    if (!window.ethereum) {
-      if (!this.isAndroid && !this.isIos) {
-        alert("Please install MetaMask!");
-        return;
-      }
-    }
-
-    if (this.signerAddress) {
-      this.$router.push({ path: "dashboard" });
-    }
-
-    window.ethereum
-      .request({ method: "eth_accounts" })
-      .then(res => {
-        console.log(res);
-        return res;
-      })
-      .catch(e => alert(e));
-
-=======
->>>>>>> 39bf647b96c95b9f1d25a6edc91131ce06360d6c
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === "logout") {
         this.$router.push({ path: "connect-wallet" });
