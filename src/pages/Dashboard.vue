@@ -109,9 +109,9 @@
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Max Transaction Amount</div>
                             <div class="text-2">
-                              <span id="max-mkat-tx">{{ maxMkatTx.toFixed(2) }}</span
+                              <span id="max-mkat-tx">{{ maxMkatTx }}</span
                               ><span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a
-                              ><span> | </span><span class="card-panel-num"> {{ maxBNBTx.toFixed(2) }} BNB </span
+                              ><span> | </span><span class="card-panel-num"> {{ maxBNBTx }} BNB </span
                               ><a><i class="el-icon-document-copy"></i></a>
                             </div>
                           </div>
