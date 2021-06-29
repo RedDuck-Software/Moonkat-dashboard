@@ -13,6 +13,10 @@ declare global {
     ethereum: any;
   }
 }
+export enum WalletType{ 
+  Metamask,
+  WalletConnect
+}
 
 export default class MetamaskService {
   contract?: Contract;
@@ -26,6 +30,26 @@ export default class MetamaskService {
 
   public getWeb3Provider() { 
     return this.web3Provider;
+  }
+
+
+  public static async createWalletProviderFromType(type: WalletType) {
+    console.log("Creating wallet provider: ", type);
+    if(type == WalletType.WalletConnect) { 
+      const walletConnectProvider = new WalletConnectProvider({
+        rpc:  {56: "https://bsc-dataseed.binance.org/"} ,
+        chainId: 56,
+        qrcode: true, // Required
+      });
+
+      await walletConnectProvider.enable();
+
+      return walletConnectProvider;
+    }
+    if(type == WalletType.Metamask) { 
+      return window.ethereum;
+    }
+    else throw new Error("Invalid type");
   }
 
   public async getContractInstance(contractAddress: string) {

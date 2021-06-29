@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "vuex-persistedstate";
+import { WalletType } from "../MetamaskService";
 
-let CircularJSON = require('circular-json');
 
 Vue.use(Vuex);
 
@@ -11,7 +11,7 @@ const store = new Vuex.Store({
     signerAddress: null,
     signer: null,
     contract: null,
-    walletProvider : null,
+    walletProviderType : null,
   },
   mutations: {
     updateSignerAddress(state, address) {
@@ -23,18 +23,18 @@ const store = new Vuex.Store({
     updateContract(state, contract) {
       state.contract = contract;
     },
-    updateWalletProvider(state, walletProvider) {
-      state.walletProvider = CircularJSON.stringify(walletProvider);
+    updateWalletProviderType(state, walletProviderType) {
+      state.walletProviderType = walletProviderType;
     },
     logout: state => {
       state.signerAddress = null;
-      state.walletProvider = null;
+      state.walletProviderType = null;
       state.signer = null;
     },
   },
   getters: {
     signerAddress: state => state.signerAddress,
-    walletProvider: state => CircularJSON.parse(state.walletProvider),
+    walletProviderType: state => state.walletProviderType,
 
   },
   actions: {

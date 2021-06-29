@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     ...mapGetters(["signerAddress"]),
-    ...mapGetters(["walletProvider"]),
+    ...mapGetters(["walletProviderType"]),
   },
   watch: {
     contract() {
@@ -86,9 +86,9 @@ export default {
   },
   methods: {
     async loadContractInfo() {
-      console.log(this.walletProvider);
+      console.log(this.walletProviderType);
 
-      const service = new MetamaskService(this.walletProvider);
+      const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
 
       this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);

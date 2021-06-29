@@ -65,6 +65,7 @@
 import { ethers } from "ethers";
 import { mapGetters } from "vuex";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { WalletType } from '../MetamaskService';
 
 export default {
   name: "WalletConnect",
@@ -119,7 +120,7 @@ export default {
         console.log("signer:", signer);
         const address = await signer.getAddress();
         this.$store.commit("updateSignerAddress", address);
-        this.$store.commit("updateWalletProvider", window.ethereum);
+        this.$store.commit("updateWalletProviderType", WalletType.Metamask);
 
         this.$router.push({ path: "dashboard" });
 
@@ -162,7 +163,7 @@ export default {
       console.log("signer address:", address);
 
       this.$store.commit("updateSignerAddress", address);
-      this.$store.commit("updateWalletProvider", walletConnectProvider);
+      this.$store.commit("updateWalletProviderType", WalletType.WalletConnect);
       
       this.$router.push({ path: "dashboard" });
 

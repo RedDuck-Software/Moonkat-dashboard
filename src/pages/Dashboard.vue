@@ -482,7 +482,7 @@ export default {
   },
   computed: {
     ...mapGetters(["signerAddress"]),
-    ...mapGetters(["walletProvider"]),
+    ...mapGetters(["walletProviderType"]),
   },
   watch: {
     myBnbReward() {},
@@ -490,17 +490,18 @@ export default {
   mounted() {
     this.loadContractInfo();
     setTimeout(async function() {
-      await this.getBnbReward(new MetamaskService(this.walletProvider));
+      await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
     }, 600000);
   },
   
   methods: {
     async loadContractInfo() {
-      console.log("wallet provider: ", this.walletProvider);
+      console.log("wallet provider: ", this.walletProviderType);
       console.log("signer address: ", this.signerAddress);
 
 
-      const service = new MetamaskService(this.walletProvider);
+      const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+
 
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.provider = service.getWeb3Provider();
