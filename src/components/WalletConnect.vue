@@ -42,11 +42,9 @@
                 >
     
                 <a
-                  v-if="isIos"
                   class="el-button button-custom-new el-button--secondary el-button--small"
-                  href="https://moonkat.net/dashboard/wc?uri=wc:00e46b69-d0cc-4b3e-b6a2-cee442f97188@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=91303dedf64285cbbaf9120f6e9d160a5c8aa3deb67017a3874cd272323f48ae
-"
-                  >Trust wallet</a
+                  @click="connectWalletConnect()"
+                  >Wallet connect</a
                 >
 
                 <!---->
@@ -66,6 +64,7 @@
 <script>
 import { ethers } from "ethers";
 import { mapGetters } from "vuex";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 export default {
   name: "WalletConnect",
@@ -134,6 +133,44 @@ export default {
       } else {
         alert("Please install MetaMask!");
       }
+    },
+    async connectWalletConnect() {
+      const walletConnectProvider = new WalletConnectProvider({
+        rpc: "https://bsc-dataseed.binance.org/",
+        qrcode: true, // Required
+      });
+
+      await walletConnectProvider.enable();
+      
+      const provider = new ethers.providers.Web3Provider(walletConnectProvider)
+
+      const signer = provider.getSigner();
+      console.log("signer:", signer);
+      const address = await signer.getAddress();
+      this.$store.commit("updateSignerAddress", address);
+
+      walletConnectProvider.on("connect", (error, payload) => {
+        if (error) {
+          throw error;
+        }
+        // Get provided accounts and chainId
+        const { accounts, chainId } = payload.params[0];
+      });
+      
+      walletConnectProvider.on("session_update", (error, payload) => {
+        if (error) {
+          throw error;
+        }
+      
+        // Get updated accounts and chainId
+        const { accounts, chainId } = payload.params[0];
+      });
+      
+      walletConnectProvider.on("disconnect", (error, payload) => {
+        this.$store.commit("logout");
+        window.location.reload();
+        // Delete connector
+      });
     },
     detectMobile() {
       if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
