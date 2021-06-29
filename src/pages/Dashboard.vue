@@ -482,6 +482,7 @@ export default {
   },
   computed: {
     ...mapGetters(["signerAddress"]),
+    ...mapGetters(["walletProvider"]),
   },
   watch: {
     myBnbReward() {},
@@ -495,7 +496,10 @@ export default {
   
   methods: {
     async loadContractInfo() {
-      const service = new MetamaskService();
+      console.log(this.walletProvider);
+      
+      const service = new MetamaskService(this.walletProvider);
+
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.provider = new ethers.providers.Web3Provider(window.ethereum);
       this.maxMkatTx = await service.getMaxTx();

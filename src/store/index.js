@@ -9,6 +9,7 @@ const store = new Vuex.Store({
     signerAddress: null,
     signer: null,
     contract: null,
+    walletProvider : null,
   },
   mutations: {
     updateSignerAddress(state, address) {
@@ -20,6 +21,9 @@ const store = new Vuex.Store({
     updateContract(state, contract) {
       state.contract = contract;
     },
+    updateWalletProvider(state, walletProvider) {
+      state.walletProvider = JSON.stringify(walletProvider);
+    },
     logout: state => {
       state.signerAddress = null;
       state.signer = null;
@@ -27,6 +31,8 @@ const store = new Vuex.Store({
   },
   getters: {
     signerAddress: state => state.signerAddress,
+    walletProvider: state => JSON.parse(state.walletProvider),
+
   },
   actions: {
     async loadContractInfo(context) {},

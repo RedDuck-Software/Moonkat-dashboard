@@ -15,8 +15,17 @@ declare global {
 
 export default class MetamaskService {
   contract?: Contract;
-  // maxMkatTx?: string;
-  // myBnbReward?: string;
+  walletProvider;
+  web3Provider;
+
+  constructor(walletProvider) { 
+    this.walletProvider = walletProvider;
+    this.web3Provider = new ethers.providers.Web3Provider(window.ethereum);
+  }
+
+  public getWeb3Provider() { 
+    return this.web3Provider;
+  }
 
   public async getContractInstance(contractAddress: string) {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
