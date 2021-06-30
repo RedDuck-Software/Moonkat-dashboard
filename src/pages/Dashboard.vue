@@ -420,7 +420,7 @@ export default {
       this.totalLiquidityPoolUSD = parseFloat(utils.formatEther(await service.totalLiquidityPoolInBUSD())).toFixed(2);
 
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
-      this.totalBnbInPool = parseFloat(await utils.formatEther(totalBnbInLiquidityPool)).toFixed(2);
+      this.totalBnbInPool = parseFloat(utils.formatEther(totalBnbInLiquidityPool)).toFixed(2);
     },
     async getMaxAmountForDisruptiveTransfer() {
       this.amountMkat = utils.formatUnits(await this.contract.balanceOf(this.signerAddress), 9);
@@ -430,7 +430,7 @@ export default {
       let reward = await service.getBnbReward(this.signerAddress);
       this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
 
-      this.myBnbReward = await utils.formatEther(reward);
+      this.myBnbReward = utils.formatEther(reward);
       this.myBnbReward = parseFloat(this.myBnbReward).toFixed(2);
     },
     isActive(menuItem) {

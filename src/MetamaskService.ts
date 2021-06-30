@@ -33,8 +33,6 @@ export default class MetamaskService {
 
   public async updateMKATBusdValue() { 
     this.oneMkatBnb =  ((await this.getPriceFromLastTrade()) / 10 ** 9).toFixed(18);
-
-    console.log("oneMKATBNbPrice: ", this.oneMkatBnb.toString());
   }
 
 
@@ -44,7 +42,6 @@ export default class MetamaskService {
 
 
   public static async createWalletProviderFromType(type: WalletType) {
-    console.log("Creating wallet provider: ", type);
     if(type == WalletType.WalletConnect) { 
       const walletConnectProvider = new WalletConnectProvider({
         rpc:  {56: "https://bsc-dataseed.binance.org/"} ,
@@ -124,9 +121,7 @@ export default class MetamaskService {
 
     const oneTokenBnbPrice = this.oneMkatBnb;
     const amountBnbPrice = utils.parseEther(oneTokenBnbPrice.toString()).mul(amount);
-   
-    console.log("GetMkatValueInBUSD: ", amountBnbPrice);
-
+  
     const res =  (await this.getPricesPath(
       amountBnbPrice,
         [
@@ -135,10 +130,7 @@ export default class MetamaskService {
         ]
     ))[1];
 
-    console.log("GetMkatValueInBUSD res:" ,res, "input: ", amount.toString());
     return res;
-    // const pathResult = await this.mkatBNBBUSDPath(amount);
-    // return pathResult[2] / 10 ** 18;
   }
 
   public async getMKATValueInBNB(amount: BigNumber) {
@@ -229,10 +221,7 @@ export default class MetamaskService {
   }
 
   public async getPriceFromLastTrade() { 
-
     const amountOut = await this.getPricesPath(BigNumber.from("10000"), [WBNB_ADDRESS, CONTRACT_ADDRESS ] );
-
-    console.log(amountOut);
 
     return parseFloat(utils.formatEther(amountOut[0].toString())) / parseFloat(utils.formatUnits(amountOut[1].toString(), 9))
   }
