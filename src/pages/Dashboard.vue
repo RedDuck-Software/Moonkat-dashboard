@@ -419,8 +419,6 @@ export default {
       this.hundredThousandMKATUSD = parseFloat(utils.formatUnits(await service.getMkatValueInBUSD(hundredThousandMKAT), 18)).toFixed(2);
       this.totalLiquidityPoolUSD = parseFloat(utils.formatEther(await service.totalLiquidityPoolInBUSD())).toFixed(2);
 
-    //  this.totalLiquidityPoolUSD = this.totalLiquidityPoolUSD.toFixed(2);
-
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
       this.totalBnbInPool = parseFloat(await utils.formatEther(totalBnbInLiquidityPool)).toFixed(2);
     },

@@ -6,9 +6,6 @@ import {
 } from "./constants";
 import { ethers, Contract, BigNumber, utils } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { faThinkPeaks } from "@fortawesome/free-brands-svg-icons";
-import { Console } from "console";
-import InputDataDecoder from 'ethereum-input-data-decoder';
 
 declare global {
   interface Window {
@@ -19,6 +16,8 @@ export enum WalletType{
   Metamask,
   WalletConnect
 }
+
+const WBNB_ADDRESS = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
 
 export default class MetamaskService {
   contract?: Contract;
@@ -105,7 +104,7 @@ export default class MetamaskService {
   private async mkatBNBBUSDPath(amount: BigNumber) {
     return this.getPricesPath(amount, [
       CONTRACT_ADDRESS,
-      "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+      WBNB_ADDRESS,
       "0x55d398326f99059ff775485246999027b3197955",
     ]);
   }
@@ -130,7 +129,7 @@ export default class MetamaskService {
     const res =  (await this.getPricesPath(
       amountBnbPrice,
         [
-          "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          WBNB_ADDRESS,
           "0x55d398326f99059ff775485246999027b3197955",
         ]
     ))[1];
@@ -156,7 +155,7 @@ export default class MetamaskService {
     const bnbUSD =
       (
         await this.getPricesPath(bnb, [
-          "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          WBNB_ADDRESS,
           "0x55d398326f99059ff775485246999027b3197955",
         ])
       )[1];
@@ -229,80 +228,12 @@ export default class MetamaskService {
   }
 
   public async getPriceFromLastTrade() { 
-    let block = await this.web3Provider.getBlockNumber();
 
-    let priceFound = false;
-    const router = await this.getPancakeRouterAddress();
+    const amountOut = await this.getPricesPath(BigNumber.from("10000"), [WBNB_ADDRESS, CONTRACT_ADDRESS ] );
 
-    console.log("router: ", router);
-    console.log(block);
+    console.log(amountOut);
 
-    let txs = []
-    let foundPriceDecodedTx = null;
-
-    do {
-      const curBlock = await this.web3Provider.getBlockWithTransactions(block);
-
-      txs = curBlock.transactions;
-      
-      txs = txs.filter(function(t)  {
-        return t.to == router &&  [
-          "0x7ff36ab5", // swapExactETHForTokens
-          "0xfb3bdb41", // swapETHForExactTokens
-          "0x75f95dcc", // swapExactETHForTokensSupportingFeeOnTransferTokens
-        ].includes(t.data.substring(0,10));        
-      });
-      
-      foundPriceDecodedTx = this.getLastMKATSwapTx(txs);
-      
-      if(foundPriceDecodedTx == null) { 
-        block--;
-        continue;
-      }
-
-      priceFound = true;
-
-    }while(!priceFound);
-
-    console.log("Price found: ", foundPriceDecodedTx);
-
-    const txReceipt = await this.web3Provider.getTransactionReceipt(foundPriceDecodedTx.hash);
-
-    console.log(txReceipt);
-
-
-    const valueToken0 = BigNumber.from(txReceipt.logs[1].data);
-    const valueToken1 = BigNumber.from(txReceipt.logs[2].data);
-
-    console.log("token0value: ", valueToken0.toString());
-    console.log("token1value: ", valueToken1.toString());
-
-    console.log(parseFloat(utils.formatEther(valueToken0.toString())) / parseFloat(utils.formatUnits(valueToken1.toString(), 9)));
-
-    return parseFloat(utils.formatEther(valueToken0.toString())) / parseFloat(utils.formatUnits(valueToken1.toString(), 9));
+    return parseFloat(utils.formatEther(amountOut[0].toString())) / parseFloat(utils.formatUnits(amountOut[1].toString(), 9))
   }
 
-  private getLastMKATSwapTx(txs) {
-    if(txs.length == 0) return null;
-
-    const decodedTxs = [];
-
-    txs.forEach(t => {
-      decodedTxs.push({ decoded: this.decodeInputData(t.data), tx: t} );
-    });
-    
-    const filteredDecodedTxs = decodedTxs.filter(function(t)  { 
-       return "0x" + t.decoded.inputs[1].pop() == CONTRACT_ADDRESS;
-    });
-
-    return filteredDecodedTxs.length == 0 ? null : filteredDecodedTxs[0].tx;
-  }
-
-  private decodeInputData(inputData) { 
-    const decoder = new InputDataDecoder(pancakeRouterContractAbi);
-
-    const result = decoder.decodeData(inputData);
-
-    return result;
-  } 
 }
