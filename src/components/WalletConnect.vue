@@ -23,6 +23,7 @@
               </div>
               <div class="button-wrapper">
                 <button
+                  v-if="!isMobile"
                   id="connectBtn"
                   type="button"
                   class="el-button button-custom-new el-button--primary el-button--medium"
@@ -33,13 +34,6 @@
                 </button>
                 <br />
                 <br />
-                <a
-                  v-if="isAndroid"
-                  class="el-button button-custom-new el-button--secondary el-button--small"
-                  href="https://link.trustwallet.com/open_url?coin_id=60&url=https://moonkat.net/dashboard"
-                  >Trust wallet</a
-                >
-
                 <a
                   class="el-button button-custom-new el-button--secondary el-button--small"
                   @click="connectWalletConnect()"
@@ -64,21 +58,19 @@
 import { ethers } from "ethers";
 import { mapGetters } from "vuex";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { WalletType } from '../MetamaskService';
+import { WalletType } from "../MetamaskService";
 
 export default {
   name: "WalletConnect",
 
   data() {
     return {
-      isAndroid: false,
-      isIos: false,
+      isMobile: false,
     };
   },
   computed: {
     ...mapGetters(["signerAddress"]),
     ...mapGetters(["walletProviderType"]),
-
   },
   mounted() {
     this.detectMobile();
@@ -106,7 +98,6 @@ export default {
 
         this.$router.push({ path: "dashboard" });
 
-
         window.ethereum.on("accountsChanged", function(accounts) {
           // Time to reload your interface with accounts[0]!
           this.$store.commit("logout");
@@ -124,26 +115,26 @@ export default {
     },
     async connectWalletConnect() {
       const walletConnectProvider = new WalletConnectProvider({
-        rpc:  {56: "https://bsc-dataseed.binance.org/"} ,
+        rpc: { 56: "https://bsc-dataseed.binance.org/" },
         chainId: 56,
         qrcode: true, // Required
       });
 
       await walletConnectProvider.enable();
-      
-      await this.updateDataOnAccountChange(walletConnectProvider)
-      
+
+      await this.updateDataOnAccountChange(walletConnectProvider);
+
       this.$router.push({ path: "dashboard" });
 
       // Subscribe to accounts change
-      walletConnectProvider.on("accountsChanged", (accounts) => {
+      walletConnectProvider.on("accountsChanged", accounts => {
         console.log("account changed: ", accounts);
 
-        this.updateDataOnAccountChange(walletConnectProvider)
+        this.updateDataOnAccountChange(walletConnectProvider);
       });
 
       // Subscribe to chainId change
-      walletConnectProvider.on("chainChanged", (chainId) => {
+      walletConnectProvider.on("chainChanged", chainId => {
         console.log("chain changed: ", chainId);
       });
 
@@ -155,26 +146,24 @@ export default {
         this.$router.push({ path: "connect-wallet" });
       });
     },
-    async updateDataOnAccountChange(walletConnectProvider) { 
-      const provider = new ethers.providers.Web3Provider(walletConnectProvider)
+    async updateDataOnAccountChange(walletConnectProvider) {
+      const provider = new ethers.providers.Web3Provider(walletConnectProvider);
 
       console.log("web3 provider:", provider);
       console.log("wallet provider:", walletConnectProvider);
-      
+
       const signer = provider.getSigner();
       console.log("signer:", signer);
       const address = await signer.getAddress();
-      
+
       console.log("signer address:", address);
 
       this.$store.commit("updateSignerAddress", address);
       this.$store.commit("updateWalletProviderType", WalletType.WalletConnect);
     },
     detectMobile() {
-      if (/Android|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        this.isAndroid = true;
-      } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        this.isIos = true;
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        this.isMobile = true;
       }
     },
   },
