@@ -4,7 +4,7 @@ import {
   pancackePairContractAbi,
   CONTRACT_ADDRESS,
 } from "./constants";
-import { ethers, Contract, BigNumber } from "ethers";
+import { ethers, Contract, BigNumber, utils } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { faThinkPeaks } from "@fortawesome/free-brands-svg-icons";
 import { Console } from "console";
@@ -24,11 +24,19 @@ export default class MetamaskService {
   contract?: Contract;
   walletProvider;
   web3Provider;
+  oneMkatBnb;
 
   constructor(walletProvider) { 
     this.walletProvider = walletProvider;
     this.web3Provider = new ethers.providers.Web3Provider(walletProvider);
   }
+
+  public async updateMKATBusdValue() { 
+    this.oneMkatBnb =  ((await this.getPriceFromLastTrade()) / 10 ** 9).toFixed(18);
+
+    console.log("oneMKATBNbPrice: ", this.oneMkatBnb.toString());
+  }
+
 
   public getWeb3Provider() { 
     return this.web3Provider;
@@ -113,8 +121,24 @@ export default class MetamaskService {
     if (amount.isZero()) {
       return 0;
     }
-    const pathResult = await this.mkatBNBBUSDPath(amount);
-    return pathResult[2] / 10 ** 18;
+
+    const oneTokenBnbPrice = this.oneMkatBnb;
+    const amountBnbPrice = utils.parseEther(oneTokenBnbPrice.toString()).mul(amount);
+   
+    console.log("GetMkatValueInBUSD: ", amountBnbPrice);
+
+    const res =  (await this.getPricesPath(
+      amountBnbPrice,
+        [
+          "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
+          "0x55d398326f99059ff775485246999027b3197955",
+        ]
+    ))[1];
+
+    console.log("GetMkatValueInBUSD res:" ,res, "input: ", amount.toString());
+    return res;
+    // const pathResult = await this.mkatBNBBUSDPath(amount);
+    // return pathResult[2] / 10 ** 18;
   }
 
   public async getMKATValueInBNB(amount: BigNumber) {
@@ -135,14 +159,13 @@ export default class MetamaskService {
           "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
           "0x55d398326f99059ff775485246999027b3197955",
         ])
-      )[1] /
-      10 ** 18;
+      )[1];
     const mkatUSD = await this.getMkatValueInBUSD(mkat);
 
     // console.log("bnbUSD:", bnbUSD);
     // console.log("mkatUSD:", mkatUSD);
 
-    return bnbUSD + mkatUSD;
+    return bnbUSD.add(mkatUSD);
   }
 
   public async getPancakePairPoolReserves() {
@@ -206,12 +229,6 @@ export default class MetamaskService {
   }
 
   public async getPriceFromLastTrade() { 
-    const iface = new ethers.utils.Interface([
-      "function swapETHForExactTokens(uint amountOut, address[] path, address to, uint deadline) payable returns (uint[] amounts)",
-      "function swapExactETHForTokens(uint amountOut, address[] path, address to, uint deadline) payable returns (uint[] amounts)",
-    ]);
-
-
     let block = await this.web3Provider.getBlockNumber();
 
     let priceFound = false;
@@ -232,6 +249,7 @@ export default class MetamaskService {
         return t.to == router &&  [
           "0x7ff36ab5", // swapExactETHForTokens
           "0xfb3bdb41", // swapETHForExactTokens
+          "0x75f95dcc", // swapExactETHForTokensSupportingFeeOnTransferTokens
         ].includes(t.data.substring(0,10));        
       });
       
@@ -254,21 +272,14 @@ export default class MetamaskService {
 
 
     const valueToken0 = BigNumber.from(txReceipt.logs[1].data);
-    const valueToken1 = BigNumber.from(txReceipt.logs[0].data);
+    const valueToken1 = BigNumber.from(txReceipt.logs[2].data);
 
     console.log("token0value: ", valueToken0.toString());
-    console.log("token0value: ", valueToken1.toString());
+    console.log("token1value: ", valueToken1.toString());
 
-    return valueToken0.div(valueToken1);
-  }
+    console.log(parseFloat(utils.formatEther(valueToken0.toString())) / parseFloat(utils.formatUnits(valueToken1.toString(), 9)));
 
-  
-  private decodeOutputData(outputData) { 
-    const decoder = new InputDataDecoder(pancakeRouterContractAbi);
-
-    const result = decoder.decodeData(outputData);
-
-    return result;
+    return parseFloat(utils.formatEther(valueToken0.toString())) / parseFloat(utils.formatUnits(valueToken1.toString(), 9));
   }
 
   private getLastMKATSwapTx(txs) {
@@ -281,10 +292,8 @@ export default class MetamaskService {
     });
     
     const filteredDecodedTxs = decodedTxs.filter(function(t)  { 
-       return "0x" + t.decoded.inputs[1].pop() == "0xe9e7cea3dedca5984780bafc599bd69add087d56";
+       return "0x" + t.decoded.inputs[1].pop() == CONTRACT_ADDRESS;
     });
-
-    console.log(filteredDecodedTxs);
 
     return filteredDecodedTxs.length == 0 ? null : filteredDecodedTxs[0].tx;
   }
