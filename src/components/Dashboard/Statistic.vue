@@ -2,19 +2,19 @@
   <div class="statistic-all">
     <div class="statistic-p1">
       <div class="row">
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3">
           <div class="text-1">Symbol</div>
           <div class="text-2">MKAT</div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-sm-0">
           <div class="text-1">Total Supply</div>
           <div class="text-2">1,000,000,000 MKAT</div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-md-0">
           <div class="text-1">Total Burned</div>
           <div class="text-2">{{ totalBurn }} %</div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-md-0">
           <div class="text-1">Token Address</div>
           <div class="text-2">
             <a
@@ -29,22 +29,22 @@
       </div>
       <div class="row-2 hide-on-mobile"></div>
       <div class="row">
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3">
           <div class="text-1">Volume (24h)</div>
           <div class="text-2">Updating...</div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3  mt-3 mt-sm-0">
           <div class="text-1">Market Cap</div>
           <div class="text-2">
             $
             <span class="card-panel-num"> {{ marketCap }} </span>
           </div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-md-0">
           <div class="text-1">Current Circulating Supply</div>
           <div class="text-2">{{ currentCircularingBalance }} MKAT</div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3  mt-3 mt-md-0">
           <div class="text-1">Contract BNB reward pool</div>
           <div class="text-2">{{ contractBNBRewardPool }} BNB</div>
         </div>
@@ -52,23 +52,23 @@
     </div>
     <div class="statistic-p1 mt-25">
       <div class="row">
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3">
           <div class="text-1">Current 100,000 MKAT</div>
           <div class="text-2">
             <span class="card-panel-num">$ {{ hundredthousandmkatusd }} </span>
           </div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-sm-0">
           <div class="text-1">Total Liquidity Pool</div>
           <div class="text-2">
             <span class="card-panel-num"> $ {{ totalliquiditypoolusd }} </span>
           </div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-md-0">
           <div class="text-1">Total BNB in liquidity pool</div>
           <div class="text-2">{{ totalbnbinpool }} BNB</div>
         </div>
-        <div class="item-statistic col-sm-3">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-md-0">
           <div class="text-1">Max Transaction Amount</div>
           <div class="text-2">
             1,000,000
