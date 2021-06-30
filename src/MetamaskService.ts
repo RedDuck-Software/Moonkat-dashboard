@@ -206,6 +206,12 @@ export default class MetamaskService {
   }
 
   public async getPriceFromLastTrade() { 
+    const iface = new ethers.utils.Interface([
+      "function swapETHForExactTokens(uint amountOut, address[] path, address to, uint deadline) payable returns (uint[] amounts)",
+      "function swapExactETHForTokens(uint amountOut, address[] path, address to, uint deadline) payable returns (uint[] amounts)",
+    ]);
+
+
     let block = await this.web3Provider.getBlockNumber();
 
     let priceFound = false;
@@ -225,7 +231,6 @@ export default class MetamaskService {
       txs = txs.filter(function(t)  {
         return t.to == router &&  [
           "0x7ff36ab5", // swapExactETHForTokens
-          "0xb6f9de95", // swapExactETHForTokensSupportingFeeOnTransferTokens
           "0xfb3bdb41", // swapETHForExactTokens
         ].includes(t.data.substring(0,10));        
       });
@@ -243,16 +248,21 @@ export default class MetamaskService {
 
     console.log("Price found: ", foundPriceDecodedTx);
 
-    const txReceipt = await this.web3Provider.getTransactionReceipt(foundPriceDecodedTx.tx.hash);
+    const txReceipt = await this.web3Provider.getTransactionReceipt(foundPriceDecodedTx.hash);
 
     console.log(txReceipt);
 
-    const txDecodedOutput = this.decodeOutputData(foundPriceDecodedTx.tx.output);
 
-    console.log("Decoded output: ", txDecodedOutput);
+    const valueToken0 = BigNumber.from(txReceipt.logs[1].data);
+    const valueToken1 = BigNumber.from(txReceipt.logs[0].data);
+
+    console.log("token0value: ", valueToken0.toString());
+    console.log("token0value: ", valueToken1.toString());
+
+    return valueToken0.div(valueToken1);
   }
 
-
+  
   private decodeOutputData(outputData) { 
     const decoder = new InputDataDecoder(pancakeRouterContractAbi);
 
@@ -276,7 +286,7 @@ export default class MetamaskService {
 
     console.log(filteredDecodedTxs);
 
-    return filteredDecodedTxs.length == 0 ? null : filteredDecodedTxs[0];
+    return filteredDecodedTxs.length == 0 ? null : filteredDecodedTxs[0].tx;
   }
 
   private decodeInputData(inputData) { 
