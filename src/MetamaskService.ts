@@ -18,6 +18,7 @@ export enum WalletType{
 }
 
 const WBNB_ADDRESS = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
+const BUSD_ADDRESS = "0x55d398326f99059ff775485246999027b3197955";
 
 export default class MetamaskService {
   contract?: Contract;
@@ -105,7 +106,7 @@ export default class MetamaskService {
     return this.getPricesPath(amount, [
       CONTRACT_ADDRESS,
       WBNB_ADDRESS,
-      "0x55d398326f99059ff775485246999027b3197955",
+      BUSD_ADDRESS,
     ]);
   }
 
@@ -130,7 +131,7 @@ export default class MetamaskService {
       amountBnbPrice,
         [
           WBNB_ADDRESS,
-          "0x55d398326f99059ff775485246999027b3197955",
+          BUSD_ADDRESS,
         ]
     ))[1];
 
@@ -156,7 +157,7 @@ export default class MetamaskService {
       (
         await this.getPricesPath(bnb, [
           WBNB_ADDRESS,
-          "0x55d398326f99059ff775485246999027b3197955",
+          BUSD_ADDRESS,
         ])
       )[1];
     const mkatUSD = await this.getMkatValueInBUSD(mkat);
