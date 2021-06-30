@@ -430,7 +430,7 @@ export default {
       this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
 
       this.myBnbReward = await utils.formatEther(reward);
-      this.myBnbReward = parseFloat(this.myBnbReward).toFixed(2);
+      this.myBnbReward = parseFloat(this.myBnbReward);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;
