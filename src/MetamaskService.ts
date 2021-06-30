@@ -8,6 +8,7 @@ import { ethers, Contract, BigNumber } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { faThinkPeaks } from "@fortawesome/free-brands-svg-icons";
 import { Console } from "console";
+import InputDataDecoder from 'ethereum-input-data-decoder';
 
 declare global {
   interface Window {
@@ -109,11 +110,9 @@ export default class MetamaskService {
   }
 
   public async getMkatValueInBUSD(amount: BigNumber) {
-    console.log("amount:", amount);
     if (amount.isZero()) {
       return 0;
     }
-    console.log("amount3:", amount);
     const pathResult = await this.mkatBNBBUSDPath(amount);
     return pathResult[2] / 10 ** 18;
   }
@@ -207,27 +206,84 @@ export default class MetamaskService {
   }
 
   public async getPriceFromLastTrade() { 
-    const block = await this.web3Provider.getBlockNumber();
+    let block = await this.web3Provider.getBlockNumber();
 
     let priceFound = false;
     const router = await this.getPancakeRouterAddress();
 
+    console.log("router: ", router);
     console.log(block);
+
+    let txs = []
+    let foundPriceDecodedTx = null;
 
     do {
       const curBlock = await this.web3Provider.getBlockWithTransactions(block);
 
-      console.log(curBlock);
-
-      const txs = curBlock.transactions;
-
-      txs.filter(function(t)  {
-        t.to == router || t.data.substring(0,10) == "0x7ff36ab5";        
-      });
-
-      console.log(txs);
+      txs = curBlock.transactions;
       
+      txs = txs.filter(function(t)  {
+        return t.to == router &&  [
+          "0x7ff36ab5", // swapExactETHForTokens
+          "0xb6f9de95", // swapExactETHForTokensSupportingFeeOnTransferTokens
+          "0xfb3bdb41", // swapETHForExactTokens
+        ].includes(t.data.substring(0,10));        
+      });
+      
+      foundPriceDecodedTx = this.getLastMKATSwapTx(txs);
+      
+      if(foundPriceDecodedTx == null) { 
+        block--;
+        continue;
+      }
+
       priceFound = true;
+
     }while(!priceFound);
+
+    console.log("Price found: ", foundPriceDecodedTx);
+
+    const txReceipt = await this.web3Provider.getTransactionReceipt(foundPriceDecodedTx.tx.hash);
+
+    console.log(txReceipt);
+
+    const txDecodedOutput = this.decodeOutputData(foundPriceDecodedTx.tx.output);
+
+    console.log("Decoded output: ", txDecodedOutput);
   }
+
+
+  private decodeOutputData(outputData) { 
+    const decoder = new InputDataDecoder(pancakeRouterContractAbi);
+
+    const result = decoder.decodeData(outputData);
+
+    return result;
+  }
+
+  private getLastMKATSwapTx(txs) {
+    if(txs.length == 0) return null;
+
+    const decodedTxs = [];
+
+    txs.forEach(t => {
+      decodedTxs.push({ decoded: this.decodeInputData(t.data), tx: t} );
+    });
+    
+    const filteredDecodedTxs = decodedTxs.filter(function(t)  { 
+       return "0x" + t.decoded.inputs[1].pop() == "0xe9e7cea3dedca5984780bafc599bd69add087d56";
+    });
+
+    console.log(filteredDecodedTxs);
+
+    return filteredDecodedTxs.length == 0 ? null : filteredDecodedTxs[0];
+  }
+
+  private decodeInputData(inputData) { 
+    const decoder = new InputDataDecoder(pancakeRouterContractAbi);
+
+    const result = decoder.decodeData(inputData);
+
+    return result;
+  } 
 }

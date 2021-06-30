@@ -25,6 +25,7 @@
     "circular-json": "^0.5.9",
     "core-js": "^3.6.5",
     "dotenv": "^10.0.0",
+    "ethereum-input-data-decoder": "^0.3.2",
     "ethers": "^5.3.1",
     "file-loader": "^6.2.0",
     "portal-vue": "^2.1.7",
