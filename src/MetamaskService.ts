@@ -4,7 +4,7 @@ import {
   pancackePairContractAbi,
   CONTRACT_ADDRESS,
 } from "./constants";
-import { ethers, Contract, BigNumber } from "ethers";
+import { ethers, Contract, BigNumber, utils } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 declare global {
@@ -17,15 +17,24 @@ export enum WalletType{
   WalletConnect
 }
 
+const WBNB_ADDRESS = "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c";
+const BUSD_ADDRESS = "0x55d398326f99059ff775485246999027b3197955";
+
 export default class MetamaskService {
   contract?: Contract;
   walletProvider;
   web3Provider;
+  oneMkatBnb;
 
   constructor(walletProvider) { 
     this.walletProvider = walletProvider;
     this.web3Provider = new ethers.providers.Web3Provider(walletProvider);
   }
+
+  public async updateMKATBusdValue() { 
+    this.oneMkatBnb =  ((await this.getPriceFromLastTrade()) / 10 ** 9).toFixed(18);
+  }
+
 
   public getWeb3Provider() { 
     return this.web3Provider;
@@ -93,8 +102,8 @@ export default class MetamaskService {
   private async mkatBNBBUSDPath(amount: BigNumber) {
     return this.getPricesPath(amount, [
       CONTRACT_ADDRESS,
-      "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-      "0x55d398326f99059ff775485246999027b3197955",
+      WBNB_ADDRESS,
+      BUSD_ADDRESS,
     ]);
   }
 
@@ -110,8 +119,18 @@ export default class MetamaskService {
       return 0;
     }
 
-    const pathResult = await this.mkatBNBBUSDPath(amount);
-    return pathResult[2] / 10 ** 18;
+    const oneTokenBnbPrice = this.oneMkatBnb;
+    const amountBnbPrice = utils.parseEther(oneTokenBnbPrice.toString()).mul(amount);
+  
+    const res =  (await this.getPricesPath(
+      amountBnbPrice,
+        [
+          WBNB_ADDRESS,
+          BUSD_ADDRESS,
+        ]
+    ))[1];
+
+    return res;
   }
 
   public async getMKATValueInBNB(amount: BigNumber) {
@@ -129,17 +148,16 @@ export default class MetamaskService {
     const bnbUSD =
       (
         await this.getPricesPath(bnb, [
-          "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c",
-          "0x55d398326f99059ff775485246999027b3197955",
+          WBNB_ADDRESS,
+          BUSD_ADDRESS,
         ])
-      )[1] /
-      10 ** 18;
+      )[1];
     const mkatUSD = await this.getMkatValueInBUSD(mkat);
 
     // console.log("bnbUSD:", bnbUSD);
     // console.log("mkatUSD:", mkatUSD);
 
-    return bnbUSD + mkatUSD;
+    return bnbUSD.add(mkatUSD);
   }
 
   public async getPancakePairPoolReserves() {
@@ -201,4 +219,11 @@ export default class MetamaskService {
 
     return tokenBalance;
   }
+
+  public async getPriceFromLastTrade() { 
+    const amountOut = await this.getPricesPath(BigNumber.from("10000"), [WBNB_ADDRESS, CONTRACT_ADDRESS ] );
+
+    return parseFloat(utils.formatEther(amountOut[0].toString())) / parseFloat(utils.formatUnits(amountOut[1].toString(), 9))
+  }
+
 }

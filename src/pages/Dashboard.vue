@@ -398,7 +398,12 @@ export default {
       console.log("signer address: ", this.signerAddress);
 
 
+      this.$loading(true);
+
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+      await service.updateMKATBusdValue();
+
+      this.$loading(false);
 
 
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
@@ -411,15 +416,11 @@ export default {
       await this.getBnbReward(service);
 
       const hundredThousandMKAT = utils.parseUnits("100000", 9);
-      this.hundredThousandMKATUSD = await service.getMkatValueInBUSD(hundredThousandMKAT);
-      this.totalLiquidityPoolUSD = await service.totalLiquidityPoolInBUSD();
-
-      this.hundredThousandMKATUSD = this.hundredThousandMKATUSD.toFixed(2);
-      this.totalLiquidityPoolUSD = this.totalLiquidityPoolUSD.toFixed(2);
+      this.hundredThousandMKATUSD = parseFloat(utils.formatUnits(await service.getMkatValueInBUSD(hundredThousandMKAT), 18)).toFixed(2);
+      this.totalLiquidityPoolUSD = parseFloat(utils.formatEther(await service.totalLiquidityPoolInBUSD())).toFixed(2);
 
       const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
-      this.totalBnbInPool = await utils.formatEther(totalBnbInLiquidityPool);
-      this.totalBnbInPool = parseFloat(this.totalBnbInPool).toFixed(2);
+      this.totalBnbInPool = parseFloat(utils.formatEther(totalBnbInLiquidityPool)).toFixed(2);
     },
     async getMaxAmountForDisruptiveTransfer() {
       this.amountMkat = utils.formatUnits(await this.contract.balanceOf(this.signerAddress), 9);
@@ -429,8 +430,8 @@ export default {
       let reward = await service.getBnbReward(this.signerAddress);
       this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
 
-      this.myBnbReward = await utils.formatEther(reward);
-      this.myBnbReward = parseFloat(this.myBnbReward);
+      this.myBnbReward = utils.formatEther(reward);
+      this.myBnbReward = parseFloat(this.myBnbReward).toFixed(2);
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;

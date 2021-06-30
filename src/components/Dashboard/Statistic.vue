@@ -124,16 +124,15 @@ export default {
   methods: {
     async loadContractInfo() {
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+      await service.updateMKATBusdValue();
 
       this.provider = service.getWeb3Provider();
 
-      this.marketCap = await this.calculateMarketCap(service);
-      this.marketCap = this.marketCap.toFixed(2);
+      this.marketCap = parseFloat(await this.calculateMarketCap(service)).toFixed(2);
 
       this.totalBurn = await this.calculateTotalBurnPercent(service);
 
-      this.currentCircularingBalance = await utils.formatUnits(await this.getCurrentCircularingBalance(), 9);
-      this.currentCircularingBalance = parseFloat(this.currentCircularingBalance).toFixed(2);
+      this.currentCircularingBalance = parseFloat(utils.formatUnits(await this.getCurrentCircularingBalance(), 9)).toFixed(2);
 
       this.contractBNBRewardPool = await utils.formatEther(await this.provider.getBalance(CONTRACT_ADDRESS));
       this.contractBNBRewardPool = parseFloat(this.contractBNBRewardPool).toFixed(2);
@@ -141,7 +140,7 @@ export default {
     async calculateMarketCap(service) {
       const circularingBalance = await this.getCurrentCircularingBalance();
 
-      return await service.getMkatValueInBUSD(circularingBalance);
+      return utils.formatUnits(await service.getMkatValueInBUSD(circularingBalance), 18);
     },
     async calculateTotalBurnPercent() {
       const { total, zero, burn } = await this.getCircularingBalances();

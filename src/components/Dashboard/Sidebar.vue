@@ -96,6 +96,7 @@ export default {
       console.log(this.walletProviderType);
 
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+      await service.updateMKATBusdValue();
 
       this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
