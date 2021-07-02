@@ -75,6 +75,12 @@ export default {
   mounted() {
     this.detectMobile();
 
+    console.log(this.signerAddress);
+    
+    if(this.signerAddress) { 
+      this.$router.replace({ path: "dashboard" });
+    }
+
     this.unsubscribe = this.$store.subscribe((mutation, state) => {
       if (mutation.type === "logout") {
         this.$router.push({ path: "connect-wallet" });

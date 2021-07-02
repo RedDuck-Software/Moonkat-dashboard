@@ -388,8 +388,8 @@ export default {
   mounted() {
     if(!this.signerAddress) { 
       alert("Please, connect your wallet first!");
-      
-      this.$router.push({ path: "connect-wallet" });
+
+      this.$router.replace({ path: "connect-wallet" });
       return;
     }
     this.$loading(true);
