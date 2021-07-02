@@ -31,7 +31,7 @@
       <div class="row">
         <div class="item-statistic col-sm-6 col-md-3">
           <div class="text-1">Volume (24h)</div>
-          <div class="text-2">Updating...</div>
+          <div class="text-2">Coming soon!</div>
         </div>
         <div class="item-statistic col-sm-6 col-md-3  mt-3 mt-sm-0">
           <div class="text-1">Market Cap</div>
