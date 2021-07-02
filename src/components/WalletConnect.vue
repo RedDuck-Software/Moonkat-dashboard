@@ -76,7 +76,7 @@ export default {
     this.detectMobile();
 
     console.log(this.signerAddress);
-    
+
     if(this.signerAddress) { 
       this.$router.replace({ path: "dashboard" });
     }
@@ -210,6 +210,7 @@ export default {
   outline: none;
   margin: 0;
   font-weight: 400;
+  user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
