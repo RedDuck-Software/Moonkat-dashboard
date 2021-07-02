@@ -109,8 +109,7 @@ export default {
     },
     async logout() {
       this.$store.commit("logout");
-      this.$router.push("/connect-wallet");
-      alert("You logged out!");
+      this.$router.replace("/connect-wallet");
     },
   },
 };
