@@ -75,19 +75,15 @@ export default {
   mounted() {
     this.detectMobile();
 
-    this.unsubscribe = this.$store.subscribe((mutation, state) => {
-      if (mutation.type === "logout") {
-        this.$router.push({ path: "connect-wallet" });
-      }
-    });
-  },
-  beforeDestroy() {
-    this.unsubscribe();
-  },
+    console.log(this.signerAddress);
 
+    if(this.signerAddress) { 
+      this.$router.replace({ path: "dashboard" });
+    }
+  },
   methods: {
     async connectMetamask() {
-      if (typeof window.ethereum !== undefined) {
+      if (window.ethereum != undefined) {
         await window.ethereum.enable(); // deprecated - need to use eth_requestAccounts
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
@@ -204,6 +200,7 @@ export default {
   outline: none;
   margin: 0;
   font-weight: 400;
+  user-select: none;
   -moz-user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;
