@@ -385,38 +385,40 @@ export default {
   watch: {
     myBnbReward() {},
   },
-  mounted() {
+  async mounted() {
     if(!this.signerAddress) { 
       alert("Please, connect your wallet first!");
 
       this.$router.replace({ path: "connect-wallet" });
       return;
     }
-    this.$loading(true);
+    try{ 
+      this.$loading(true);
 
-    this.loadContractInfo().catch(function(_){
+      const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+      await service.updateMKATBusdValue();
+      await this.loadContractInfo(service);
+
+      setInterval(async function() {
+        await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
+      }, 60000);
+    }catch(ex) { 
       alert(
         "Please, ensure that right network is selected in your wallet provider." +
         "Must be: BSC Mainnet"
       );  
-    }).finally(() => { 
+    }finally {
       this.$loading(false);
-    })
-
-    setInterval(async function() {
-      await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
-    }, 60000);
+    }
   },
 
   methods: {
-    async loadContractInfo() {
+    async loadContractInfo(_service) {
       console.log("wallet provider: ", this.walletProviderType);
       console.log("signer address: ", this.signerAddress);
 
-
-      const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
-      await service.updateMKATBusdValue();
-
+      const service = _service;
+      
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.provider = service.getWeb3Provider();
       this.maxMkatTx = await service.getMaxTx();

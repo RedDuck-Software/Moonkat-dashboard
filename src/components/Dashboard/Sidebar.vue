@@ -57,6 +57,7 @@ import { ContractFactory } from "ethers";
 import { mapGetters } from "vuex";
 import MetamaskService from "@/MetamaskService";
 import { ethers } from "ethers";
+import { WalletType } from '../../MetamaskService';
 
 export default {
   name: "Sidebar",
@@ -72,6 +73,7 @@ export default {
       myMkatBalance: "...",
       myMkatBalanceInBUSD: "0.00",
       mkatContract: null,
+      service: null,
     };
   },
   computed: {
@@ -98,6 +100,7 @@ export default {
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
       await service.updateMKATBusdValue();
 
+      this.service = service;
       this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
       this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD( ethers.utils.parseUnits(this.myMkatBalance, 9));
@@ -108,6 +111,9 @@ export default {
       alert("Copied!");
     },
     async logout() {
+      if(this.walletProviderType == WalletType.WalletConnect) 
+        this.service.walletProvider.disconnect();
+
       this.$store.commit("logout");
       this.$router.replace("/connect-wallet");
     },
