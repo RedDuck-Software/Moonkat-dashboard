@@ -87,7 +87,7 @@ export default {
 
   methods: {
     async connectMetamask() {
-      if (typeof window.ethereum !== undefined) {
+      if (window.ethereum != undefined) {
         await window.ethereum.enable(); // deprecated - need to use eth_requestAccounts
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();

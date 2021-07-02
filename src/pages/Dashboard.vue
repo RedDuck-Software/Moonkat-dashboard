@@ -386,10 +386,23 @@ export default {
     myBnbReward() {},
   },
   mounted() {
-    this.loadContractInfo();
-    setTimeout(async function() {
+    if(!this.signerAddress) { 
+      alert("Please, connect your wallet first!");
+      
+      this.$router.push({ path: "connect-wallet" });
+      return;
+    }
+    this.$loading(true);
+
+    this.loadContractInfo().catch(function(reason){
+      alert(`Error: ${reason}`);  
+    }).finally(() => { 
+      this.$loading(false);
+    })
+
+    setInterval(async function() {
       await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
-    }, 600000);
+    }, 60000);
   },
 
   methods: {
@@ -398,13 +411,8 @@ export default {
       console.log("signer address: ", this.signerAddress);
 
 
-      this.$loading(true);
-
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
       await service.updateMKATBusdValue();
-
-      this.$loading(false);
-
 
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       this.provider = service.getWeb3Provider();
