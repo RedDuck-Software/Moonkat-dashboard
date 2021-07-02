@@ -394,8 +394,11 @@ export default {
     }
     this.$loading(true);
 
-    this.loadContractInfo().catch(function(reason){
-      alert(`Error: ${reason}`);  
+    this.loadContractInfo().catch(function(_){
+      alert(
+        "Please, ensure that right network is selected in your wallet provider." +
+        "Must be: BSC Mainnet"
+      );  
     }).finally(() => { 
       this.$loading(false);
     })
