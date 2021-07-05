@@ -156,10 +156,10 @@
                       </div>
                     </div>
 
-
                     <div 
                     v-if="claimToken.showTokenClaimer"
                     class="bought-tokens-claimer col" >
+
                     <div v-if="claimToken.claimIsAvailable">
 
                     <div class="claim-head row">
@@ -183,7 +183,7 @@
                           <span><i class="fa fa-gift"></i> Claim My tokens </span>
                         </button>
                       </div>
-                        <div v-if="claimToken.nextClaimDate != null">Next available claim: {{ claimToken.nextTokensClaimDate }} </div>
+                        <div v-if="claimToken.nextClaimDate != null">Next available claim: {{ claimToken.nextTokensClaimDate.toGMTString() }} </div>
                       </div>
                     </div>
 
@@ -477,8 +477,12 @@ export default {
         const unFreezePeriod = await this.claimerContract.unFreezePeriod();
         let passedPeriodPaymentsCount = await this.claimerContract.calculatePassedPeriodPaymentsCount();
         
-        this.claimToken.remainsPreSaleTokens = parseFloat(utils.formatUnits(await service.getRemainsPreSaleTokens(this.signerAddress), 9)).toFixed(2);
+        this.claimToken.remainsPreSaleTokens = await service.getRemainsPreSaleTokens(this.signerAddress);
 
+        if(this.claimToken.remainsPreSaleTokens.isZero()) 
+          this.claimToken.claimIsAvailable = false;
+
+        this.claimToken.remainsPreSaleTokens  = parseFloat(utils.formatUnits(this.claimToken.remainsPreSaleTokens, 9)).toFixed(2);
         let nextClaimDate;
 
         if(maxPayments.lte(passedPeriodPaymentsCount) || claimInfo.paymentsMade.eq(maxPayments))  {
