@@ -1444,6 +1444,28 @@ textarea::placeholder {
     background-color: transparent;
     padding: 15px;
 }
+.bought-tokens-claimer *{ 
+    color: white;
+}
+.bought-tokens-claimer .claim-body.row {
+    justify-content: space-between !important;
+}
+.bought-tokens-claimer .row {
+    margin: 0 !important;
+}
+.bought-tokens-claimer .claim-head.row {
+    justify-content: space-between !important;
+}
+.bought-tokens-claimer .val { 
+    color:rgb(201, 201, 201);
+}
+.bought-tokens-claimer { 
+    background-color: transparent;
+    border-radius: 20px;
+    padding: 10px;
+    border: 1px solid rgb(255 118 87 / 37%);
+}
+
 .claim-reward .claim-reward-content .image-content {
     margin-top: 10px;
 }

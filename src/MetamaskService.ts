@@ -34,7 +34,7 @@ export default class MetamaskService {
   }
 
   public async updateMKATBusdValue() { 
-    this.oneMkatBnb =  0.0000000000001; //((await this.getPriceFromLastTrade()) / 10 ** 9).toFixed(18);
+    this.oneMkatBnb = ((await this.getPriceFromLastTrade()) / 10 ** 9).toFixed(18);
   }
 
 
