@@ -2,7 +2,9 @@ import {
   erc20TokenContractAbi,
   pancakeRouterContractAbi,
   pancackePairContractAbi,
+  claimerContractAbi,
   CONTRACT_ADDRESS,
+  CLAIMER_CONTRACT_ADDRESS,
 } from "./constants";
 import { ethers, Contract, BigNumber, utils } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -32,7 +34,7 @@ export default class MetamaskService {
   }
 
   public async updateMKATBusdValue() { 
-    this.oneMkatBnb =  ((await this.getPriceFromLastTrade()) / 10 ** 9).toFixed(18);
+    this.oneMkatBnb =  0.0000000000001; //((await this.getPriceFromLastTrade()) / 10 ** 9).toFixed(18);
   }
 
 
@@ -58,12 +60,26 @@ export default class MetamaskService {
     }
     else throw new Error("Invalid type");
   }
+  
+
+  public async getRemainsPreSaleTokens(address: string) {
+    const contract = await this.getClaimerContractInstance(CLAIMER_CONTRACT_ADDRESS);
+    return await contract.calculateRemainsTokens(address);
+  }
+
 
   public async getContractInstance(contractAddress: string) {
     const provider = this.web3Provider;
 
     const signer = provider.getSigner();
     return new ethers.Contract(contractAddress, erc20TokenContractAbi, signer);
+  }
+
+  public async getClaimerContractInstance(contractAddress: string) {
+    const provider = this.web3Provider;
+
+    const signer = provider.getSigner();
+    return new ethers.Contract(contractAddress, claimerContractAbi , signer);
   }
 
   public async getPancakeRouterContractInstance(pancakeContractAddress: string) {
@@ -89,6 +105,7 @@ export default class MetamaskService {
     return res;
   }
 
+  
   private async getPricesPath(amount: BigNumber, path: string[]) {
     if (amount.isZero()) {
       return new Array(path.length).fill(BigNumber.from([0]));
@@ -225,5 +242,8 @@ export default class MetamaskService {
 
     return parseFloat(utils.formatEther(amountOut[0].toString())) / parseFloat(utils.formatUnits(amountOut[1].toString(), 9))
   }
+
+
+
 
 }

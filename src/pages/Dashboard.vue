@@ -155,6 +155,22 @@
                         </div>
                       </div>
                     </div>
+
+
+                    <div 
+                    v-if="showTokenClaimer"
+                    class="bought-tokens-claimer col" >
+                      <div>Bought tokens remains: {{ remainsPreSaleTokens }} </div>
+                      <div>Next available claim: {{ nextTokensClaimDate }}</div>
+
+                       <button
+                                type="button"
+                                class="el-button button-custom-new el-button--default el-button--medium is-disabled"
+                                @click="claimTokens()"
+                              >
+                               <span><i class="fa fa-gift"></i> Claim My tokens </span>
+                      </button>
+                    </div>
                     <div class="hidden-input el-input el-input--medium">
                       <input id="copy-value" type="text" autocomplete="off" class="el-input__inner" />
                     </div>
@@ -349,7 +365,7 @@
 import { mapGetters } from "vuex";
 import { BigNumber, ethers, utils } from "ethers";
 
-import { CONTRACT_ADDRESS } from "@/constants";
+import { CONTRACT_ADDRESS, CLAIMER_CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import Statistic from "@/components/Dashboard/Statistic";
@@ -372,10 +388,11 @@ export default {
       totalLiquidityPoolUSD: "...",
       recipientAddress: "",
       amountMkat: 0,
-
+      remainsPreSaleTokens: 0,
       maxBNBTx: "...",
-
+      nextTokensClaimDate: 0,
       provider: null,
+      showTokenClaimer: false,
     };
   },
   computed: {
@@ -403,6 +420,7 @@ export default {
         await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
       }, 60000);
     }catch(ex) { 
+      console.log(ex);
       alert(
         "Please, ensure that right network is selected in your wallet provider." +
         "Must be: BSC Mainnet"
@@ -419,7 +437,33 @@ export default {
 
       const service = _service;
       
+      this.remainsPreSaleTokens = await service.getRemainsPreSaleTokens(this.signerAddress);
+
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
+      
+      const claimerContract = await service.getClaimerContractInstance(CLAIMER_CONTRACT_ADDRESS);
+      const claimInfo = await claimerContract.tokenClaimInfoFor(this.signerAddress);
+      const maxPayments = await claimerContract.maxPayments();
+
+      this.showTokenClaimer = claimInfo.isValue && claimInfo.paymentsMade < maxPayments;
+      
+      if(claimInfo.isValue)  {
+        const claimStart = await claimerContract.claimAvailableFrom();
+        const unFreezePeriod = await claimerContract.unFreezePeriod();
+        const paymentsSinceStart = await claimerContract.calculatePassedPeriodPaymentsCount();
+        
+
+        let nextClaimDate;
+
+        if(maxPayments.lte(paymentsSinceStart) || claimInfo.paymentsMade.eq(maxPayments))
+          nextClaimDate = null;
+        else  
+          nextClaimDate = paymentsSinceStart.sub(claimInfo.paymentsMade).eq(0) ?  new Date(1000 * claimStart.add(unFreezePeriod.mul(paymentsSinceStart)).toNumber()) : null;
+
+        this.nextTokensClaimDate = nextClaimDate;
+      }
+
+
       this.provider = service.getWeb3Provider();
       this.maxMkatTx = await service.getMaxTx();
       this.maxMkatTx = parseFloat(this.maxMkatTx).toFixed(2);

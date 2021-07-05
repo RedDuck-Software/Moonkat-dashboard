@@ -1,6 +1,234 @@
-export const CONTRACT_ADDRESS = "0x38bd8cd90374dbc903aed9d2ee28f5ab856342ce";
-
+export const CONTRACT_ADDRESS = "0x38Bd8CD90374DBc903AeD9d2eE28f5Ab856342Ce";
+export const CLAIMER_CONTRACT_ADDRESS = "0x8ccAa996baA88e9027aBbc18711987722fCd84de";
 export const BURN_ADDRESS = "0x000000000000000000000000000000000000dEaD";
+
+
+export const claimerContractAbi = [
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_claimAvailableFrom",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "_mkatAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "paymentsMade",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "claimAvailableFrom",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "maxPayments",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "mkatToken",
+    outputs: [
+      {
+        internalType: "contract IBEP20",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "tokenClaimInfoFor",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "totalTokensAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "periodPaymentAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "paymentsMade",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "isValue",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "unFreezePercentage",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "unFreezePeriod",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "claimTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_addr",
+        type: "address",
+      },
+    ],
+    name: "calculateRemainsTokens",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "calculatePassedPeriodPaymentsCount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "calculateTokenAmountNeededForClaimers",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
 
 export const pancackePairContractAbi = [
   {
