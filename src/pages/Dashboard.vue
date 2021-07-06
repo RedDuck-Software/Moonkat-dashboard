@@ -593,7 +593,7 @@ export default {
         });
         const txReceipt = await txResponse.wait();
       } catch (ex) {
-        console.log("claimBNB exception: ", ex);
+        console.log("Error occured on token claiming. Refresh the page and try latter.",);
       } finally {
         this.$loading(false);
       }
