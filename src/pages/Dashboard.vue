@@ -470,7 +470,7 @@ export default {
       const maxPayments = await  this.claimerContract.maxPayments();
       const claimStart = await this.claimerContract.claimAvailableFrom();
 
-      this.claimToken.showTokenClaimer = claimInfo.isValue && claimInfo.paymentsMade.lt(maxPayments);
+      this.claimToken.showTokenClaimer = true;//claimInfo.isValue && claimInfo.paymentsMade.lt(maxPayments);
       this.claimToken.claimIsAvailable = new Date(claimStart.toNumber() * 1000 ) < new Date();
 
       if(claimInfo.isValue && this.claimToken.claimIsAvailable)  {
@@ -526,13 +526,12 @@ export default {
 
       try { 
         const txResponse = await this.claimerContract.claimTokens();
-        const txReceipt = await txResponse.wait();
-
-        console.log("Claim tx: ", txReceipt);
+        await txResponse.wait();
 
         location.reload();
       }catch(ex) { 
-        alert(`Error happend: ${ex}`)
+        console.log(ex);
+        alert(`Error occured on token claiming. Message: ${ex.data.message}`)
       }finally {
         this.$loading(false);
       }
@@ -593,7 +592,7 @@ export default {
         });
         const txReceipt = await txResponse.wait();
       } catch (ex) {
-        console.log("Error occured on token claiming. Refresh the page and try latter.",);
+        console.log("claimBNB exception: ", ex);
       } finally {
         this.$loading(false);
       }
