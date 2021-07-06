@@ -470,7 +470,7 @@ export default {
       const maxPayments = await  this.claimerContract.maxPayments();
       const claimStart = await this.claimerContract.claimAvailableFrom();
 
-      this.claimToken.showTokenClaimer = true;//claimInfo.isValue && claimInfo.paymentsMade.lt(maxPayments);
+      this.claimToken.showTokenClaimer = claimInfo.isValue && claimInfo.paymentsMade.lt(maxPayments);
       this.claimToken.claimIsAvailable = new Date(claimStart.toNumber() * 1000 ) < new Date();
 
       if(claimInfo.isValue && this.claimToken.claimIsAvailable)  {
