@@ -466,40 +466,51 @@ export default {
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
       
       this.claimerContract = await service.getClaimerContractInstance(CLAIMER_CONTRACT_ADDRESS);
-      const claimInfo = await  this.claimerContract.tokenClaimInfoFor(this.signerAddress);
-      const maxPayments = await  this.claimerContract.maxPayments();
+      const claimInfo = await this.claimerContract.tokenClaimInfoFor(this.signerAddress);
+      const maxPayments = claimInfo.totalTokensAmount.div(claimInfo.periodPaymentAmount).add(1);
       const claimStart = await this.claimerContract.claimAvailableFrom();
 
-      this.claimToken.showTokenClaimer = claimInfo.isValue && claimInfo.paymentsMade.lt(maxPayments);
+      const alreadyClaimed = claimInfo.paymentsMade.mul(claimInfo.periodPaymentAmount);
+
+      this.claimToken.showTokenClaimer = claimInfo.isValue && claimInfo.totalTokensAmount.gt(alreadyClaimed);
+
       this.claimToken.claimIsAvailable = new Date(claimStart.toNumber() * 1000 ) < new Date();
 
       if(claimInfo.isValue && this.claimToken.claimIsAvailable)  {
         const unFreezePeriod = await this.claimerContract.unFreezePeriod();
         let passedPeriodPaymentsCount = await this.claimerContract.calculatePassedPeriodPaymentsCount();
         
-        this.claimToken.remainsPreSaleTokens = await service.getRemainsPreSaleTokens(this.signerAddress);
+        try  {
+          this.claimToken.remainsPreSaleTokens = await service.getRemainsPreSaleTokens(this.signerAddress);
+        }catch(ex) {
+          this.claimToken.claimIsAvailable = false;
+        }
 
         if(this.claimToken.remainsPreSaleTokens.isZero()) 
           this.claimToken.claimIsAvailable = false;
 
-        this.claimToken.remainsPreSaleTokens  = parseFloat(utils.formatUnits(this.claimToken.remainsPreSaleTokens, 9)).toFixed(2);
+
+        let tokensToClaim = passedPeriodPaymentsCount.sub(claimInfo.paymentsMade).mul(claimInfo.periodPaymentAmount);
+
+        if(tokensToClaim.gt(this.claimToken.remainsPreSaleTokens))
+          tokensToClaim = this.claimToken.remainsPreSaleTokens;
+        
+        this.claimToken.remainsPreSaleTokens = parseFloat(utils.formatUnits(this.claimToken.remainsPreSaleTokens, 9)).toFixed(2);
         let nextClaimDate;
 
-        if(maxPayments.lte(passedPeriodPaymentsCount) || claimInfo.paymentsMade.eq(maxPayments))  {
+        if(maxPayments.lte(passedPeriodPaymentsCount) || claimInfo.paymentsMade.eq(maxPayments)) {
           nextClaimDate = null;
         }
         else   { 
           nextClaimDate = passedPeriodPaymentsCount.eq(claimInfo.paymentsMade) ?  new Date(1000 * claimStart.add(unFreezePeriod.mul(passedPeriodPaymentsCount)).toNumber()) : null;
         }
 
-        if(passedPeriodPaymentsCount > maxPayments) 
-            passedPeriodPaymentsCount = maxPayments;
 
         this.claimToken.nextTokensClaimDate = nextClaimDate;
 
-        this.claimToken.tokensToClaim =  parseFloat(utils.formatUnits(passedPeriodPaymentsCount.sub(claimInfo.paymentsMade).mul(claimInfo.periodPaymentAmount), 9)).toFixed(2);
-        this.claimToken.alreadyClaimedTokens =  parseFloat(utils.formatUnits(claimInfo.periodPaymentAmount.mul(claimInfo.paymentsMade), 9)).toFixed(2);
-        this.claimToken.totalBoughtTokens =  parseFloat(utils.formatUnits(claimInfo.totalTokensAmount,  9)).toFixed(2);
+        this.claimToken.tokensToClaim =  parseFloat(utils.formatUnits(tokensToClaim, 9)).toFixed(2);
+        this.claimToken.alreadyClaimedTokens =  parseFloat(utils.formatUnits(alreadyClaimed, 9)).toFixed(2);
+        this.claimToken.totalBoughtTokens =  parseFloat(utils.formatUnits(claimInfo.totalBought, 9)).toFixed(2);
       }
 
 

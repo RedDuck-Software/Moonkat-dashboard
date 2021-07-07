@@ -16,11 +16,6 @@ export const claimerContractAbi = [
         name: "_mkatAddress",
         type: "address",
       },
-      {
-        internalType: "uint256",
-        name: "paymentsMade",
-        type: "uint256",
-      },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -59,23 +54,10 @@ export const claimerContractAbi = [
   },
   {
     inputs: [],
-    name: "maxPayments",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "mkatToken",
     outputs: [
       {
-        internalType: "contract IBEP20",
+        internalType: "contract MKAT",
         name: "",
         type: "address",
       },
@@ -113,6 +95,11 @@ export const claimerContractAbi = [
     ],
     name: "tokenClaimInfoFor",
     outputs: [
+      {
+        internalType: "uint256",
+        name: "totalBought",
+        type: "uint256",
+      },
       {
         internalType: "uint256",
         name: "totalTokensAmount",
@@ -179,6 +166,13 @@ export const claimerContractAbi = [
   {
     inputs: [],
     name: "claimTokens",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "returnMkatOwnerShip",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
