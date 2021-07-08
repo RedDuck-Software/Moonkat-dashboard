@@ -26,7 +26,7 @@
         </div>
         <div class="col-lg-5">
           <div class="banner-img">
-            <img src="@/assets/images/moonKat.jpg" alt="banner-img" class="img-fluid" />
+            <img src="@/assets/images/Moonkat.png" alt="banner-img" class="img-fluid" />
           </div>
         </div>
       </div>

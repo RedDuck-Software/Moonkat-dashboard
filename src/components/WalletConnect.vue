@@ -6,7 +6,7 @@
         <div class="col-sm-6">
           <div class="section-2">
             <div class="connect-to-wallet">
-              <img src="@/assets/images/moonKat.jpg" class="logo-section" />
+              <img src="@/assets/images/Moonkat.png" class="logo-section" />
               <div class="text-show-1">Welcome to MoonKat Dapp</div>
               <div class="content-main">
                 <div class="text-1">You are not connected to MoonKat Dapp yet</div>

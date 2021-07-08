@@ -145,7 +145,7 @@
                       </div>
                       <div class="item-statistic">
                         <div class="row">
-                          <div class="col-sm-4 p-1"><img src="@/assets/images/moonKat.jpg" class="img-icon" /></div>
+                          <div class="col-sm-4 p-1"><img src="@/assets/images/Moonkat.png" class="img-icon" /></div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Current 100,000 MKAT price</div>
                             <div class="text-2">
