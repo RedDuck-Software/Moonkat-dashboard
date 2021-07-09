@@ -155,6 +155,40 @@
                         </div>
                       </div>
                     </div>
+
+                    <div 
+                    v-if="claimToken.showTokenClaimer"
+                    class="bought-tokens-claimer col" >
+
+                    <div v-if="claimToken.claimIsAvailable">
+
+                    <div class="claim-head row">
+                      <span>Already claimed: <span class="val">{{ claimToken.alreadyClaimedTokens  }}</span>  MKAT</span> 
+                      <div class="pl-3"></div>
+                      <span>Total bought: <span class="val">{{ claimToken.totalBoughtTokens  }} </span> MKAT</span> 
+                    </div>
+                      <div class="mt-2"></div>
+                    <div class="claim-body row">
+                      <div >
+                        <div>Tokens to claim remains:  <span class="val">{{ claimToken.remainsPreSaleTokens }} </span> MKAT </div>
+                        <div v-if="claimToken.tokensToClaim > 0">Available to claim:<span class="val"> {{ claimToken.tokensToClaim }} </span> MKAT</div>
+                      </div>
+                          <div>
+                        <button
+                              v-if="claimToken.nextClaimDate == null"
+                              type="button"
+                              class="el-button button-custom-new el-button--default el-button--medium is-disabled"
+                              @click="claimTokens()"
+                        >
+                          <span><i class="fa fa-gift"></i> Claim My tokens </span>
+                        </button>
+                      </div>
+                        <div v-if="claimToken.nextClaimDate != null">Next available claim: {{ claimToken.nextTokensClaimDate.toGMTString() }} </div>
+                      </div>
+                    </div>
+
+                      <div v-if="!claimToken.claimIsAvailable">Pre-bought tokens claim is not available yet </div>
+                    </div>
                     <div class="hidden-input el-input el-input--medium">
                       <input id="copy-value" type="text" autocomplete="off" class="el-input__inner" />
                     </div>
@@ -349,7 +383,7 @@
 import { mapGetters } from "vuex";
 import { BigNumber, ethers, utils } from "ethers";
 
-import { CONTRACT_ADDRESS } from "@/constants";
+import { CONTRACT_ADDRESS, CLAIMER_CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import Statistic from "@/components/Dashboard/Statistic";
@@ -372,10 +406,19 @@ export default {
       totalLiquidityPoolUSD: "...",
       recipientAddress: "",
       amountMkat: 0,
-
       maxBNBTx: "...",
-
       provider: null,
+      claimerContract: null,
+      claimToken : {
+        claimIsAvailable : false,
+        claimAvailableFrom: null, 
+        showTokenClaimer: false,
+        nextTokensClaimDate: null,
+        remainsPreSaleTokens: 0,
+        tokensToClaim: 0,
+        alreadyClaimedTokens: 0, 
+        totalBoughtTokens : 0, 
+      },
     };
   },
   computed: {
@@ -403,6 +446,7 @@ export default {
         await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
       }, 60000);
     }catch(ex) { 
+      console.log(ex);
       alert(
         "Please, ensure that right network is selected in your wallet provider." +
         "Must be: BSC Mainnet"
@@ -418,8 +462,58 @@ export default {
       console.log("signer address: ", this.signerAddress);
 
       const service = _service;
-      
+
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
+      
+      this.claimerContract = await service.getClaimerContractInstance(CLAIMER_CONTRACT_ADDRESS);
+      const claimInfo = await this.claimerContract.tokenClaimInfoFor(this.signerAddress);
+      const maxPayments = claimInfo.totalTokensAmount.div(claimInfo.periodPaymentAmount).add(1);
+      const claimStart = await this.claimerContract.claimAvailableFrom();
+
+      const alreadyClaimed = claimInfo.paymentsMade.mul(claimInfo.periodPaymentAmount);
+
+      this.claimToken.showTokenClaimer = claimInfo.isValue && claimInfo.totalTokensAmount.gt(alreadyClaimed);
+
+      this.claimToken.claimIsAvailable = new Date(claimStart.toNumber() * 1000 ) < new Date();
+
+      if(claimInfo.isValue && this.claimToken.claimIsAvailable)  {
+        const unFreezePeriod = await this.claimerContract.unFreezePeriod();
+        let passedPeriodPaymentsCount = await this.claimerContract.calculatePassedPeriodPaymentsCount();
+        
+        try  {
+          this.claimToken.remainsPreSaleTokens = await service.getRemainsPreSaleTokens(this.signerAddress);
+        }catch(ex) {
+          this.claimToken.claimIsAvailable = false;
+        }
+
+        if(this.claimToken.remainsPreSaleTokens.isZero()) 
+          this.claimToken.claimIsAvailable = false;
+
+
+        let tokensToClaim = passedPeriodPaymentsCount.sub(claimInfo.paymentsMade).mul(claimInfo.periodPaymentAmount);
+
+        if(tokensToClaim.gt(this.claimToken.remainsPreSaleTokens))
+          tokensToClaim = this.claimToken.remainsPreSaleTokens;
+        
+        this.claimToken.remainsPreSaleTokens = parseFloat(utils.formatUnits(this.claimToken.remainsPreSaleTokens, 9)).toFixed(2);
+        let nextClaimDate;
+
+        if(maxPayments.lte(passedPeriodPaymentsCount) || claimInfo.paymentsMade.eq(maxPayments)) {
+          nextClaimDate = null;
+        }
+        else   { 
+          nextClaimDate = passedPeriodPaymentsCount.eq(claimInfo.paymentsMade) ?  new Date(1000 * claimStart.add(unFreezePeriod.mul(passedPeriodPaymentsCount)).toNumber()) : null;
+        }
+
+
+        this.claimToken.nextTokensClaimDate = nextClaimDate;
+
+        this.claimToken.tokensToClaim =  parseFloat(utils.formatUnits(tokensToClaim, 9)).toFixed(2);
+        this.claimToken.alreadyClaimedTokens =  parseFloat(utils.formatUnits(alreadyClaimed, 9)).toFixed(2);
+        this.claimToken.totalBoughtTokens =  parseFloat(utils.formatUnits(claimInfo.totalBought, 9)).toFixed(2);
+      }
+
+
       this.provider = service.getWeb3Provider();
       this.maxMkatTx = await service.getMaxTx();
       this.maxMkatTx = parseFloat(this.maxMkatTx).toFixed(2);
@@ -438,7 +532,21 @@ export default {
     async getMaxAmountForDisruptiveTransfer() {
       this.amountMkat = utils.formatUnits(await this.contract.balanceOf(this.signerAddress), 9);
     },
+    async claimTokens() { 
+      this.$loading(true);
 
+      try { 
+        const txResponse = await this.claimerContract.claimTokens();
+        await txResponse.wait();
+
+        location.reload();
+      }catch(ex) { 
+        console.log(ex);
+        alert(`Error occured on token claiming. Message: ${ex.data.message}`)
+      }finally {
+        this.$loading(false);
+      }
+    },
     async getBnbReward(service) {
       let reward = await service.getBnbReward(this.signerAddress);
       this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
@@ -537,4 +645,6 @@ export default {
 .share-network-twitter:hover {
   color: white;
 }
+
+
 </style>
