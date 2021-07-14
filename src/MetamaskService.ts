@@ -243,7 +243,28 @@ export default class MetamaskService {
     return parseFloat(utils.formatEther(amountOut[0].toString())) / parseFloat(utils.formatUnits(amountOut[1].toString(), 9))
   }
 
+  public getClaimerContractAddress(signerAddress:string) {
+    const problematicAddresses = [
+      "0x03CE7ad9E91Ca95576B90B00B780328677c8DC5F",
+      "0x05Fb9594BbF49979D5Ca5c95a913BF4995F4C096",
+      "0x06e5a9feb9e33BCae23a2f53E70A513fba96bc77",
+      "0x0bA2f9edB9734F5c6715F86079649f3814C5Fd98",
+      "0x0E08d3048c5435d30eF83c55915227e3ca4Aa3BA",
+      "0x0Ec8BC018C50502254A1f257471698212bC54cC7",
+      "0x14318237a1f45792533eB5A34925245f17a4F660",
+      "0x19689D6f4AD16bdec73f9648326A38C27BfBe961",
+      ]
 
+    if (problematicAddresses.includes(signerAddress))
+    {
+      // stub address for those addresses that had incorrect amounts specified
+      return "0x1B3DB5Fe578b26b4FA0A891B0D76aD80c89B2b06";
+    }
+    else
+    { // real claiming contract address 
+      return "0xC990ff5175BdE3C12b160787AC8A6570bA144B85";
+    }
+  }
 
 
 }
