@@ -8,22 +8,22 @@
       </div>
       <div class="row team-pa">
         <div class="col-lg-3 col-md-3 col-sm-4 m-auto team-item text-center">
-          <img src="@/assets/images/moonKat.jpg" alt="team-member" class="img-fluid" />
+          <img src="@/assets/images/Moonkat.png" alt="team-member" class="img-fluid" />
           <h3>Simba</h3>
           <p>CEO & Founder</p>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4 m-auto team-item text-center">
-          <img src="@/assets/images/moonKat.jpg" alt="team-member" class="img-fluid" />
+          <img src="@/assets/images/Moonkat.png" alt="team-member" class="img-fluid" />
           <h3>Meowsie</h3>
           <p>Co-Founder & Marketer</p>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4 m-auto team-item text-center">
-          <img src="@/assets/images/moonKat.jpg" alt="team-member" class="img-fluid" />
+          <img src="@/assets/images/Moonkat.png" alt="team-member" class="img-fluid" />
           <h3>Angel</h3>
           <p>Designer</p>
         </div>
         <div class="col-lg-3 col-md-3 col-sm-4 m-auto team-item text-center">
-          <img src="@/assets/images/moonKat.jpg" alt="team-member" class="img-fluid" />
+          <img src="@/assets/images/Moonkat.png" alt="team-member" class="img-fluid" />
           <h3>Uz</h3>
           <p>Developer</p>
         </div>

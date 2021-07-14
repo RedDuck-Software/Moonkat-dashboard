@@ -145,7 +145,7 @@
                       </div>
                       <div class="item-statistic">
                         <div class="row">
-                          <div class="col-sm-4 p-1"><img src="@/assets/images/moonKat.jpg" class="img-icon" /></div>
+                          <div class="col-sm-4 p-1"><img src="@/assets/images/Moonkat.png" class="img-icon" /></div>
                           <div class="col-sm-8 p-2">
                             <div class="text-1">Current 100,000 MKAT price</div>
                             <div class="text-2">
@@ -383,7 +383,7 @@
 import { mapGetters } from "vuex";
 import { BigNumber, ethers, utils } from "ethers";
 
-import { CONTRACT_ADDRESS, CLAIMER_CONTRACT_ADDRESS } from "@/constants";
+import { CONTRACT_ADDRESS } from "@/constants";
 import MetamaskService from "@/MetamaskService";
 import Sidebar from "@/components/Dashboard/Sidebar";
 import Statistic from "@/components/Dashboard/Statistic";
@@ -464,10 +464,12 @@ export default {
       const service = _service;
 
       this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
-      
-      this.claimerContract = await service.getClaimerContractInstance(CLAIMER_CONTRACT_ADDRESS);
+  
+      const claimerContractAddress = service.getClaimerContractAddress(this.signerAddress);
+
+      this.claimerContract = await service.getClaimerContractInstance(claimerContractAddress);
       const claimInfo = await this.claimerContract.tokenClaimInfoFor(this.signerAddress);
-      const maxPayments = claimInfo.totalTokensAmount.div(claimInfo.periodPaymentAmount).add(1);
+      const maxPayments = !claimInfo.isValue ? 0 : claimInfo.totalTokensAmount.div(claimInfo.periodPaymentAmount).add(1);
       const claimStart = await this.claimerContract.claimAvailableFrom();
 
       const alreadyClaimed = claimInfo.paymentsMade.mul(claimInfo.periodPaymentAmount);
