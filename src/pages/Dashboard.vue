@@ -472,25 +472,24 @@ export default {
       const maxPayments = !claimInfo.isValue ? 0 : claimInfo.totalTokensAmount.div(claimInfo.periodPaymentAmount).add(1);
       const claimStart = await this.claimerContract.claimAvailableFrom();
 
-      const alreadyClaimed = claimInfo.paymentsMade.mul(claimInfo.periodPaymentAmount);
+      const alreadyClaimedTheory = claimInfo.paymentsMade.mul(claimInfo.periodPaymentAmount);
+      const alreadyClaimed = alreadyClaimedTheory > claimInfo.totalTokensAmount ? claimInfo.totalTokensAmount : alreadyClaimedTheory;
+      const remainsPreSaleTokens = claimInfo.totalTokensAmount.sub(alreadyClaimed);
+      
+      console.log("remainsPreSaleTokens", remainsPreSaleTokens);
+      console.log("alreadyClaimed", alreadyClaimed);
 
       this.claimToken.showTokenClaimer = claimInfo.isValue && claimInfo.totalTokensAmount.gt(alreadyClaimed);
+      console.log(this.claimToken);
 
       this.claimToken.claimIsAvailable = new Date(claimStart.toNumber() * 1000 ) < new Date();
 
       if(claimInfo.isValue && this.claimToken.claimIsAvailable)  {
         const unFreezePeriod = await this.claimerContract.unFreezePeriod();
         let passedPeriodPaymentsCount = await this.claimerContract.calculatePassedPeriodPaymentsCount();
-        
-        try  {
-          this.claimToken.remainsPreSaleTokens = await service.getRemainsPreSaleTokens(this.signerAddress);
-        }catch(ex) {
+      
+        if(remainsPreSaleTokens.isZero())
           this.claimToken.claimIsAvailable = false;
-        }
-
-        if(this.claimToken.remainsPreSaleTokens.isZero()) 
-          this.claimToken.claimIsAvailable = false;
-
 
         let tokensToClaim = passedPeriodPaymentsCount.sub(claimInfo.paymentsMade).mul(claimInfo.periodPaymentAmount);
 
