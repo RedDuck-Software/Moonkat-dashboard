@@ -195,7 +195,7 @@ export default class MetamaskService {
       this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
     }
 
-    return await this.contract.pancakeRouter();
+    return await this.contract.uniswapV2Router();
   }
 
   public async getMaxTx() {
