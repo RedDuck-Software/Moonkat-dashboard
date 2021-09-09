@@ -278,9 +278,8 @@ export default {
 
       await this.loadContractInfo();
 
-      setInterval(async function() {
-        await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
-      }, 60000);
+      const that = this;
+      setInterval(function() { that.loadContractInfo() } , 10000);
     }catch(ex) { 
       console.error(ex);
       alert(
@@ -303,6 +302,8 @@ export default {
       this.provider = this.service.getWeb3Provider();
 
       const staticRewardsInfo =  await this.contract.getAccountDividendsInfo(this.signerAddress);
+
+      console.debug("static rewards : ", staticRewardsInfo);
 
       this.isRewardClaimAvailable = staticRewardsInfo[1].gt(BigNumber.from("0"));
 
@@ -340,15 +341,11 @@ export default {
       this.$bvModal.show("bv-share-modal");
     },
     async claimMyReward() {
-      if ((await this.contract.balanceOf(this.signerAddress)) == 0) {
-        alert(`You need to own MKAT first!`);
-        return;
-      }
-      this.$loading(true);
-
       try {
-        const txResponse = await this.contract.claimBNBReward();
-        const txReceipt = await txResponse.wait();
+        this.$loading(true);
+        const txResponse = await this.contract.claim();
+        const resp = await txResponse.wait();
+        console.debug({txResponse: resp});
 
         this.openShareOnTwitterModal();
       } catch (ex) {
