@@ -29,15 +29,15 @@
                         </li>
                         <li class="nav-item">
                           <a
-                            id="three-tab"
+                            id="two-tab"
                             class="nav-link"
-                            :class="{ 'active show': isActive('three') }"
+                            :class="{ 'active show': isActive('two') }"
                             data-toggle="tab"
-                            href="#three"
+                            href="#statistics"
                             role="tab"
-                            aria-controls="Three"
+                            aria-controls="Two"
                             aria-selected="false"
-                            @click.prevent="setActive('three')"
+                            @click.prevent="setActive('two')"
                             >Statistic</a
                           >
                         </li>
@@ -127,46 +127,6 @@
                         </div>
                       </div>
                     </div>
-
-                    <div 
-                    v-if="claimToken.showTokenClaimer"
-                    class="bought-tokens-claimer col" >
-
-                    <div v-if="claimToken.claimIsAvailable">
-
-                    <div class="claim-head row">
-                      <span>Already claimed: <span class="val">{{ claimToken.alreadyClaimedTokens  }}</span>  MKAT</span> 
-                      <div class="pl-3"></div>
-                      <span>Total bought: <span class="val">{{ claimToken.totalBoughtTokens  }} </span> MKAT</span> 
-                    </div>
-                      <div class="mt-2"></div>
-                    <div class="claim-body row">
-                      <div >
-                        <div>Tokens to claim remains:  <span class="val">{{ claimToken.remainsPreSaleTokens }} </span> MKAT </div>
-                        <div v-if="claimToken.tokensToClaim > 0">Available to claim:<span class="val"> {{ claimToken.tokensToClaim }} </span> MKAT</div>
-                      </div>
-                          <div>
-                        <button
-                              v-if="claimToken.nextClaimDate == null"
-                              type="button"
-                              class="el-button button-custom-new el-button--default el-button--medium is-disabled"
-                              @click="claimTokens()"
-                        >
-                          <span><i class="fa fa-gift"></i> Claim My tokens </span>
-                        </button>
-                      </div>
-                        <div v-if="claimToken.nextClaimDate != null">Next available claim: {{ claimToken.nextTokensClaimDate.toGMTString() }} </div>
-                      </div>
-                    </div>
-
-                      <div v-if="!claimToken.claimIsAvailable">Pre-bought tokens claim is not available yet </div>
-                    </div>
-                    <div class="hidden-input el-input el-input--medium">
-                      <input id="copy-value" type="text" autocomplete="off" class="el-input__inner" />
-                    </div>
-                    <div class="hidden-input el-input el-input--medium">
-                      <input id="copy-value-bnb" type="text" autocomplete="off" class="el-input__inner" />
-                    </div>
                     <div
                       class="sweet-modal-content sweet-modal-overlay theme-light sweet-modal-clickable"
                       style="display: none"
@@ -224,7 +184,7 @@
                     :class="{ 'active show': isActive('two') }"
                   >
                     <Statistic
-                      v-if="contract"
+                      v-if="contract != null && contract != undefined"
                       :hundredthousandmkatusd="hundredThousandMKATUSD"
                       :totalliquiditypoolusd="totalLiquidityPoolUSD"
                       :totalbnbinpool="totalBnbInPool"
@@ -289,17 +249,6 @@ export default {
       amountMkat: 0,
       maxBNBTx: "...",
       provider: null,
-      claimerContract: null,
-      claimToken : {
-        claimIsAvailable : false,
-        claimAvailableFrom: null, 
-        showTokenClaimer: false,
-        nextTokensClaimDate: null,
-        remainsPreSaleTokens: 0,
-        tokensToClaim: 0,
-        alreadyClaimedTokens: 0, 
-        totalBoughtTokens : 0, 
-      },
     };
   },
   computed: {
@@ -359,21 +308,6 @@ export default {
 
       const totalBnbInLiquidityPool = (await this.service.getPancakePairPoolReserves())[1];
       this.totalBnbInPool = parseFloat(utils.formatEther(totalBnbInLiquidityPool)).toFixed(2);
-    },
-    async claimTokens() { 
-      this.$loading(true);
-
-      try { 
-        const txResponse = await this.claimerContract.claimTokens();
-        await txResponse.wait();
-
-        location.reload();
-      }catch(ex) { 
-        console.log(ex);
-        alert(`Error occured on token claiming. Message: ${ex.data.message}`)
-      }finally {
-        this.$loading(false);
-      }
     },
     isActive(menuItem) {
       return this.activeItem === menuItem;

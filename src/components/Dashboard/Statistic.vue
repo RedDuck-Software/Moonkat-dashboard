@@ -112,11 +112,15 @@ export default {
     ...mapGetters(["signerAddress"]),
     ...mapGetters(["walletProviderType"]),
   },
-  mounted() {
+  async mounted() {
+    this.$loading(true);
     this.loadContractInfo();
+    this.$loading(false);
   },
   methods: {
     async loadContractInfo() {
+      console.log("statistics loading");
+      
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
       await service.initialize();
 
