@@ -82,28 +82,25 @@ export default {
   },
   watch: {
     contract() {
-      this.loadContractInfo();
+      this.updateUserBalances();
     },
   },
-  mounted() {
+  async mounted() {
     this.canCopy = !!navigator.clipboard;
-    this.loadContractInfo();
 
-    setTimeout(async function() {
-      await this.loadContractInfo();
-    }, 600000);
+    this.service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+    this.service.updateMKATBusdValue();
+
+    this.mkatContract = await this.service.getContractInstance(CONTRACT_ADDRESS);
+
+    this.updateUserBalances();
+
+    setTimeout(this.updateUserBalance, 600000);
   },
   methods: {
-    async loadContractInfo() {
-      console.log(this.walletProviderType);
-
-      const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
-      await service.updateMKATBusdValue();
-
-      this.service = service;
-      this.mkatContract = await service.getContractInstance(CONTRACT_ADDRESS);
+    async updateUserBalances() {
       this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
-      this.myMkatBalanceInBUSD = await service.getMkatValueInBUSD( ethers.utils.parseUnits(this.myMkatBalance, 9));
+      this.myMkatBalanceInBUSD = await this.service.getMkatValueInBUSD( ethers.utils.parseUnits(this.myMkatBalance, 9));
     },
     async copyAddress() {
       const address = this.$refs.myAddr;
