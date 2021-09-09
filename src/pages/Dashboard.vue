@@ -51,6 +51,7 @@
                 <div id="myTabContent" class="tab-content">
                   <div id="one" class="tab-pane fade p-3 claim-reward" :class="{ 'active show': isActive('one') }">
                     <div class="claim-reward-content">
+                      <div v-if="!isRewardClaimAvailable" class="disabled-overlay w-100 h-100"></div>
                       <div class="row">
                         <div class="col-sm-3 p-1">
                           <div class="title-1">Reward Pool</div>
@@ -84,9 +85,12 @@
                                 <span><i class="fa fa-gift"></i> Claim My Reward </span>
                               </button>
                             </div>
+                            <span v-if="!isRewardClaimAvailable" class="text-warning mt-4">Claim is not available. You must to own BabyCake token to start gaining your static rewards</span>
+
                           </div>
                         </div>
                       </div>
+                      
                     </div>
                     <div class="statistic-wrapper">
                       <div class="item-statistic">
@@ -238,6 +242,7 @@ export default {
       activeItem: "one",
       maxMkatTx: null,
       hundredThousandMKATUSD: "...",
+      isRewardClaimAvailable: false,
       myBnbReward: "...",
       nextClaimDate: "...",
       myBnbRewardAfterTax: 0,
@@ -249,6 +254,7 @@ export default {
       amountMkat: 0,
       maxBNBTx: "...",
       provider: null,
+      
     };
   },
   computed: {
@@ -298,7 +304,18 @@ export default {
 
       const staticRewardsInfo =  await this.contract.getAccountDividendsInfo(this.signerAddress);
 
-      console.log(staticRewardsInfo);
+      this.isRewardClaimAvailable = staticRewardsInfo[1].gt(BigNumber.from("0"));
+
+      console.log("is reward claim available for user: ", this.isRewardClaimAvailable);
+
+      if(this.isRewardClaimAvailable == true) { 
+        this.myBnbReward = utils.formatEther(staticRewardsInfo[3]); 
+        this.nextClaimDate = new Date(staticRewardsInfo[6]) / 1000; 
+
+        console.log("available reward: ", this.myBnbReward);
+        console.log("next claim date: ", this.nextClaimDate);
+      }
+      
 
       const hundredThousandMKAT = utils.parseUnits("100000", 18);
       const usdPrice = await this.service.getMkatValueInBUSD(hundredThousandMKAT);
@@ -359,5 +376,14 @@ export default {
   color: white;
 }
 
+.claim-reward-content { 
+  position: relative;
+}
+
+.claim-reward-content .disabled-overlay { 
+  position: absolute;
+  background: rgba(46, 46, 46, 0.212);
+  z-index: 1000000000;
+}
 
 </style>

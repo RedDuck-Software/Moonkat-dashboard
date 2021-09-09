@@ -36,7 +36,7 @@
       </div>
       <div class="text-2">Your MKAT balance:</div>
       <div class="text-3">
-        MKAT
+        BBC
         <span> {{ myMkatBalance }} </span><br />
         (
         <span>
@@ -99,8 +99,8 @@ export default {
   },
   methods: {
     async updateUserBalances() {
-      this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
-      this.myMkatBalanceInBUSD = await this.service.getMkatValueInBUSD(ethers.utils.parseUnits(this.myMkatBalance, 9));
+      this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 18);
+      this.myMkatBalanceInBUSD = ethers.utils.formatUnits(await this.service.getMkatValueInBUSD(ethers.utils.parseUnits(this.myMkatBalance, 18)), 18);
     },
     async copyAddress() {
       const address = this.$refs.myAddr;

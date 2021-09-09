@@ -3,7 +3,6 @@ import {
   pancakeRouterContractAbi,
   pancackePairContractAbi,
   CONTRACT_ADDRESS,
-  CLAIMER_CONTRACT_ADDRESS,
 } from "./constants";
 import { ethers, Contract, BigNumber, utils } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
@@ -119,13 +118,10 @@ export default class MetamaskService {
       return 0;
     }
 
-    const oneTokenBnbPrice = this.oneMkatBnb;
-    const amountBnbPrice = oneTokenBnbPrice.mul(amount);
-  
     const res =  (await this.getPricesPath(
-      amountBnbPrice,
+      amount,
         [
-          WBNB_ADDRESS,
+          CONTRACT_ADDRESS,
           BUSD_ADDRESS,
         ]
     ))[1];
@@ -143,7 +139,6 @@ export default class MetamaskService {
 
   public async totalLiquidityPoolInBUSD() {
     const poolReserves = await this.getPancakePairPoolReserves();
-    // console.log("poolRes:", poolReserves);
 
     const mkat = poolReserves[0];
     const bnb = poolReserves[1];

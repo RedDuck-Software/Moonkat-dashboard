@@ -1436,14 +1436,18 @@ textarea::placeholder {
          border-top: 2px solid hsla(0,0%,100%,.5019607843137255);
          margin: 20px 100px;
          }
-         /*claim bnb css*/
-         .claim-reward .claim-reward-content {
+/*claim bnb css*/
+.claim-reward .claim-reward-content {
     margin-top: 25px;
     border-radius: 20px;
     border: 1px solid rgb(255 118 87 / 37%);
     background-color: transparent;
-    padding: 15px;
 }
+
+.claim-reward .claim-reward-content > .row{ 
+    padding: 25px;
+}
+
 .bought-tokens-claimer *{ 
     color: white;
 }
