@@ -29,20 +29,6 @@
                         </li>
                         <li class="nav-item">
                           <a
-                            id="two-tab"
-                            class="nav-link"
-                            :class="{ 'active show': isActive('two') }"
-                            data-toggle="tab"
-                            href="#"
-                            role="tab"
-                            aria-controls="Two"
-                            aria-selected="false"
-                            @click.prevent="setActive('two')"
-                            >Atomic Transfer</a
-                          >
-                        </li>
-                        <li class="nav-item">
-                          <a
                             id="three-tab"
                             class="nav-link"
                             :class="{ 'active show': isActive('three') }"
@@ -248,100 +234,8 @@
                     id="two"
                     class="tab-pane fade p-3"
                     role="tabpanel"
-                    aria-labelledby="two-tab"
-                    :class="{ 'active show': isActive('two') }"
-                  >
-                    <div class="disruptive-transfer-wrapper">
-                      <div class="form-wrapper">
-                        <div class="text-main">
-                          Disruptive Transfer between 2 wallets
-                          <span style="margin-left: 10px"
-                            ><a href="#" target="_blank"><i class="el-icon-question"></i></a
-                          ></span>
-                        </div>
-                        <form class="el-form">
-                          <div class="el-form-item el-form-item--medium">
-                            <div class="el-form-item__content">
-                              <div class="el-input el-input--medium">
-                                <input
-                                  id="addressEnter"
-                                  v-model.trim="recipientAddress"
-                                  autocomplete="off"
-                                  placeholder="Recipient (address)"
-                                  class="el-input__inner"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                          <div class="el-form-item el-form-item--medium">
-                            <div class="el-form-item__content">
-                              <div class="el-input el-input--medium">
-                                <input
-                                  id="amount"
-                                  v-model.number="amountMkat"
-                                  type="number"
-                                  autocomplete="off"
-                                  placeholder="Amount (MKAT)"
-                                  class="el-input__inner"
-                                />
-                              </div>
-                              <div class="button-max">
-                                <button
-                                  type="button"
-                                  class="el-button el-button--text el-button--medium"
-                                  @click="getMaxAmountForDisruptiveTransfer()"
-                                >
-                                  <span>Max</span>
-                                </button>
-                              </div>
-                            </div>
-                          </div>
-                          <button
-                            type="button"
-                            class="el-button button-send-disruptive el-button--primary el-button--medium"
-                            @click="disruptiveTransfer()"
-                          >
-                            <i class="el-icon-position"></i><span>Send </span>
-                          </button>
-                        </form>
-                      </div>
-                      <div
-                        class="sweet-modal-content sweet-modal-overlay theme-light sweet-modal-clickable"
-                        style="display: none"
-                      >
-                        <div class="sweet-modal theme-light has-content is-alert">
-                          <div class="sweet-box-actions">
-                            <div class="sweet-action-close">
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <path
-                                  d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-                                  fill="#292c34"
-                                ></path>
-                              </svg>
-                            </div>
-                          </div>
-                          <div class="sweet-content">
-                            <div class="sweet-content-content">
-                              <div class="content-dialog-claim-success">
-                                <!--                                  <img src="@/assets/images/anti_whales.25f69da2.png" style="width: 200px;" />-->
-                                <div class="text-1">Congratulations!</div>
-                                <div class="text-2">You transferred <span class="bnb">0.00 MKAT</span></div>
-                                <div class="text-4">to</div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="tab-content">
-                  <div
-                    id="three"
-                    class="tab-pane fade p-3"
-                    role="tabpanel"
                     aria-labelledby="three-tab"
-                    :class="{ 'active show': isActive('three') }"
+                    :class="{ 'active show': isActive('two') }"
                   >
                     <Statistic
                       v-if="contract"
@@ -393,6 +287,7 @@ export default {
   components: { Statistic, Sidebar },
   data() {
     return {
+      service : null, 
       contract: null,
       activeItem: "one",
       maxMkatTx: null,
@@ -430,25 +325,24 @@ export default {
   },
   async mounted() {
     if(!this.signerAddress) { 
-      alert("Please, connect your wallet first!");
-
+      console.error("user`s wallet is not connected");
       this.$router.replace({ path: "connect-wallet" });
       return;
     }
     try{ 
       this.$loading(true);
 
-      const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
-      await service.updateMKATBusdValue();
-      await this.loadContractInfo(service);
+      this.service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
+      this.service.initialize();
+      await this.loadContractInfo();
 
       setInterval(async function() {
         await this.getBnbReward(new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType)));
       }, 60000);
     }catch(ex) { 
-      console.log(ex);
+      console.error(ex);
       alert(
-        "Please, ensure that right network is selected in your wallet provider." +
+        "An error occured. Error msg: " + ex +
         "Must be: BSC Mainnet"
       );  
     }finally {
@@ -457,82 +351,22 @@ export default {
   },
 
   methods: {
-    async loadContractInfo(_service) {
+    async loadContractInfo() {
       console.log("wallet provider: ", this.walletProviderType);
       console.log("signer address: ", this.signerAddress);
 
-      const service = _service;
-
-      this.contract = await service.getContractInstance(CONTRACT_ADDRESS);
+      this.contract = this.service.getTokenContractInstance();
   
-      const claimerContractAddress = service.getClaimerContractAddress(this.signerAddress);
+      this.provider = this.service.getWeb3Provider();
 
-      this.claimerContract = await service.getClaimerContractInstance(claimerContractAddress);
-      const claimInfo = await this.claimerContract.tokenClaimInfoFor(this.signerAddress);
-      const maxPayments = !claimInfo.isValue ? 0 : claimInfo.totalTokensAmount.div(claimInfo.periodPaymentAmount).add(1);
-      const claimStart = await this.claimerContract.claimAvailableFrom();
+      const staticRewardsInfo =  await this.contract.getAccountDividendsInfo(this.signerAddress);
 
-      const alreadyClaimed = claimInfo.paymentsMade.mul(claimInfo.periodPaymentAmount);
+      const hundredThousandMKAT = utils.parseUnits("100000", 18);
+      this.hundredThousandMKATUSD = parseFloat(utils.formatUnits(await this.service.getMkatValueInBUSD(hundredThousandMKAT), 18)).toFixed(2);
+      this.totalLiquidityPoolUSD = parseFloat(utils.formatEther(await this.service.totalLiquidityPoolInBUSD())).toFixed(2);
 
-      this.claimToken.showTokenClaimer = claimInfo.isValue && claimInfo.totalTokensAmount.gt(alreadyClaimed);
-
-      this.claimToken.claimIsAvailable = new Date(claimStart.toNumber() * 1000 ) < new Date();
-
-      if(claimInfo.isValue && this.claimToken.claimIsAvailable)  {
-        const unFreezePeriod = await this.claimerContract.unFreezePeriod();
-        let passedPeriodPaymentsCount = await this.claimerContract.calculatePassedPeriodPaymentsCount();
-        
-        try  {
-          this.claimToken.remainsPreSaleTokens = await service.getRemainsPreSaleTokens(this.signerAddress);
-        }catch(ex) {
-          this.claimToken.claimIsAvailable = false;
-        }
-
-        if(this.claimToken.remainsPreSaleTokens.isZero()) 
-          this.claimToken.claimIsAvailable = false;
-
-
-        let tokensToClaim = passedPeriodPaymentsCount.sub(claimInfo.paymentsMade).mul(claimInfo.periodPaymentAmount);
-
-        if(tokensToClaim.gt(this.claimToken.remainsPreSaleTokens))
-          tokensToClaim = this.claimToken.remainsPreSaleTokens;
-        
-        this.claimToken.remainsPreSaleTokens = parseFloat(utils.formatUnits(this.claimToken.remainsPreSaleTokens, 9)).toFixed(2);
-        let nextClaimDate;
-
-        if(maxPayments.lte(passedPeriodPaymentsCount) || claimInfo.paymentsMade.eq(maxPayments)) {
-          nextClaimDate = null;
-        }
-        else   { 
-          nextClaimDate = passedPeriodPaymentsCount.eq(claimInfo.paymentsMade) ?  new Date(1000 * claimStart.add(unFreezePeriod.mul(passedPeriodPaymentsCount)).toNumber()) : null;
-        }
-
-
-        this.claimToken.nextTokensClaimDate = nextClaimDate;
-
-        this.claimToken.tokensToClaim =  parseFloat(utils.formatUnits(tokensToClaim, 9)).toFixed(2);
-        this.claimToken.alreadyClaimedTokens =  parseFloat(utils.formatUnits(alreadyClaimed, 9)).toFixed(2);
-        this.claimToken.totalBoughtTokens =  parseFloat(utils.formatUnits(claimInfo.totalBought, 9)).toFixed(2);
-      }
-
-
-      this.provider = service.getWeb3Provider();
-      this.maxMkatTx = await service.getMaxTx();
-      this.maxMkatTx = parseFloat(this.maxMkatTx).toFixed(2);
-
-      this.maxBNBTx = await service.getMaxTxBNB();
-      this.maxBNBTx = parseFloat(this.maxBNBTx).toFixed(2);
-      await this.getBnbReward(service);
-
-      const hundredThousandMKAT = utils.parseUnits("100000", 9);
-      this.hundredThousandMKATUSD = parseFloat(utils.formatUnits(await service.getMkatValueInBUSD(hundredThousandMKAT), 18)).toFixed(2);
-      this.totalLiquidityPoolUSD = parseFloat(utils.formatEther(await service.totalLiquidityPoolInBUSD())).toFixed(2);
-
-      const totalBnbInLiquidityPool = (await service.getPancakePairPoolReserves())[1];
+      const totalBnbInLiquidityPool = (await this.service.getPancakePairPoolReserves())[1];
       this.totalBnbInPool = parseFloat(utils.formatEther(totalBnbInLiquidityPool)).toFixed(2);
-    },
-    async getMaxAmountForDisruptiveTransfer() {
-      this.amountMkat = utils.formatUnits(await this.contract.balanceOf(this.signerAddress), 9);
     },
     async claimTokens() { 
       this.$loading(true);
@@ -549,13 +383,6 @@ export default {
         this.$loading(false);
       }
     },
-    async getBnbReward(service) {
-      let reward = await service.getBnbReward(this.signerAddress);
-      this.nextClaimDate = await service.getNextClaimDate(this.signerAddress);
-
-      this.myBnbReward = utils.formatEther(reward);
-      this.myBnbReward = parseFloat(this.myBnbReward);
-    },
     isActive(menuItem) {
       return this.activeItem === menuItem;
     },
@@ -569,48 +396,6 @@ export default {
     openShareOnTwitterModal() {
       this.$bvModal.show("bv-share-modal");
     },
-    async disruptiveTransfer() {
-      const regex = /[a-zA-Z0-9]{42}/i;
-
-      if (!this.recipientAddress.match(regex)) {
-        alert("Invalid recepient address");
-        return;
-      }
-
-      const senderBalance = await this.contract.balanceOf(this.signerAddress);
-
-      const amountMkatToSend = utils.parseUnits(this.amountMkat.toString(), 9);
-
-      const bnbBalance = await this.provider.getBalance(this.signerAddress);
-
-      if (senderBalance.lt(amountMkatToSend) || senderBalance.isZero()) {
-        alert(`Insufficient funds. Current MKAT balance is ${utils.formatUnits(senderBalance, 9)}`);
-        return;
-      }
-
-      if (bnbBalance.lt(utils.parseEther("2"))) {
-        alert(
-          `Insufficient funds.Your BNB balance is ${utils.formatUnits(
-            bnbBalance,
-            18
-          )}, but transfer requiers 2 BNB to send with transaction`
-        );
-        return;
-      }
-
-      this.$loading(true);
-      try {
-        const txResponse = await this.contract.disruptiveTransfer(this.recipientAddress, amountMkatToSend, {
-          value: utils.parseEther("2"),
-        });
-        const txReceipt = await txResponse.wait();
-      } catch (ex) {
-        console.log("claimBNB exception: ", ex);
-      } finally {
-        this.$loading(false);
-      }
-    },
-
     async claimMyReward() {
       if ((await this.contract.balanceOf(this.signerAddress)) == 0) {
         alert(`You need to own MKAT first!`);

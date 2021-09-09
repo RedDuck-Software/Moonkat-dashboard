@@ -89,9 +89,9 @@ export default {
     this.canCopy = !!navigator.clipboard;
 
     this.service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
-    this.service.updateMKATBusdValue();
+    this.service.initialize();
 
-    this.mkatContract = await this.service.getContractInstance(CONTRACT_ADDRESS);
+    this.mkatContract = this.service.getTokenContractInstance();
 
     this.updateUserBalances();
 

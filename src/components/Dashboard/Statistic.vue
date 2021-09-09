@@ -124,7 +124,7 @@ export default {
   methods: {
     async loadContractInfo() {
       const service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
-      await service.updateMKATBusdValue();
+      await service.initialize();
 
       this.provider = service.getWeb3Provider();
 
