@@ -30,8 +30,8 @@
         <span id="copy-address" @click="copyAddress()">
           <span style="margin-right: 3px"> <i class="fa fa-clone"></i></span> Copy address
         </span>
-        <a id="bscscan" :href="`https://bscscan.com/address/${signerAddress}`" target="_blank" style="margin-left: 10px"
-          ><span style="margin-right: 3px"><i class="fa fa-clone"></i></span> View on BscScan Explorer
+        <a id="bscscan" :href="`https://etherscan.io/address/${signerAddress}`" target="_blank" style="margin-left: 10px"
+          ><span style="margin-right: 3px"><i class="fa fa-clone"></i></span> View on Etherscan
         </a>
       </div>
       <div class="text-2">Your MKAT balance:</div>
@@ -57,7 +57,7 @@ import { ContractFactory } from "ethers";
 import { mapGetters } from "vuex";
 import MetamaskService from "@/MetamaskService";
 import { ethers } from "ethers";
-import { WalletType } from '../../MetamaskService';
+import { WalletType } from "../../MetamaskService";
 
 export default {
   name: "Sidebar",
@@ -89,7 +89,7 @@ export default {
     this.canCopy = !!navigator.clipboard;
 
     this.service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
-    this.service.initialize();
+    await this.service.initialize();
 
     this.mkatContract = this.service.getTokenContractInstance();
 
@@ -100,7 +100,7 @@ export default {
   methods: {
     async updateUserBalances() {
       this.myMkatBalance = ethers.utils.formatUnits(await this.mkatContract.balanceOf(this.signerAddress), 9);
-      this.myMkatBalanceInBUSD = await this.service.getMkatValueInBUSD( ethers.utils.parseUnits(this.myMkatBalance, 9));
+      this.myMkatBalanceInBUSD = await this.service.getMkatValueInBUSD(ethers.utils.parseUnits(this.myMkatBalance, 9));
     },
     async copyAddress() {
       const address = this.$refs.myAddr;
@@ -108,8 +108,7 @@ export default {
       alert("Copied!");
     },
     async logout() {
-      if(this.walletProviderType == WalletType.WalletConnect) 
-        this.service.walletProvider.disconnect();
+      if (this.walletProviderType == WalletType.WalletConnect) this.service.walletProvider.disconnect();
 
       this.$store.commit("logout");
       this.$router.replace("/connect-wallet");

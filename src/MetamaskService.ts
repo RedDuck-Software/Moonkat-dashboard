@@ -1,8 +1,7 @@
 import {
-  erc20TokenContractAbi,
+  babyCakeContractAbi,
   pancakeRouterContractAbi,
   pancackePairContractAbi,
-  claimerContractAbi,
   CONTRACT_ADDRESS,
   CLAIMER_CONTRACT_ADDRESS,
 } from "./constants";
@@ -35,7 +34,7 @@ export default class MetamaskService {
 
   public async initialize() { 
     this.oneMkatBnb = await this.getOneMkatPrice();
-    this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+    this.contract = await this.getBabyCakeContractInstance(CONTRACT_ADDRESS);
   }
 
   public getWeb3Provider() { 
@@ -62,27 +61,15 @@ export default class MetamaskService {
   }
   
 
-  public async getRemainsPreSaleTokens(address: string) {
-    const contract = await this.getClaimerContractInstance(CLAIMER_CONTRACT_ADDRESS);
-    return await contract.calculateRemainsTokens(address);
-  }
-
   public getTokenContractInstance() { 
     return this.contract;
   }
 
-  private async getContractInstance(contractAddress: string) {
+  private async getBabyCakeContractInstance(contractAddress: string) {
     const provider = this.web3Provider;
 
     const signer = provider.getSigner();
-    return new ethers.Contract(contractAddress, erc20TokenContractAbi, signer);
-  }
-
-  public async getClaimerContractInstance(contractAddress: string) {
-    const provider = this.web3Provider;
-
-    const signer = provider.getSigner();
-    return new ethers.Contract(contractAddress, claimerContractAbi , signer);
+    return new ethers.Contract(contractAddress, babyCakeContractAbi, signer);
   }
 
   public async getPancakeRouterContractInstance(pancakeContractAddress: string) {
@@ -133,7 +120,7 @@ export default class MetamaskService {
     }
 
     const oneTokenBnbPrice = this.oneMkatBnb;
-    const amountBnbPrice = utils.parseEther(oneTokenBnbPrice.toString()).mul(amount);
+    const amountBnbPrice = oneTokenBnbPrice.mul(amount);
   
     const res =  (await this.getPricesPath(
       amountBnbPrice,
@@ -186,12 +173,12 @@ export default class MetamaskService {
     if (!this.contract) {
       this.contract = this.getTokenContractInstance();
     }
-    return await this.contract.pancakePair();
+    return await this.contract.uniswapV2Pair();
   }
 
   public async getPancakeRouterAddress() {
     if (!this.contract) {
-      this.contract = await this.getContractInstance(CONTRACT_ADDRESS);
+      this.contract = await this.getBabyCakeContractInstance(CONTRACT_ADDRESS);
     }
 
     return await this.contract.uniswapV2Router();

@@ -91,20 +91,6 @@
                     <div class="statistic-wrapper">
                       <div class="item-statistic">
                         <div class="row">
-                          <div class="col-sm-4 p-1"><img src="@/assets/images/Max_trans.png" class="img-icon" /></div>
-                          <div class="col-sm-8 p-2">
-                            <div class="text-1">Max Transaction Amount</div>
-                            <div class="text-2">
-                              <span id="max-mkat-tx">{{ maxMkatTx }}</span
-                              ><span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a
-                              ><span> | </span><span class="card-panel-num"> {{ maxBNBTx }} BNB </span
-                              ><a><i class="el-icon-document-copy"></i></a>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="item-statistic">
-                        <div class="row">
                           <div class="col-sm-4 p-1">
                             <img src="@/assets/images/Total_liquidity_pool.png" class="img-icon" />
                           </div>
@@ -129,7 +115,7 @@
                           </div>
                         </div>
                       </div>
-                      <div class="item-statistic">
+                      <div class="item-statistic w-100">
                         <div class="row">
                           <div class="col-sm-4 p-1"><img src="@/assets/images/Moonkat.png" class="img-icon" /></div>
                           <div class="col-sm-8 p-2">
@@ -333,7 +319,8 @@ export default {
       this.$loading(true);
 
       this.service = new MetamaskService(await MetamaskService.createWalletProviderFromType(this.walletProviderType));
-      this.service.initialize();
+      await this.service.initialize();
+
       await this.loadContractInfo();
 
       setInterval(async function() {
@@ -356,13 +343,18 @@ export default {
       console.log("signer address: ", this.signerAddress);
 
       this.contract = this.service.getTokenContractInstance();
+      console.log("contract:  ", this.contract);
   
       this.provider = this.service.getWeb3Provider();
 
       const staticRewardsInfo =  await this.contract.getAccountDividendsInfo(this.signerAddress);
 
+      console.log(staticRewardsInfo);
+
       const hundredThousandMKAT = utils.parseUnits("100000", 18);
-      this.hundredThousandMKATUSD = parseFloat(utils.formatUnits(await this.service.getMkatValueInBUSD(hundredThousandMKAT), 18)).toFixed(2);
+      const usdPrice = await this.service.getMkatValueInBUSD(hundredThousandMKAT);
+
+      this.hundredThousandMKATUSD = parseFloat(utils.formatUnits(usdPrice, 18)).toFixed(2);
       this.totalLiquidityPoolUSD = parseFloat(utils.formatEther(await this.service.totalLiquidityPoolInBUSD())).toFixed(2);
 
       const totalBnbInLiquidityPool = (await this.service.getPancakePairPoolReserves())[1];

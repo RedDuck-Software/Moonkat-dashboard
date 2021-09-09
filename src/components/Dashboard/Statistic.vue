@@ -33,7 +33,7 @@
           <div class="text-1">Volume (24h)</div>
           <div class="text-2">Coming soon!</div>
         </div>
-        <div class="item-statistic col-sm-6 col-md-3  mt-3 mt-sm-0">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-sm-0">
           <div class="text-1">Market Cap</div>
           <div class="text-2">
             $
@@ -44,7 +44,7 @@
           <div class="text-1">Current Circulating Supply</div>
           <div class="text-2">{{ currentCircularingBalance }} MKAT</div>
         </div>
-        <div class="item-statistic col-sm-6 col-md-3  mt-3 mt-md-0">
+        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-md-0">
           <div class="text-1">Contract BNB reward pool</div>
           <div class="text-2">{{ contractBNBRewardPool }} BNB</div>
         </div>
@@ -68,19 +68,13 @@
           <div class="text-1">Total BNB in liquidity pool</div>
           <div class="text-2">{{ totalbnbinpool }} BNB</div>
         </div>
-        <div class="item-statistic col-sm-6 col-md-3 mt-3 mt-md-0">
-          <div class="text-1">Max Transaction Amount</div>
-          <div class="text-2">
-            1,000,000
-            <span class="card-panel-num"> MKAT </span><a><i class="el-icon-document-copy"></i></a>
-          </div>
-        </div>
       </div>
     </div>
     <div class="hidden-input el-input el-input--medium">
       <input id="copy-value-max" type="text" autocomplete="off" class="el-input__inner" />
-    </div></div
-></template>
+    </div>
+  </div>
+</template>
 
 <script>
 import { CONTRACT_ADDRESS, BURN_ADDRESS } from "@/constants";
@@ -132,7 +126,9 @@ export default {
 
       this.totalBurn = await this.calculateTotalBurnPercent(service);
 
-      this.currentCircularingBalance = parseFloat(utils.formatUnits(await this.getCurrentCircularingBalance(), 9)).toFixed(2);
+      this.currentCircularingBalance = parseFloat(
+        utils.formatUnits(await this.getCurrentCircularingBalance(), 9)
+      ).toFixed(2);
 
       this.contractBNBRewardPool = await utils.formatEther(await this.provider.getBalance(CONTRACT_ADDRESS));
       this.contractBNBRewardPool = parseFloat(this.contractBNBRewardPool).toFixed(2);
